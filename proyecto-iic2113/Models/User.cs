@@ -9,7 +9,10 @@
 
  	public User(string name, int id, string mail, string phoneNumber){
 
- 		
+ 		Name = name;
+ 		Id = id;
+ 		Mail = mail;
+ 		phoneNumber = PhoneNumber;
 
  	}
 
