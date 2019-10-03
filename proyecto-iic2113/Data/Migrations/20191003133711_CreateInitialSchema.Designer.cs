@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using proyecto_iic2113.Data;
 
-namespace proyecto_iic2113.Data.Migrations
+namespace proyecto_iic2113.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191002223851_CreateSponsor")]
-    partial class CreateSponsor
+    [Migration("20191003133711_CreateInitialSchema")]
+    partial class CreateInitialSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -180,6 +180,55 @@ namespace proyecto_iic2113.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("proyecto_iic2113.Models.Event", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DateTime");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<string>("Subject");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Events");
+                });
+
+            modelBuilder.Entity("proyecto_iic2113.Models.Menu", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("FoodName")
+                        .IsRequired();
+
+                    b.Property<string>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Menus");
+                });
+
+            modelBuilder.Entity("proyecto_iic2113.Models.Room", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<string>("Photo");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
