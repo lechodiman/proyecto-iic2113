@@ -149,5 +149,24 @@ namespace proyecto_iic2113.Controllers
         {
             return _context.Conferences.Any(e => e.Id == id);
         }
+
+        //GET: Conference/AddSponsor/5
+        public async Task<IActionResult> AddSponsor(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var conference = await _context.Conferences.FindAsync(id);
+            if (conference == null)
+            {
+                return NotFound();
+            }
+            return View();
+        }
+
+
+
     }
 }

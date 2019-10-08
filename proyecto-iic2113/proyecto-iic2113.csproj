@@ -19,4 +19,7 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Remove="Views\Conference\AddSponsor.cshtml" />
+  </ItemGroup>
 </Project>
