@@ -21,5 +21,9 @@ namespace proyecto_iic2113.Data
         public DbSet<Conference> Conferences { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
     }
+
+
+
 }
