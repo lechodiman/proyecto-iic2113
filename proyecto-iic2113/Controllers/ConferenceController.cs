@@ -166,13 +166,6 @@ namespace proyecto_iic2113.Controllers
             return View(conference);
         }
 
-        //[HttpGet]
-        //[Route("{buildingId:int}")]
-        ////GET Conference/123/AddSponsor/456
-        //public IActionResult AddSponsor2([FromRoute]int campusId, [FromRoute]int buildingId)
-        //{
-        //    //... validate campus id along with building id 
-        //}
     }
     
 }
