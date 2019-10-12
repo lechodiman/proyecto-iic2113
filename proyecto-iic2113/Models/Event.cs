@@ -17,7 +17,6 @@ namespace proyecto_iic2113.Models
 		[DataType(DataType.Date)]
 		public DateTime DateTime { get; set; }
 
-		public string Subject { get; set; }
 		public string Description { get; set; }
 	}
 }
