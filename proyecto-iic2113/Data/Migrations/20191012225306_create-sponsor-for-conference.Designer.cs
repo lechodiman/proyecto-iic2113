@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using proyecto_iic2113.Data;
@@ -9,9 +10,10 @@ using proyecto_iic2113.Data;
 namespace proyecto_iic2113.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191012225306_create-sponsor-for-conference")]
+    partial class createsponsorforconference
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -192,32 +194,9 @@ namespace proyecto_iic2113.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<int?>("VenueId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("VenueId");
 
                     b.ToTable("Conferences");
-                });
-
-            modelBuilder.Entity("proyecto_iic2113.Models.Equipment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.Property<int>("RoomId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoomId");
-
-                    b.ToTable("Equipments");
                 });
 
             modelBuilder.Entity("proyecto_iic2113.Models.Event", b =>
@@ -264,11 +243,7 @@ namespace proyecto_iic2113.Migrations
 
                     b.Property<string>("Photo");
 
-                    b.Property<int>("VenueId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("VenueId");
 
                     b.ToTable("Rooms");
                 });
@@ -288,23 +263,6 @@ namespace proyecto_iic2113.Migrations
                     b.HasIndex("ConferenceId");
 
                     b.ToTable("Sponsors");
-                });
-
-            modelBuilder.Entity("proyecto_iic2113.Models.Venue", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Adress");
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.Property<string>("Photo");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Venues");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -349,29 +307,6 @@ namespace proyecto_iic2113.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("proyecto_iic2113.Models.Conference", b =>
-                {
-                    b.HasOne("proyecto_iic2113.Models.Venue", "Venue")
-                        .WithMany("Conferences")
-                        .HasForeignKey("VenueId");
-                });
-
-            modelBuilder.Entity("proyecto_iic2113.Models.Equipment", b =>
-                {
-                    b.HasOne("proyecto_iic2113.Models.Room", "Room")
-                        .WithMany("Equipments")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("proyecto_iic2113.Models.Room", b =>
-                {
-                    b.HasOne("proyecto_iic2113.Models.Venue", "Venue")
-                        .WithMany("Rooms")
-                        .HasForeignKey("VenueId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -22,7 +22,8 @@ namespace proyecto_iic2113.Controllers
         // GET: Sponsor
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Sponsors.ToListAsync());
+            var applicationDbContext = _context.Sponsors.Include(s => s.Conference);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Sponsor/Details/5
@@ -34,6 +35,7 @@ namespace proyecto_iic2113.Controllers
             }
 
             var sponsor = await _context.Sponsors
+                .Include(s => s.Conference)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (sponsor == null)
             {
@@ -46,6 +48,7 @@ namespace proyecto_iic2113.Controllers
         // GET: Sponsor/Create
         public IActionResult Create()
         {
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name");
             return View();
         }
 
@@ -54,7 +57,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Sponsor sponsor)
+        public async Task<IActionResult> Create([Bind("Id,Name,ConferenceId")] Sponsor sponsor)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +65,7 @@ namespace proyecto_iic2113.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", sponsor.ConferenceId);
             return View(sponsor);
         }
 
@@ -78,6 +82,7 @@ namespace proyecto_iic2113.Controllers
             {
                 return NotFound();
             }
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", sponsor.ConferenceId);
             return View(sponsor);
         }
 
@@ -86,7 +91,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Sponsor sponsor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ConferenceId")] Sponsor sponsor)
         {
             if (id != sponsor.Id)
             {
@@ -113,6 +118,7 @@ namespace proyecto_iic2113.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", sponsor.ConferenceId);
             return View(sponsor);
         }
 
@@ -125,6 +131,7 @@ namespace proyecto_iic2113.Controllers
             }
 
             var sponsor = await _context.Sponsors
+                .Include(s => s.Conference)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (sponsor == null)
             {
