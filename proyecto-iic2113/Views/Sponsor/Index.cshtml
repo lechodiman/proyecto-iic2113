@@ -1,6 +1,7 @@
 @model IEnumerable<proyecto_iic2113.Models.Sponsor>
 
 @{
+    ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
@@ -14,6 +15,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Conference)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -22,6 +26,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Conference.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
