@@ -14,11 +14,11 @@ namespace proyecto_iic2113.Models
         [Required(ErrorMessage = "Name cannot be blank")]
         public string Name { get; set; }
         public string Description { get; set; }
-
         [DataType(DataType.Date)]
         public DateTime DateTime { get; set; }
-
         public IEnumerable<Sponsor> Sponsors { get; set; }
+        public int? VenueId { get; set; }
+        public Venue Venue { get; set; }
 
     }
 }
