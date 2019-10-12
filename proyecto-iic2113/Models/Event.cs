@@ -14,8 +14,11 @@ namespace proyecto_iic2113.Models
 		[Required(ErrorMessage = "Name cannot be blank")]
 		public string Name { get; set; }
 
-		[DataType(DataType.Date)]
-		public DateTime DateTime { get; set; }
+		[DataType(DataType.DateTime)]
+		public DateTime StartDate { get; set; }
+
+		[DataType(DataType.DateTime)]
+		public DateTime EndDate { get; set; }
 
 		public string Description { get; set; }
 	}
