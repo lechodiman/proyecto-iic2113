@@ -20,6 +20,7 @@ namespace proyecto_iic2113.Data
         public DbSet<Sponsor> Sponsors { get; set; }
         public DbSet<Conference> Conferences { get; set; }
         public DbSet<Venue> Venues { get; set; }
+        public DbSet<Equipment> Equipments { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
