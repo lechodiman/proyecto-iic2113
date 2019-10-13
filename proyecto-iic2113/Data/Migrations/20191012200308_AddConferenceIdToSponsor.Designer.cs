@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using proyecto_iic2113.Data;
@@ -9,9 +10,10 @@ using proyecto_iic2113.Data;
 namespace proyecto_iic2113.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191012200308_AddConferenceIdToSponsor")]
+    partial class AddConferenceIdToSponsor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -202,27 +204,18 @@ namespace proyecto_iic2113.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("ConferenceId");
+                    b.Property<DateTime>("DateTime");
 
                     b.Property<string>("Description");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
-                    b.Property<DateTime>("EndDate");
 
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<DateTime>("StartDate");
+                    b.Property<string>("Subject");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ConferenceId");
-
                     b.ToTable("Events");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Event");
                 });
 
             modelBuilder.Entity("proyecto_iic2113.Models.Menu", b =>
@@ -272,15 +265,6 @@ namespace proyecto_iic2113.Migrations
                     b.ToTable("Sponsors");
                 });
 
-            modelBuilder.Entity("proyecto_iic2113.Models.Talk", b =>
-                {
-                    b.HasBaseType("proyecto_iic2113.Models.Event");
-
-                    b.Property<string>("Subject");
-
-                    b.HasDiscriminator().HasValue("Talk");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
@@ -323,14 +307,6 @@ namespace proyecto_iic2113.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("proyecto_iic2113.Models.Event", b =>
-                {
-                    b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
-                        .WithMany()
-                        .HasForeignKey("ConferenceId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
