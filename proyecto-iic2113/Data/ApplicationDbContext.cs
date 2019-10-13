@@ -22,6 +22,4 @@ namespace proyecto_iic2113.Data
 
     }
 
-
-
 }
