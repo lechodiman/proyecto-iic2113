@@ -9,7 +9,7 @@ using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Event> Events { get; set; }
         public DbSet<Menu> Menus { get; set; }
@@ -19,7 +19,5 @@ namespace proyecto_iic2113.Data
         public DbSet<Talk> Talks { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
-
     }
-
 }

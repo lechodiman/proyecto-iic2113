@@ -19,6 +19,7 @@ namespace proyecto_iic2113.Models
         public DateTime DateTime { get; set; }
 
         public IEnumerable<Sponsor> Sponsors { get; set; }
+        public ApplicationUser Organizer { get; set; }
 
     }
 }
