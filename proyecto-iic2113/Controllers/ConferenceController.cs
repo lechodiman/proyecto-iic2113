@@ -54,7 +54,14 @@ namespace proyecto_iic2113.Controllers
         // GET: Conference/Create
         public IActionResult Create()
         {
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // POST: Conference/Create
