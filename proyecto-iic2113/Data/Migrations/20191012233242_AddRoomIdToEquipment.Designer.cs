@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using proyecto_iic2113.Data;
@@ -9,9 +10,10 @@ using proyecto_iic2113.Data;
 namespace proyecto_iic2113.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191012233242_AddRoomIdToEquipment")]
+    partial class AddRoomIdToEquipment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,7 +280,7 @@ namespace proyecto_iic2113.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("ConferenceId");
+                    b.Property<int?>("ConferenceId");
 
                     b.Property<string>("Name")
                         .IsRequired();
@@ -377,10 +379,9 @@ namespace proyecto_iic2113.Migrations
 
             modelBuilder.Entity("proyecto_iic2113.Models.Sponsor", b =>
                 {
-                    b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
+                    b.HasOne("proyecto_iic2113.Models.Conference")
                         .WithMany("Sponsors")
-                        .HasForeignKey("ConferenceId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ConferenceId");
                 });
 #pragma warning restore 612, 618
         }

@@ -10,23 +10,23 @@ using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
 {
-    public class ConferenceController : Controller
+    public class EquipmentController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ConferenceController(ApplicationDbContext context)
+        public EquipmentController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Conference
+        // GET: Equipment
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Conferences.Include(c => c.Venue);
+            var applicationDbContext = _context.Equipments.Include(e => e.Room);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Conference/Details/5
+        // GET: Equipment/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,42 +34,42 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var conference = await _context.Conferences
-                .Include(c => c.Venue)
+            var equipment = await _context.Equipments
+                .Include(e => e.Room)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (conference == null)
+            if (equipment == null)
             {
                 return NotFound();
             }
 
-            return View(conference);
+            return View(equipment);
         }
 
-        // GET: Conference/Create
+        // GET: Equipment/Create
         public IActionResult Create()
         {
-            ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name");
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name");
             return View();
         }
 
-        // POST: Conference/Create
+        // POST: Equipment/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,DateTime,VenueId")] Conference conference)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,RoomId")] Equipment equipment)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(conference);
+                _context.Add(equipment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", conference.VenueId);
-            return View(conference);
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name", equipment.RoomId);
+            return View(equipment);
         }
 
-        // GET: Conference/Edit/5
+        // GET: Equipment/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -77,23 +77,23 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var conference = await _context.Conferences.FindAsync(id);
-            if (conference == null)
+            var equipment = await _context.Equipments.FindAsync(id);
+            if (equipment == null)
             {
                 return NotFound();
             }
-            ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", conference.VenueId);
-            return View(conference);
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name", equipment.RoomId);
+            return View(equipment);
         }
 
-        // POST: Conference/Edit/5
+        // POST: Equipment/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,DateTime,VenueId")] Conference conference)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,RoomId")] Equipment equipment)
         {
-            if (id != conference.Id)
+            if (id != equipment.Id)
             {
                 return NotFound();
             }
@@ -102,12 +102,12 @@ namespace proyecto_iic2113.Controllers
             {
                 try
                 {
-                    _context.Update(conference);
+                    _context.Update(equipment);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ConferenceExists(conference.Id))
+                    if (!EquipmentExists(equipment.Id))
                     {
                         return NotFound();
                     }
@@ -118,11 +118,11 @@ namespace proyecto_iic2113.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", conference.VenueId);
-            return View(conference);
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name", equipment.RoomId);
+            return View(equipment);
         }
 
-        // GET: Conference/Delete/5
+        // GET: Equipment/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -130,48 +130,31 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var conference = await _context.Conferences
-                .Include(c => c.Venue)
+            var equipment = await _context.Equipments
+                .Include(e => e.Room)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (conference == null)
+            if (equipment == null)
             {
                 return NotFound();
             }
 
-            return View(conference);
+            return View(equipment);
         }
 
-        // POST: Conference/Delete/5
+        // POST: Equipment/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var conference = await _context.Conferences.FindAsync(id);
-            _context.Conferences.Remove(conference);
+            var equipment = await _context.Equipments.FindAsync(id);
+            _context.Equipments.Remove(equipment);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ConferenceExists(int id)
+        private bool EquipmentExists(int id)
         {
-            return _context.Conferences.Any(e => e.Id == id);
+            return _context.Equipments.Any(e => e.Id == id);
         }
-
-        //GET: Conference/AddSponsor/5
-        public async Task<IActionResult> AddSponsor(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var conference = await _context.Conferences.FindAsync(id);
-            if (conference == null)
-            {
-                return NotFound();
-            }
-            return View(conference);
-        }
-
     }
 }

@@ -5,20 +5,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace proyecto_iic2113.Models
 {
-    public class Conference
+    public class Equipment
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
         [Required(ErrorMessage = "Name cannot be blank")]
         public string Name { get; set; }
         public string Description { get; set; }
-        [DataType(DataType.Date)]
-        public DateTime DateTime { get; set; }
-        public IEnumerable<Sponsor> Sponsors { get; set; }
-        public int? VenueId { get; set; }
-        public Venue Venue { get; set; }
-
+        public int RoomId { get; set; }
+        public Room Room { get; set; }
     }
 }

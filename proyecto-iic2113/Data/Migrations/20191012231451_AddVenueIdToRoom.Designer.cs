@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using proyecto_iic2113.Data;
@@ -9,9 +10,10 @@ using proyecto_iic2113.Data;
 namespace proyecto_iic2113.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191012231451_AddVenueIdToRoom")]
+    partial class AddVenueIdToRoom
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -201,25 +203,6 @@ namespace proyecto_iic2113.Migrations
                     b.ToTable("Conferences");
                 });
 
-            modelBuilder.Entity("proyecto_iic2113.Models.Equipment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.Property<int>("RoomId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoomId");
-
-                    b.ToTable("Equipments");
-                });
-
             modelBuilder.Entity("proyecto_iic2113.Models.Event", b =>
                 {
                     b.Property<int>("Id")
@@ -278,7 +261,7 @@ namespace proyecto_iic2113.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("ConferenceId");
+                    b.Property<int?>("ConferenceId");
 
                     b.Property<string>("Name")
                         .IsRequired();
@@ -359,14 +342,6 @@ namespace proyecto_iic2113.Migrations
                         .HasForeignKey("VenueId");
                 });
 
-            modelBuilder.Entity("proyecto_iic2113.Models.Equipment", b =>
-                {
-                    b.HasOne("proyecto_iic2113.Models.Room", "Room")
-                        .WithMany("Equipments")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("proyecto_iic2113.Models.Room", b =>
                 {
                     b.HasOne("proyecto_iic2113.Models.Venue", "Venue")
@@ -377,10 +352,9 @@ namespace proyecto_iic2113.Migrations
 
             modelBuilder.Entity("proyecto_iic2113.Models.Sponsor", b =>
                 {
-                    b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
+                    b.HasOne("proyecto_iic2113.Models.Conference")
                         .WithMany("Sponsors")
-                        .HasForeignKey("ConferenceId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ConferenceId");
                 });
 #pragma warning restore 612, 618
         }

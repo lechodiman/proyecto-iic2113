@@ -1,4 +1,4 @@
-@model IEnumerable<proyecto_iic2113.Models.Conference>
+@model IEnumerable<proyecto_iic2113.Models.Equipment>
 
 @{
     ViewData["Title"] = "Index";
@@ -19,10 +19,7 @@
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Venue)
+                @Html.DisplayNameFor(model => model.Room)
             </th>
             <th></th>
         </tr>
@@ -37,10 +34,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DateTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Venue.Name)
+                @Html.DisplayFor(modelItem => item.Room.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -10,23 +10,22 @@ using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
 {
-    public class ConferenceController : Controller
+    public class VenueController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ConferenceController(ApplicationDbContext context)
+        public VenueController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Conference
+        // GET: Venue
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Conferences.Include(c => c.Venue);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await _context.Venues.ToListAsync());
         }
 
-        // GET: Conference/Details/5
+        // GET: Venue/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,42 +33,39 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var conference = await _context.Conferences
-                .Include(c => c.Venue)
+            var venue = await _context.Venues
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (conference == null)
+            if (venue == null)
             {
                 return NotFound();
             }
 
-            return View(conference);
+            return View(venue);
         }
 
-        // GET: Conference/Create
+        // GET: Venue/Create
         public IActionResult Create()
         {
-            ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name");
             return View();
         }
 
-        // POST: Conference/Create
+        // POST: Venue/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,DateTime,VenueId")] Conference conference)
+        public async Task<IActionResult> Create([Bind("Id,Name,Adress,Photo")] Venue venue)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(conference);
+                _context.Add(venue);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", conference.VenueId);
-            return View(conference);
+            return View(venue);
         }
 
-        // GET: Conference/Edit/5
+        // GET: Venue/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -77,23 +73,22 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var conference = await _context.Conferences.FindAsync(id);
-            if (conference == null)
+            var venue = await _context.Venues.FindAsync(id);
+            if (venue == null)
             {
                 return NotFound();
             }
-            ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", conference.VenueId);
-            return View(conference);
+            return View(venue);
         }
 
-        // POST: Conference/Edit/5
+        // POST: Venue/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,DateTime,VenueId")] Conference conference)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Adress,Photo")] Venue venue)
         {
-            if (id != conference.Id)
+            if (id != venue.Id)
             {
                 return NotFound();
             }
@@ -102,12 +97,12 @@ namespace proyecto_iic2113.Controllers
             {
                 try
                 {
-                    _context.Update(conference);
+                    _context.Update(venue);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ConferenceExists(conference.Id))
+                    if (!VenueExists(venue.Id))
                     {
                         return NotFound();
                     }
@@ -118,11 +113,10 @@ namespace proyecto_iic2113.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", conference.VenueId);
-            return View(conference);
+            return View(venue);
         }
 
-        // GET: Conference/Delete/5
+        // GET: Venue/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -130,48 +124,30 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var conference = await _context.Conferences
-                .Include(c => c.Venue)
+            var venue = await _context.Venues
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (conference == null)
+            if (venue == null)
             {
                 return NotFound();
             }
 
-            return View(conference);
+            return View(venue);
         }
 
-        // POST: Conference/Delete/5
+        // POST: Venue/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var conference = await _context.Conferences.FindAsync(id);
-            _context.Conferences.Remove(conference);
+            var venue = await _context.Venues.FindAsync(id);
+            _context.Venues.Remove(venue);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ConferenceExists(int id)
+        private bool VenueExists(int id)
         {
-            return _context.Conferences.Any(e => e.Id == id);
+            return _context.Venues.Any(e => e.Id == id);
         }
-
-        //GET: Conference/AddSponsor/5
-        public async Task<IActionResult> AddSponsor(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var conference = await _context.Conferences.FindAsync(id);
-            if (conference == null)
-            {
-                return NotFound();
-            }
-            return View(conference);
-        }
-
     }
 }
