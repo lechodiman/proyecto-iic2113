@@ -28,7 +28,8 @@ namespace proyecto_iic2113.Controllers
         // GET: Conference
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Conferences.ToListAsync());
+            var applicationDbContext = _context.Conferences.Include(c => c.Venue);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Conference/Details/5
@@ -41,6 +42,7 @@ namespace proyecto_iic2113.Controllers
 
             var conference = await _context.Conferences
                 .Include(conf => conf.Organizer)
+                .Include(c => c.Venue)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (conference == null)
@@ -56,6 +58,7 @@ namespace proyecto_iic2113.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
+                ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name");
                 return View();
             }
             else
@@ -69,7 +72,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,DateTime")] Conference conference)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,DateTime,VenueId")] Conference conference)
         {
             // conference.Organizer = 
             ApplicationUser currentUser = await _userManager.GetUserAsync(HttpContext.User);
@@ -80,6 +83,7 @@ namespace proyecto_iic2113.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", conference.VenueId);
             return View(conference);
         }
 
@@ -96,6 +100,7 @@ namespace proyecto_iic2113.Controllers
             {
                 return NotFound();
             }
+            ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", conference.VenueId);
             return View(conference);
         }
 
@@ -104,7 +109,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,DateTime")] Conference conference)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,DateTime,VenueId")] Conference conference)
         {
             if (id != conference.Id)
             {
@@ -131,6 +136,7 @@ namespace proyecto_iic2113.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", conference.VenueId);
             return View(conference);
         }
 
@@ -143,6 +149,7 @@ namespace proyecto_iic2113.Controllers
             }
 
             var conference = await _context.Conferences
+                .Include(c => c.Venue)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (conference == null)
             {
@@ -185,5 +192,4 @@ namespace proyecto_iic2113.Controllers
         }
 
     }
-
 }

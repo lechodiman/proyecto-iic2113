@@ -341,4 +341,6 @@ healthchecksdb
 
 # vscode stuff
 .vscode
+
+# AppSettings
 proyecto-iic2113/appsettings.json
