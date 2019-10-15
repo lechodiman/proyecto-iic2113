@@ -19,6 +19,9 @@ namespace proyecto_iic2113.Data
         public DbSet<Talk> Talks { get; set; }
         public DbSet<Venue> Venues { get; set; }
         public DbSet<Equipment> Equipments { get; set; }
+        public DbSet<Party> Parties { get; set; }
+        public DbSet<Resource> Resources { get; set; }
+        public DbSet<Workshop> Workshops { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
     }
