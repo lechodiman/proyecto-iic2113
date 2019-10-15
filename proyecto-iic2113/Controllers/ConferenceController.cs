@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
 
@@ -13,10 +17,12 @@ namespace proyecto_iic2113.Controllers
     public class ConferenceController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ConferenceController(ApplicationDbContext context)
+        public ConferenceController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Conference
@@ -35,8 +41,10 @@ namespace proyecto_iic2113.Controllers
             }
 
             var conference = await _context.Conferences
+                .Include(conf => conf.Organizer)
                 .Include(c => c.Venue)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (conference == null)
             {
                 return NotFound();
@@ -48,8 +56,15 @@ namespace proyecto_iic2113.Controllers
         // GET: Conference/Create
         public IActionResult Create()
         {
-            ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name");
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name");
+                return View();
+            }
+            else
+            {
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // POST: Conference/Create
@@ -59,6 +74,9 @@ namespace proyecto_iic2113.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,DateTime,VenueId")] Conference conference)
         {
+            // conference.Organizer = 
+            ApplicationUser currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            conference.Organizer = currentUser;
             if (ModelState.IsValid)
             {
                 _context.Add(conference);
