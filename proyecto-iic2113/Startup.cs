@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using proyecto_iic2113.Data;
+using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113
 {
@@ -41,7 +42,7 @@ namespace proyecto_iic2113
                 options.UseNpgsql(
                     Configuration.GetConnectionString("PostgresConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<ApplicationUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 

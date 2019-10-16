@@ -12,5 +12,7 @@ namespace proyecto_iic2113.Models
 
         [Required]
         public string Name { get; set; }
+        public Conference Conference { get; set; }
+        public int ConferenceId { get; set; }
     }
 }
