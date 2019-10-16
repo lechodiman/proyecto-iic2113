@@ -1,4 +1,3 @@
-
 # Team 18
 
 ## Some good practices
@@ -42,46 +41,52 @@ Where **branch-type** indicates what is the purpose of the branch. The possible 
 
 In the `documents` directory are some useful files that represent the data model.
 
-
 # proyecto-iic2113
+
 Proyecto Diseño Detallado de Software
 Apuntes por Luis Chodiman
 
 # Ayudantía 3
 
-Creamos un archivo models **Conference** y otro para **Sponsors** 
+Creamos un archivo models **Conference** y otro para **Sponsors**
 
-    namespace TestAplicationModels { 
-    	public class Conference { 
-    		public int Id {get; set} //reserved 
-    		public string Name {get; set;} 
-    		public string Description {get; set;} 
-    		public IEnumerable<Sponsor> Sponsors {get; set;} 
-    	} 
-    } 
-    
-    namespace TestAplicationModels { 
-    	public class Sponsors { 
-    		public string Name {get; set;} 
+```csharp
+    namespace TestAplicationModels {
+    	public class Conference {
+    		public int Id {get; set}
+    		public string Name {get; set;}
     		public string Description {get; set;}
+    		public IEnumerable<Sponsor> Sponsors {get; set;}
     	}
     }
 
-Para trabajar con la db Data/ApplicationDbContext.cs 
+    namespace TestAplicationModels {
+    	public class Sponsors {
+    		public string Name {get; set;}
+    		public string Description {get; set;}
+    	}
+    }
+```
 
-Public DbSet<tipoObjeto> Nombre de la tabla 
+Para trabajar con la db Data/ApplicationDbContext.cs
 
-Definimos atributos de la clase 
+Public DbSet<tipoObjeto> Nombre de la tabla
 
-    Public DbSet<Conference> Conferences {get; set;} 
-    
+Definimos atributos de la clase
+
+```csharp
+    Public DbSet<Conference> Conferences {get; set;}
+
     Public DbSet<Sponsor> Sponsors {get; set;}
+```
 
-Luego en terminal 
+Luego en terminal
 
-    dotnet ef migrations add <MigrationName> 
+```
+    dotnet ef migrations add <MigrationName>
 
     dotnet ef database update
+```
 
 Se genera un archivo nuevo en la carpeta de migrations
 
@@ -91,27 +96,27 @@ Se genera una query de creación de tablas relaciones N a N son tebeos con tabla
 
 - List available migrations
 
-    dotnet ef migrations list
+`dotnet ef migrations list`
 
 - Remove the last migration
 
-    dotnet ef migrations remove
+`dotnet ef migrations remove`
 
 - Drop the database
 
-    dotnet ef database drop
+`dotnet ef database drop`
 
 - List available DbContext types
 
-    dotnet ef dbcontext list
+`dotnet ef dbcontext list`
 
 - Get information about a DbContext type
 
-    dotnet ef dbcontextinfo
+`dotnet ef dbcontextinfo`
 
 - Scaffolds a DbContext and entity types for a database
 
-    dotnet ef dbcontext scaffold
+`dotnet ef dbcontext scaffold`
 
 # Dotnet aspnet-codegenerator
 
