@@ -13,6 +13,10 @@ namespace proyecto_iic2113.Models
         [Required]
         public string FoodName { get; set; }
 
+        [Required]
         public string Type { get; set; }
+
+        public int LaunchId { get; set; }
+        public Launch Launch { get; set; }
     }
 }
