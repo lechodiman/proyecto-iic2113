@@ -27,6 +27,8 @@ namespace proyecto_iic2113.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             // The many to many relationsips need to be configured using the Fluent API below
 
             modelBuilder.Entity<ChatPanelist>()

@@ -7,7 +7,7 @@ namespace proyecto_iic2113.Models
 {
     public class ChatPanelist
     {
-        public int ApplicationUserId { get; set; }
+        public string ApplicationUserId { get; set; }
         public ApplicationUser Panelist { get; set; }
 
         public int ChatId { get; set; }
