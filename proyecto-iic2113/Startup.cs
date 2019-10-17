@@ -40,7 +40,8 @@ namespace proyecto_iic2113
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(
-                    Configuration.GetConnectionString("PostgresConnection")));
+                    Configuration.GetConnectionString("PostgresConnection"),
+                    x => x.UseNetTopologySuite()));
 
             services.AddDefaultIdentity<ApplicationUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
