@@ -6,8 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using proyecto_iic2113.Data;
-
-
 namespace proyecto_iic2113.ViewComponents
 {
     public class ConferenceViewComponent: ViewComponent
