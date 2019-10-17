@@ -15,8 +15,8 @@ namespace proyecto_iic2113.Models
         public string Name { get; set; }
         public string Adress { get; set; }
         public string Photo { get; set; }
+
         public IEnumerable<Conference> Conferences { get; set; }
         public IEnumerable<Room> Rooms { get; set; }
-
     }
 }

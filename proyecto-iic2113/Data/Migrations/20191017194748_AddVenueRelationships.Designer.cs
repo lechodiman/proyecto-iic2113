@@ -10,8 +10,8 @@ using proyecto_iic2113.Data;
 namespace proyecto_iic2113.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191012231451_AddVenueIdToRoom")]
-    partial class AddVenueIdToRoom
+    [Migration("20191017194748_AddVenueRelationships")]
+    partial class AddVenueRelationships
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -61,56 +61,6 @@ namespace proyecto_iic2113.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetRoleClaims");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AccessFailedCount");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256);
-
-                    b.Property<bool>("EmailConfirmed");
-
-                    b.Property<bool>("LockoutEnabled");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("PasswordHash");
-
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<string>("SecurityStamp");
-
-                    b.Property<bool>("TwoFactorEnabled");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasName("UserNameIndex");
-
-                    b.ToTable("AspNetUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -182,6 +132,56 @@ namespace proyecto_iic2113.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("proyecto_iic2113.Models.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed");
+
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers");
+                });
+
             modelBuilder.Entity("proyecto_iic2113.Models.Conference", b =>
                 {
                     b.Property<int>("Id")
@@ -194,13 +194,36 @@ namespace proyecto_iic2113.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
+                    b.Property<string>("OrganizerId");
+
                     b.Property<int?>("VenueId");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OrganizerId");
+
                     b.HasIndex("VenueId");
 
                     b.ToTable("Conferences");
+                });
+
+            modelBuilder.Entity("proyecto_iic2113.Models.Equipment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<int>("RoomId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("Equipments");
                 });
 
             modelBuilder.Entity("proyecto_iic2113.Models.Event", b =>
@@ -208,18 +231,27 @@ namespace proyecto_iic2113.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("DateTime");
+                    b.Property<int>("ConferenceId");
 
                     b.Property<string>("Description");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired();
+
+                    b.Property<DateTime>("EndDate");
 
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<string>("Subject");
+                    b.Property<DateTime>("StartDate");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ConferenceId");
+
                     b.ToTable("Events");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Event");
                 });
 
             modelBuilder.Entity("proyecto_iic2113.Models.Menu", b =>
@@ -261,7 +293,7 @@ namespace proyecto_iic2113.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("ConferenceId");
+                    b.Property<int>("ConferenceId");
 
                     b.Property<string>("Name")
                         .IsRequired();
@@ -290,6 +322,15 @@ namespace proyecto_iic2113.Migrations
                     b.ToTable("Venues");
                 });
 
+            modelBuilder.Entity("proyecto_iic2113.Models.Talk", b =>
+                {
+                    b.HasBaseType("proyecto_iic2113.Models.Event");
+
+                    b.Property<string>("Subject");
+
+                    b.HasDiscriminator().HasValue("Talk");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
@@ -300,7 +341,7 @@ namespace proyecto_iic2113.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("proyecto_iic2113.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -308,7 +349,7 @@ namespace proyecto_iic2113.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("proyecto_iic2113.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -321,7 +362,7 @@ namespace proyecto_iic2113.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("proyecto_iic2113.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -329,7 +370,7 @@ namespace proyecto_iic2113.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("proyecto_iic2113.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -337,9 +378,29 @@ namespace proyecto_iic2113.Migrations
 
             modelBuilder.Entity("proyecto_iic2113.Models.Conference", b =>
                 {
+                    b.HasOne("proyecto_iic2113.Models.ApplicationUser", "Organizer")
+                        .WithMany("Conferences")
+                        .HasForeignKey("OrganizerId");
+
                     b.HasOne("proyecto_iic2113.Models.Venue", "Venue")
                         .WithMany("Conferences")
                         .HasForeignKey("VenueId");
+                });
+
+            modelBuilder.Entity("proyecto_iic2113.Models.Equipment", b =>
+                {
+                    b.HasOne("proyecto_iic2113.Models.Room", "Room")
+                        .WithMany("Equipments")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("proyecto_iic2113.Models.Event", b =>
+                {
+                    b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
+                        .WithMany()
+                        .HasForeignKey("ConferenceId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("proyecto_iic2113.Models.Room", b =>
@@ -352,9 +413,10 @@ namespace proyecto_iic2113.Migrations
 
             modelBuilder.Entity("proyecto_iic2113.Models.Sponsor", b =>
                 {
-                    b.HasOne("proyecto_iic2113.Models.Conference")
+                    b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
                         .WithMany("Sponsors")
-                        .HasForeignKey("ConferenceId");
+                        .HasForeignKey("ConferenceId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
