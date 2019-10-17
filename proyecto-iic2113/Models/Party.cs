@@ -7,6 +7,6 @@ namespace proyecto_iic2113.Models
 {
     public class Party : Event
     {
-
+        public bool HasOpenBar { get; set; }
     }
 }

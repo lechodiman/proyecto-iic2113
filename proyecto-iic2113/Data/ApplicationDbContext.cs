@@ -24,5 +24,27 @@ namespace proyecto_iic2113.Data
         public DbSet<Workshop> Workshops { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // The many to many relationsips need to be configured using the Fluent API below
+
+            modelBuilder.Entity<ChatPanelist>()
+                .HasKey(cp => new { cp.ChatId, cp.ApplicationUserId });
+
+            // The model ChatPanelist has one Chat
+            // And that Chat has many ChatPanelists
+            // And the ChatPanelist uses the foreign key ChatId
+            modelBuilder.Entity<ChatPanelist>()
+                .HasOne(cp => cp.Chat)
+                .WithMany(c => c.ChatPanelists)
+                .HasForeignKey(cp => cp.ChatId);
+
+            modelBuilder.Entity<ChatPanelist>()
+                .HasOne(cp => cp.Panelist)
+                .WithMany(user => user.ChatPanelists)
+                .HasForeignKey(cp => cp.ApplicationUserId);
+
+        }
     }
 }
