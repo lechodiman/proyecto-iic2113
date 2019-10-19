@@ -22,6 +22,7 @@ namespace proyecto_iic2113.Data
         public DbSet<Party> Parties { get; set; }
         public DbSet<Resource> Resources { get; set; }
         public DbSet<Workshop> Workshops { get; set; }
+        public DbSet<Launch> Launches { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
