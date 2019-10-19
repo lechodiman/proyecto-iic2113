@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -31,6 +31,7 @@ namespace proyecto_iic2113.Data
 
             // The many to many relationsips need to be configured using the Fluent API below
 
+            // Chat and User relationship
             modelBuilder.Entity<ChatPanelist>()
                 .HasKey(cp => new { cp.ChatId, cp.ApplicationUserId });
 
@@ -75,5 +76,7 @@ namespace proyecto_iic2113.Data
                 .WithMany(user => user.WorkshopExhibitors)
                 .HasForeignKey(cp => cp.ApplicationUserId);
         }
+
+        public DbSet<proyecto_iic2113.Models.Chat> Chat { get; set; }
     }
 }
