@@ -47,6 +47,33 @@ namespace proyecto_iic2113.Data
                 .WithMany(user => user.ChatPanelists)
                 .HasForeignKey(cp => cp.ApplicationUserId);
 
+            // Talk and User relationship
+            modelBuilder.Entity<TalkLecturer>()
+                .HasKey(cp => new { cp.TalkId, cp.ApplicationUserId });
+
+            modelBuilder.Entity<TalkLecturer>()
+                .HasOne(cp => cp.Talk)
+                .WithMany(c => c.TalkLecturers)
+                .HasForeignKey(cp => cp.TalkId);
+
+            modelBuilder.Entity<TalkLecturer>()
+                .HasOne(cp => cp.Lecturer)
+                .WithMany(user => user.TalkLecturers)
+                .HasForeignKey(cp => cp.ApplicationUserId);
+
+            // Workshop and User relationship
+            modelBuilder.Entity<WorkshopExhibitor>()
+                .HasKey(cp => new { cp.WorkshopId, cp.ApplicationUserId });
+
+            modelBuilder.Entity<WorkshopExhibitor>()
+                .HasOne(cp => cp.Workshop)
+                .WithMany(c => c.WorkshopExhibitors)
+                .HasForeignKey(cp => cp.WorkshopId);
+
+            modelBuilder.Entity<WorkshopExhibitor>()
+                .HasOne(cp => cp.Exhibitor)
+                .WithMany(user => user.WorkshopExhibitors)
+                .HasForeignKey(cp => cp.ApplicationUserId);
         }
     }
 }
