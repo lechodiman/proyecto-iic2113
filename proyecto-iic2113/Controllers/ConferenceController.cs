@@ -42,7 +42,8 @@ namespace proyecto_iic2113.Controllers
             }
 
             var conference = await _context.Conferences
-                .Include(conf => conf.Organizer)
+                .Include(c => c.Organizer)
+                .Include(c => c.Sponsors)
                 .Include(c => c.Venue)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
