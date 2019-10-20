@@ -5,10 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace proyecto_iic2113.Models
 {
-    public class Talk : Event
+    public class Launch : Event
     {
-        public string Subject { get; set; }
-
-        public IEnumerable<TalkLecturer> TalkLecturers { get; set; }
+        public bool IsAllYouCanEat { get; set; }
+        public IEnumerable<Menu> Menus { get; set; }
     }
 }

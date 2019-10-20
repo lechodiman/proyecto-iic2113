@@ -11,5 +11,8 @@ namespace proyecto_iic2113.Models
     {
         public IEnumerable<Conference> Conferences { get; set; }
 
+        public IEnumerable<ChatPanelist> ChatPanelists { get; set; }
+        public IEnumerable<TalkLecturer> TalkLecturers { get; set; }
+        public IEnumerable<WorkshopExhibitor> WorkshopExhibitors { get; set; }
     }
 }

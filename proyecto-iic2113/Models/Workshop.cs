@@ -5,10 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace proyecto_iic2113.Models
 {
-    public class Talk : Event
+    public class Workshop : Event
     {
-        public string Subject { get; set; }
+        public IEnumerable<Resource> Resources { get; set; }
 
-        public IEnumerable<TalkLecturer> TalkLecturers { get; set; }
+        public IEnumerable<WorkshopExhibitor> WorkshopExhibitors { get; set; }
     }
 }
