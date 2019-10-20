@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -54,17 +55,11 @@ namespace proyecto_iic2113.Controllers
         }
 
         // GET: Conference/Create
+        [Authorize]
         public IActionResult Create()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name");
-                return View();
-            }
-            else
-            {
-                return RedirectToAction(nameof(Index));
-            }
+            ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name");
+            return View();
         }
 
         // POST: Conference/Create
