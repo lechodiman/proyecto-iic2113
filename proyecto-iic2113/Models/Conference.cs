@@ -21,6 +21,7 @@ namespace proyecto_iic2113.Models
         public ApplicationUser Organizer { get; set; }
         public int? VenueId { get; set; }
         public Venue Venue { get; set; }
+        public IEnumerable<ConferenceUserAssistee> ConferenceUserAssistees { get; set; } 
 
     }
 }

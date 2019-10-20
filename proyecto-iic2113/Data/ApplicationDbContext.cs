@@ -76,6 +76,20 @@ namespace proyecto_iic2113.Data
                 .HasOne(cp => cp.Exhibitor)
                 .WithMany(user => user.WorkshopExhibitors)
                 .HasForeignKey(cp => cp.ApplicationUserId);
+
+            // Conference and User relationship
+            modelBuilder.Entity<ConferenceUserAssistee>()
+                .HasKey(cp => new { cp.ConferenceId, cp.ApplicationUserId });
+
+            modelBuilder.Entity<ConferenceUserAssistee>()
+                .HasOne(cp => cp.Conference)
+                .WithMany(c => c.ConferenceUserAssistees)
+                .HasForeignKey(cp => cp.ConferenceId);
+
+            modelBuilder.Entity<ConferenceUserAssistee>()
+                .HasOne(cp => cp.UserAssistee)
+                .WithMany(user => user.ConferenceUserAssistees)
+                .HasForeignKey(cp => cp.ApplicationUserId);
         }
 
         public DbSet<proyecto_iic2113.Models.Chat> Chat { get; set; }
