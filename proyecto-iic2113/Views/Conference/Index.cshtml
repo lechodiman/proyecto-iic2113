@@ -40,7 +40,10 @@
                 @Html.DisplayFor(modelItem => item.DateTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Venue.Name)
+                <!--/Venue/Details/1 PLACEHOLDER-->
+                <a asp-action="Details" asp-controller="Venue" asp-route-id= "1">
+                    @Html.DisplayFor(modelItem => item.Venue.Name)
+                </a>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
