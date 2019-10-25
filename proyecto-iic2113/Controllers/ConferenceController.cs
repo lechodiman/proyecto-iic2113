@@ -27,6 +27,7 @@ namespace proyecto_iic2113.Controllers
         }
 
         // GET: Conference
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Conferences.Include(c => c.Venue).Include(c => c.Organizer);
@@ -37,6 +38,7 @@ namespace proyecto_iic2113.Controllers
         }
 
         // GET: Conference/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
