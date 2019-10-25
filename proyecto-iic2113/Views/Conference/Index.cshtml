@@ -41,8 +41,11 @@
             </td>
             <td>
                 <!--/Venue/Details/1 PLACEHOLDER-->
+                <!-- No estoy teniendo acceso a las variables del item desde el html, no funcionan si son ints -->
+                <!-- @item.Venue.Id.ToString() No funciona -->
                 <a asp-action="Details" asp-controller="Venue" asp-route-id= "1">
                     @Html.DisplayFor(modelItem => item.Venue.Name)
+                    @Html.DisplayFor(modelItem => item.Venue.Id)
                 </a>
             </td>
             <td>

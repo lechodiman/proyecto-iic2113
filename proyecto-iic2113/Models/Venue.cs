@@ -13,7 +13,7 @@ namespace proyecto_iic2113.Models
 
         [Required(ErrorMessage = "Name cannot be blank")]
         public string Name { get; set; }
-        public string Adress { get; set; }
+        public string Adress { get; set; } //Mal escrito
         public string Photo { get; set; }
 
         public IEnumerable<Conference> Conferences { get; set; }
