@@ -26,6 +26,7 @@ namespace proyecto_iic2113.Controllers
         }
 
         // GET: Venue/Details/5
+        [HttpGet("{id}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
