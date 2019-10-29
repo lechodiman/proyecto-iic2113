@@ -17,7 +17,8 @@ namespace proyecto_iic2113.ViewComponents
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            return View(await _context.Conferences.ToListAsync());
+            var applicationDbContext = _context.Conferences.Include(c => c.Venue);
+            return View(await applicationDbContext.ToListAsync());
         }
     }
 }

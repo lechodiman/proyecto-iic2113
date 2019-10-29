@@ -1,5 +1,6 @@
 ﻿body {
-    background-image: url('Images/conference.jpg');
+    background-image: url('Images/airbnb.jpg');
     background-repeat: no-repeat;
     background-attachment: fixed;
+    background-size: cover;
 }

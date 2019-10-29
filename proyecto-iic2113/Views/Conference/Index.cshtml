@@ -6,16 +6,16 @@
 
 <h1 class="text-center">Conferences</h1>
 
-<br />
-
 <p>
-    <a asp-action="Create">Create New</a>
+    <form asp-action="Create">
+        <input type="submit" class="btn btn-primary btn-lg" value="Create new">
+    </form>
 </p>
 
 @foreach (var item in Model)
 {
-    <div class="card">
-        <div class="card-header">
+    <div class="card border-dark mb-3">
+        <div class="card-header text-white bg-dark">
             <div class="row justify-content-between">
                 <div> <a> @Html.DisplayFor(modelItem => item.DateTime) </a> </div>
                 <div><a> Conference </a></div>
@@ -23,7 +23,7 @@
             </div>
         </div>
 
-        <div class="card-body">
+        <div class="card-body text-info">
             <div class="row justify-content-center">
                 <h3 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h3>
             </div>
@@ -35,13 +35,19 @@
             <div class="container">
                 <div class="row justify-content-between">
                     <div>
-                       <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <form asp-action="Edit" asp-route-id="@item.Id">
+                            <input type="submit" class="btn btn-info" value="Edit">
+                        </form>
                     </div>
                     <div>
-                       <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        <form asp-action="Details" asp-route-id="@item.Id">
+                            <input type="submit" class="btn btn-info" value="Details">
+                        </form>
                     </div>
                     <div>
-                       <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <form asp-action="Delete" asp-route-id="@item.Id">
+                            <input type="submit" class="btn btn-info" value="Delete">
+                        </form>
                     </div>
                 </div>
             </div>
