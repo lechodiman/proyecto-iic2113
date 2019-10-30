@@ -15,8 +15,6 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Mvc.Authorization;
-
 
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;

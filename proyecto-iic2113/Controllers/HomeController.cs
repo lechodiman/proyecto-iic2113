@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-using proyecto_iic2113.Models;
-using proyecto_iic2113.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
+
+using proyecto_iic2113.Data;
+using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
 {
