@@ -12,23 +12,23 @@ using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
 {
-    public class SponsorController : Controller
+    public class MenuController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public SponsorController(ApplicationDbContext context)
+        public MenuController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Sponsor
+        // GET: Menu
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Sponsors.Include(s => s.Conference);
+            var applicationDbContext = _context.Menus.Include(m => m.Launch);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Sponsor/Details/5
+        // GET: Menu/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -36,43 +36,42 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var sponsor = await _context.Sponsors
-                .Include(s => s.Conference)
+            var menu = await _context.Menus
+                .Include(m => m.Launch)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (sponsor == null)
+            if (menu == null)
             {
                 return NotFound();
             }
 
-            return View(sponsor);
+            return View(menu);
         }
 
-        // GET: Sponsor/Create/5
-        public async Task<IActionResult> Create(int? id)
+        // GET: Menu/Create
+        public IActionResult Create()
         {
-            var conference = await _context.Conferences.FindAsync(id);
-            ViewData["Conference"] = conference;
+            ViewData["LaunchId"] = new SelectList(_context.Launches, "Id", "Name");
             return View();
         }
 
-        // POST: Sponsor/Create/5
+        // POST: Menu/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,ConferenceId")] Sponsor sponsor)
+        public async Task<IActionResult> Create([Bind("Id,FoodName,IsVegan,LaunchId")] Menu menu)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(sponsor);
+                _context.Add(menu);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Conference", new { id = sponsor.ConferenceId });
+                return RedirectToAction(nameof(Index));
             }
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", sponsor.ConferenceId);
-            return View(sponsor);
+            ViewData["LaunchId"] = new SelectList(_context.Launches, "Id", "Discriminator", menu.LaunchId);
+            return View(menu);
         }
 
-        // GET: Sponsor/Edit/5
+        // GET: Menu/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,23 +79,23 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var sponsor = await _context.Sponsors.FindAsync(id);
-            if (sponsor == null)
+            var menu = await _context.Menus.FindAsync(id);
+            if (menu == null)
             {
                 return NotFound();
             }
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", sponsor.ConferenceId);
-            return View(sponsor);
+            ViewData["LaunchId"] = new SelectList(_context.Launches, "Id", "Discriminator", menu.LaunchId);
+            return View(menu);
         }
 
-        // POST: Sponsor/Edit/5
+        // POST: Menu/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ConferenceId")] Sponsor sponsor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FoodName,IsVegan,LaunchId")] Menu menu)
         {
-            if (id != sponsor.Id)
+            if (id != menu.Id)
             {
                 return NotFound();
             }
@@ -105,12 +104,12 @@ namespace proyecto_iic2113.Controllers
             {
                 try
                 {
-                    _context.Update(sponsor);
+                    _context.Update(menu);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SponsorExists(sponsor.Id))
+                    if (!MenuExists(menu.Id))
                     {
                         return NotFound();
                     }
@@ -121,11 +120,11 @@ namespace proyecto_iic2113.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", sponsor.ConferenceId);
-            return View(sponsor);
+            ViewData["LaunchId"] = new SelectList(_context.Launches, "Id", "Discriminator", menu.LaunchId);
+            return View(menu);
         }
 
-        // GET: Sponsor/Delete/5
+        // GET: Menu/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,31 +132,31 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var sponsor = await _context.Sponsors
-                .Include(s => s.Conference)
+            var menu = await _context.Menus
+                .Include(m => m.Launch)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (sponsor == null)
+            if (menu == null)
             {
                 return NotFound();
             }
 
-            return View(sponsor);
+            return View(menu);
         }
 
-        // POST: Sponsor/Delete/5
+        // POST: Menu/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var sponsor = await _context.Sponsors.FindAsync(id);
-            _context.Sponsors.Remove(sponsor);
+            var menu = await _context.Menus.FindAsync(id);
+            _context.Menus.Remove(menu);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SponsorExists(int id)
+        private bool MenuExists(int id)
         {
-            return _context.Sponsors.Any(e => e.Id == id);
+            return _context.Menus.Any(e => e.Id == id);
         }
     }
 }

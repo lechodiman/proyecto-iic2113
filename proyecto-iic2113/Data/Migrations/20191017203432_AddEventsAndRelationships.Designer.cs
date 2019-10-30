@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using proyecto_iic2113.Data;
@@ -9,9 +10,10 @@ using proyecto_iic2113.Data;
 namespace proyecto_iic2113.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191017203432_AddEventsAndRelationships")]
+    partial class AddEventsAndRelationships
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -305,8 +307,6 @@ namespace proyecto_iic2113.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("Capacity");
-
                     b.Property<string>("Name")
                         .IsRequired();
 
@@ -338,19 +338,6 @@ namespace proyecto_iic2113.Migrations
                     b.ToTable("Sponsors");
                 });
 
-            modelBuilder.Entity("proyecto_iic2113.Models.TalkLecturer", b =>
-                {
-                    b.Property<int>("TalkId");
-
-                    b.Property<string>("ApplicationUserId");
-
-                    b.HasKey("TalkId", "ApplicationUserId");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.ToTable("TalkLecturer");
-                });
-
             modelBuilder.Entity("proyecto_iic2113.Models.Venue", b =>
                 {
                     b.Property<int>("Id")
@@ -368,19 +355,6 @@ namespace proyecto_iic2113.Migrations
                     b.ToTable("Venues");
                 });
 
-            modelBuilder.Entity("proyecto_iic2113.Models.WorkshopExhibitor", b =>
-                {
-                    b.Property<int>("WorkshopId");
-
-                    b.Property<string>("ApplicationUserId");
-
-                    b.HasKey("WorkshopId", "ApplicationUserId");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.ToTable("WorkshopExhibitor");
-                });
-
             modelBuilder.Entity("proyecto_iic2113.Models.Chat", b =>
                 {
                     b.HasBaseType("proyecto_iic2113.Models.Event");
@@ -395,8 +369,6 @@ namespace proyecto_iic2113.Migrations
             modelBuilder.Entity("proyecto_iic2113.Models.Launch", b =>
                 {
                     b.HasBaseType("proyecto_iic2113.Models.Event");
-
-                    b.Property<bool>("IsAllYouCanEat");
 
                     b.HasDiscriminator().HasValue("Launch");
                 });
@@ -540,32 +512,6 @@ namespace proyecto_iic2113.Migrations
                     b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
                         .WithMany("Sponsors")
                         .HasForeignKey("ConferenceId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("proyecto_iic2113.Models.TalkLecturer", b =>
-                {
-                    b.HasOne("proyecto_iic2113.Models.ApplicationUser", "Lecturer")
-                        .WithMany("TalkLecturers")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("proyecto_iic2113.Models.Talk", "Talk")
-                        .WithMany("TalkLecturers")
-                        .HasForeignKey("TalkId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("proyecto_iic2113.Models.WorkshopExhibitor", b =>
-                {
-                    b.HasOne("proyecto_iic2113.Models.ApplicationUser", "Exhibitor")
-                        .WithMany("WorkshopExhibitors")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("proyecto_iic2113.Models.Workshop", "Workshop")
-                        .WithMany("WorkshopExhibitors")
-                        .HasForeignKey("WorkshopId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -42,8 +42,25 @@
         </dd>
     </dl>
 </div>
+
 <div>
-    <a asp-action="Create" asp-controller="Sponsor">Add Sponsor</a>
+    <h2>
+        @Html.DisplayFor(model => model.Name)
+        Sponsors
+    </h2>
+
+    <ul>
+        @foreach (var sponsor in Model.Sponsors) {
+            <li>
+                @sponsor.Name
+            </li>
+        }
+    </ul>
+    
+</div>
+
+<div>
+    <a asp-action="Create" asp-controller="Sponsor" asp-route-id=@Model.Id>Add Sponsor</a>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |

@@ -12,23 +12,23 @@ using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
 {
-    public class SponsorController : Controller
+    public class ResourceController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public SponsorController(ApplicationDbContext context)
+        public ResourceController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Sponsor
+        // GET: Resource
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Sponsors.Include(s => s.Conference);
+            var applicationDbContext = _context.Resources.Include(r => r.Workshop);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Sponsor/Details/5
+        // GET: Resource/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -36,43 +36,42 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var sponsor = await _context.Sponsors
-                .Include(s => s.Conference)
+            var resource = await _context.Resources
+                .Include(r => r.Workshop)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (sponsor == null)
+            if (resource == null)
             {
                 return NotFound();
             }
 
-            return View(sponsor);
+            return View(resource);
         }
 
-        // GET: Sponsor/Create/5
-        public async Task<IActionResult> Create(int? id)
+        // GET: Resource/Create
+        public IActionResult Create()
         {
-            var conference = await _context.Conferences.FindAsync(id);
-            ViewData["Conference"] = conference;
+            ViewData["WorkshopId"] = new SelectList(_context.Workshops, "Id", "Name");
             return View();
         }
 
-        // POST: Sponsor/Create/5
+        // POST: Resource/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,ConferenceId")] Sponsor sponsor)
+        public async Task<IActionResult> Create([Bind("Id,ResourceUrl,WorkshopId")] Resource resource)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(sponsor);
+                _context.Add(resource);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Conference", new { id = sponsor.ConferenceId });
+                return RedirectToAction(nameof(Index));
             }
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", sponsor.ConferenceId);
-            return View(sponsor);
+            ViewData["WorkshopId"] = new SelectList(_context.Workshops, "Id", "Discriminator", resource.WorkshopId);
+            return View(resource);
         }
 
-        // GET: Sponsor/Edit/5
+        // GET: Resource/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,23 +79,23 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var sponsor = await _context.Sponsors.FindAsync(id);
-            if (sponsor == null)
+            var resource = await _context.Resources.FindAsync(id);
+            if (resource == null)
             {
                 return NotFound();
             }
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", sponsor.ConferenceId);
-            return View(sponsor);
+            ViewData["WorkshopId"] = new SelectList(_context.Workshops, "Id", "Discriminator", resource.WorkshopId);
+            return View(resource);
         }
 
-        // POST: Sponsor/Edit/5
+        // POST: Resource/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ConferenceId")] Sponsor sponsor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ResourceUrl,WorkshopId")] Resource resource)
         {
-            if (id != sponsor.Id)
+            if (id != resource.Id)
             {
                 return NotFound();
             }
@@ -105,12 +104,12 @@ namespace proyecto_iic2113.Controllers
             {
                 try
                 {
-                    _context.Update(sponsor);
+                    _context.Update(resource);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SponsorExists(sponsor.Id))
+                    if (!ResourceExists(resource.Id))
                     {
                         return NotFound();
                     }
@@ -121,11 +120,11 @@ namespace proyecto_iic2113.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", sponsor.ConferenceId);
-            return View(sponsor);
+            ViewData["WorkshopId"] = new SelectList(_context.Workshops, "Id", "Discriminator", resource.WorkshopId);
+            return View(resource);
         }
 
-        // GET: Sponsor/Delete/5
+        // GET: Resource/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,31 +132,31 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var sponsor = await _context.Sponsors
-                .Include(s => s.Conference)
+            var resource = await _context.Resources
+                .Include(r => r.Workshop)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (sponsor == null)
+            if (resource == null)
             {
                 return NotFound();
             }
 
-            return View(sponsor);
+            return View(resource);
         }
 
-        // POST: Sponsor/Delete/5
+        // POST: Resource/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var sponsor = await _context.Sponsors.FindAsync(id);
-            _context.Sponsors.Remove(sponsor);
+            var resource = await _context.Resources.FindAsync(id);
+            _context.Resources.Remove(resource);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SponsorExists(int id)
+        private bool ResourceExists(int id)
         {
-            return _context.Sponsors.Any(e => e.Id == id);
+            return _context.Resources.Any(e => e.Id == id);
         }
     }
 }

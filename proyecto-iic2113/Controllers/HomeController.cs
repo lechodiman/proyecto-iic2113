@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 using proyecto_iic2113.Models;
 using proyecto_iic2113.Data;
 using Microsoft.EntityFrameworkCore;

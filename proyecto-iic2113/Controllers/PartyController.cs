@@ -2,33 +2,31 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
 {
-    public class SponsorController : Controller
+    public class PartyController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public SponsorController(ApplicationDbContext context)
+        public PartyController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Sponsor
+        // GET: Party
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Sponsors.Include(s => s.Conference);
+            var applicationDbContext = _context.Parties.Include(p => p.Conference);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Sponsor/Details/5
+        // GET: Party/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -36,43 +34,42 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var sponsor = await _context.Sponsors
-                .Include(s => s.Conference)
+            var party = await _context.Parties
+                .Include(p => p.Conference)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (sponsor == null)
+            if (party == null)
             {
                 return NotFound();
             }
 
-            return View(sponsor);
+            return View(party);
         }
 
-        // GET: Sponsor/Create/5
-        public async Task<IActionResult> Create(int? id)
+        // GET: Party/Create
+        public IActionResult Create()
         {
-            var conference = await _context.Conferences.FindAsync(id);
-            ViewData["Conference"] = conference;
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name");
             return View();
         }
 
-        // POST: Sponsor/Create/5
+        // POST: Party/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,ConferenceId")] Sponsor sponsor)
+        public async Task<IActionResult> Create([Bind("HasOpenBar,Id,Name,StartDate,EndDate,Description,ConferenceId")] Party party)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(sponsor);
+                _context.Add(party);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Conference", new { id = sponsor.ConferenceId });
+                return RedirectToAction(nameof(Index));
             }
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", sponsor.ConferenceId);
-            return View(sponsor);
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", party.ConferenceId);
+            return View(party);
         }
 
-        // GET: Sponsor/Edit/5
+        // GET: Party/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,23 +77,23 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var sponsor = await _context.Sponsors.FindAsync(id);
-            if (sponsor == null)
+            var party = await _context.Parties.FindAsync(id);
+            if (party == null)
             {
                 return NotFound();
             }
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", sponsor.ConferenceId);
-            return View(sponsor);
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", party.ConferenceId);
+            return View(party);
         }
 
-        // POST: Sponsor/Edit/5
+        // POST: Party/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ConferenceId")] Sponsor sponsor)
+        public async Task<IActionResult> Edit(int id, [Bind("HasOpenBar,Id,Name,StartDate,EndDate,Description,ConferenceId")] Party party)
         {
-            if (id != sponsor.Id)
+            if (id != party.Id)
             {
                 return NotFound();
             }
@@ -105,12 +102,12 @@ namespace proyecto_iic2113.Controllers
             {
                 try
                 {
-                    _context.Update(sponsor);
+                    _context.Update(party);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SponsorExists(sponsor.Id))
+                    if (!PartyExists(party.Id))
                     {
                         return NotFound();
                     }
@@ -121,11 +118,11 @@ namespace proyecto_iic2113.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", sponsor.ConferenceId);
-            return View(sponsor);
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", party.ConferenceId);
+            return View(party);
         }
 
-        // GET: Sponsor/Delete/5
+        // GET: Party/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,31 +130,31 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var sponsor = await _context.Sponsors
-                .Include(s => s.Conference)
+            var party = await _context.Parties
+                .Include(p => p.Conference)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (sponsor == null)
+            if (party == null)
             {
                 return NotFound();
             }
 
-            return View(sponsor);
+            return View(party);
         }
 
-        // POST: Sponsor/Delete/5
+        // POST: Party/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var sponsor = await _context.Sponsors.FindAsync(id);
-            _context.Sponsors.Remove(sponsor);
+            var party = await _context.Parties.FindAsync(id);
+            _context.Parties.Remove(party);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SponsorExists(int id)
+        private bool PartyExists(int id)
         {
-            return _context.Sponsors.Any(e => e.Id == id);
+            return _context.Parties.Any(e => e.Id == id);
         }
     }
 }

@@ -2,33 +2,31 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
 {
-    public class SponsorController : Controller
+    public class ChatController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public SponsorController(ApplicationDbContext context)
+        public ChatController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Sponsor
+        // GET: Chat
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Sponsors.Include(s => s.Conference);
+            var applicationDbContext = _context.Chat.Include(c => c.Conference).Include(c => c.Moderator);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Sponsor/Details/5
+        // GET: Chat/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -36,43 +34,45 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var sponsor = await _context.Sponsors
-                .Include(s => s.Conference)
+            var chat = await _context.Chat
+                .Include(c => c.Conference)
+                .Include(c => c.Moderator)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (sponsor == null)
+            if (chat == null)
             {
                 return NotFound();
             }
 
-            return View(sponsor);
+            return View(chat);
         }
 
-        // GET: Sponsor/Create/5
-        public async Task<IActionResult> Create(int? id)
+        // GET: Chat/Create
+        public IActionResult Create()
         {
-            var conference = await _context.Conferences.FindAsync(id);
-            ViewData["Conference"] = conference;
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name");
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
-        // POST: Sponsor/Create/5
+        // POST: Chat/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,ConferenceId")] Sponsor sponsor)
+        public async Task<IActionResult> Create([Bind("ApplicationUserId,Id,Name,StartDate,EndDate,Description,ConferenceId")] Chat chat)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(sponsor);
+                _context.Add(chat);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Conference", new { id = sponsor.ConferenceId });
+                return RedirectToAction(nameof(Index));
             }
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", sponsor.ConferenceId);
-            return View(sponsor);
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", chat.ConferenceId);
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", chat.ApplicationUserId);
+            return View(chat);
         }
 
-        // GET: Sponsor/Edit/5
+        // GET: Chat/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,23 +80,24 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var sponsor = await _context.Sponsors.FindAsync(id);
-            if (sponsor == null)
+            var chat = await _context.Chat.FindAsync(id);
+            if (chat == null)
             {
                 return NotFound();
             }
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", sponsor.ConferenceId);
-            return View(sponsor);
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", chat.ConferenceId);
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", chat.ApplicationUserId);
+            return View(chat);
         }
 
-        // POST: Sponsor/Edit/5
+        // POST: Chat/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ConferenceId")] Sponsor sponsor)
+        public async Task<IActionResult> Edit(int id, [Bind("ApplicationUserId,Id,Name,StartDate,EndDate,Description,ConferenceId")] Chat chat)
         {
-            if (id != sponsor.Id)
+            if (id != chat.Id)
             {
                 return NotFound();
             }
@@ -105,12 +106,12 @@ namespace proyecto_iic2113.Controllers
             {
                 try
                 {
-                    _context.Update(sponsor);
+                    _context.Update(chat);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SponsorExists(sponsor.Id))
+                    if (!ChatExists(chat.Id))
                     {
                         return NotFound();
                     }
@@ -121,11 +122,12 @@ namespace proyecto_iic2113.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", sponsor.ConferenceId);
-            return View(sponsor);
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", chat.ConferenceId);
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", chat.ApplicationUserId);
+            return View(chat);
         }
 
-        // GET: Sponsor/Delete/5
+        // GET: Chat/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,31 +135,32 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var sponsor = await _context.Sponsors
-                .Include(s => s.Conference)
+            var chat = await _context.Chat
+                .Include(c => c.Conference)
+                .Include(c => c.Moderator)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (sponsor == null)
+            if (chat == null)
             {
                 return NotFound();
             }
 
-            return View(sponsor);
+            return View(chat);
         }
 
-        // POST: Sponsor/Delete/5
+        // POST: Chat/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var sponsor = await _context.Sponsors.FindAsync(id);
-            _context.Sponsors.Remove(sponsor);
+            var chat = await _context.Chat.FindAsync(id);
+            _context.Chat.Remove(chat);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SponsorExists(int id)
+        private bool ChatExists(int id)
         {
-            return _context.Sponsors.Any(e => e.Id == id);
+            return _context.Chat.Any(e => e.Id == id);
         }
     }
 }
