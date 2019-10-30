@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +19,11 @@ namespace proyecto_iic2113.Data
         public DbSet<Talk> Talks { get; set; }
         public DbSet<Venue> Venues { get; set; }
         public DbSet<Equipment> Equipments { get; set; }
+
+        internal static Task<string> ToListAsync()
+        {
+            throw new NotImplementedException();
+        }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
     }

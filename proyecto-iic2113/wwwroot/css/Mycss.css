@@ -1,6 +1,6 @@
-﻿body {
-    background-image: url('Images/airbnb.jpg');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+﻿
+.jumbotron {
+    background-image: url("Images/airbnb.jpg");
     background-size: cover;
+    height: 10vh;
 }

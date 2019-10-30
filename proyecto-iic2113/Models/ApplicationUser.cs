@@ -11,5 +11,9 @@ namespace proyecto_iic2113.Models
     {
         public IEnumerable<Conference> Conferences { get; set; }
 
+        public bool IsOrganizer(Conference conference)
+        {
+            return conference.Organizer.Id == Id;
+        }
     }
 }

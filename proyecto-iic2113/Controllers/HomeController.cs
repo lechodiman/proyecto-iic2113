@@ -5,14 +5,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using proyecto_iic2113.Models;
+using proyecto_iic2113.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace proyecto_iic2113.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private ApplicationDbContext _context;
+        public HomeController(ApplicationDbContext context)
         {
-            return View();
+            _context = context;
+        }
+        public async Task<IActionResult> Index()
+        {
+            var applicationDbContext = _context.Conferences.Include(c => c.Venue);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         public IActionResult Privacy()
