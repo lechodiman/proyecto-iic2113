@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +23,11 @@ namespace proyecto_iic2113.Data
         public DbSet<Resource> Resources { get; set; }
         public DbSet<Workshop> Workshops { get; set; }
         public DbSet<Launch> Launches { get; set; }
+
+        internal static Task<string> ToListAsync()
+        {
+            throw new NotImplementedException();
+        }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
