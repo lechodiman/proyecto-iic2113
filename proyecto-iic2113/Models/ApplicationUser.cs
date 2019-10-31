@@ -14,5 +14,10 @@ namespace proyecto_iic2113.Models
         public IEnumerable<ChatPanelist> ChatPanelists { get; set; }
         public IEnumerable<TalkLecturer> TalkLecturers { get; set; }
         public IEnumerable<WorkshopExhibitor> WorkshopExhibitors { get; set; }
+
+        public bool IsOrganizer(Conference conference)
+        {
+            return conference.Organizer.Id == Id;
+        }
     }
 }
