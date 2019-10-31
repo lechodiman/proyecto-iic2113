@@ -8,24 +8,22 @@
 
 <div class="container">
 
-    <form asp-action="Create">
-        <input type="submit" class="btn btn-primary btn-lg" value="Create new">
-    </form>
+    <a asp-action="Create" class="btn btn-primary btn-lg">Create new</a>
 
     <br />
 
     @foreach (var item in Model)
     {
         <div class="card border-dark mb-3">
-            <div class="card-header text-white bg-dark">
-                <div class="row justify-content-between">
+            <div class="card-header text-white bg-success">
+                <div class="row justify-content-around">
                     <div> <a> @Html.DisplayFor(modelItem => item.DateTime) </a> </div>
                     <div><a> Conference </a></div>
                     <div> <a> @Html.DisplayFor(modelItem => item.Venue.Name) </a> </div>
                 </div>
             </div>
 
-            <div class="card-body text-info">
+            <div class="card-body text-dark">
                 <div class="row justify-content-center">
                     <h3 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h3>
                 </div>
@@ -35,17 +33,17 @@
                     </div>
                 </blockquote>
                 <div class="container">
-                    <div class="row justify-content-between">
+                    <div class="row justify-content-around">
                         <div>
-                            <form asp-action="Details" asp-route-id="@item.Id">
-                                <input type="submit" class="btn btn-info" value="Details">
-                            </form>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
                         </div>
                         @if (User.Identity.IsAuthenticated && ViewBag.UserId == item.Organizer.Id)
                         {
-                            <div class="d-inline-block">
-                                | <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            <div>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-info">Edit</a>
+                            </div>
+                            <div>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-info">Delete</a>
                             </div>
                         }
                     </div>

@@ -3,47 +3,46 @@
 @{
     ViewData["Title"] = "Home Page";
 }
+    <body id="HomepageBody">
 
-<div class="jumbotron jumbotron-fluid">
-    <div class="container-fluid">
-        <h1 class="display-4">Welcome</h1>
-        <p class="lead">Here you'll find any conference you want.</p>
-        <hr class="my-4">
-        <p>Let's search.</p>
-    </div>
-</div>
+        <h1 class="text-center">Index</h1>
 
-<h1 class="text-center">Index</h1>
+        <div class="container">
 
-<div class="container">
-
-    @foreach (var item in Model)
-    {
-        <div class="card border-dark mb-3">
-            <div class="card-header text-white bg-dark">
-                <div class="row justify-content-between">
-                    <div> <a> @Html.DisplayFor(modelItem => item.DateTime) </a> </div>
-                    <div><a> Conference </a></div>
-                    <div> <a> @Html.DisplayFor(modelItem => item.Venue.Name) </a> </div>
-                </div>
-            </div>
-
-            <div class="card-body text-info">
-                <div class="row justify-content-center">
-                    <h3 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h3>
-                </div>
-                <blockquote class="blockquote mb-0">
-                    <div class="row justify-content-center">
-                        <p> @Html.DisplayFor(modelItem => item.Description) </p>
+            @foreach (var item in Model)
+            {
+                <div class="card border-dark mb-3">
+                    <div class="card-header text-white bg-success ">
+                        <div class="row justify-content-around">
+                            <div> <a> @Html.DisplayFor(modelItem => item.DateTime) </a> </div>
+                            <div><a> Conference </a></div>
+                            <div> <a> @Html.DisplayFor(modelItem => item.Venue.Name) </a> </div>
+                        </div>
                     </div>
-                </blockquote>
-            </div>
+
+                    <div class="card-body text-dark">
+                        <div class="row justify-content-center">
+                            <h3 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h3>
+                        </div>
+                        <blockquote class="blockquote mb-0">
+                            <div class="row justify-content-center">
+                                <p> @Html.DisplayFor(modelItem => item.Description) </p>
+                            </div>
+                        </blockquote>
+                    </div>
+                </div>
+
+                <br />
+
+            }
+
+
         </div>
 
-        <br />
+    </body>
+    
 
-    }
 
 
-</div>
+
 
