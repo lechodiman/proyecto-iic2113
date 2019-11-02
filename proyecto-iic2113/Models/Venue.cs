@@ -13,6 +13,7 @@ namespace proyecto_iic2113.Models
 
         [Required(ErrorMessage = "Name cannot be blank")]
         public string Name { get; set; }
+        [Required(ErrorMessage = "An adress in needed")]
         public string Adress { get; set; }
         public string Photo { get; set; }
 
