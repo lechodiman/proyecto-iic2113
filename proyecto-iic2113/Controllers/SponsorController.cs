@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
 
@@ -45,25 +47,26 @@ namespace proyecto_iic2113.Controllers
             return View(sponsor);
         }
 
-        // GET: Sponsor/Create
-        public IActionResult Create()
+        // GET: Sponsor/Create/5
+        public async Task<IActionResult> Create(int? id)
         {
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name");
+            var conference = await _context.Conferences.FindAsync(id);
+            ViewData["Conference"] = conference;
             return View();
         }
 
-        // POST: Sponsor/Create
+        // POST: Sponsor/Create/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,ConferenceId")] Sponsor sponsor)
+        public async Task<IActionResult> Create([Bind("Name,ConferenceId")] Sponsor sponsor)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(sponsor);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Conference", new { id = sponsor.ConferenceId });
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", sponsor.ConferenceId);
             return View(sponsor);
