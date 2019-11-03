@@ -56,7 +56,13 @@
             </li>
         }
     </ul>
+
+    <div>
+        <a asp-action="Create" asp-controller="Sponsor" asp-route-id=@Model.Id class="btn btn-outline-secondary">Add Sponsor</a>
+    </div>
 </div>
+
+
 
 <div>
     <h2>
@@ -71,18 +77,19 @@
             </li>
         }
     </ul>
+    
+    <form asp-action="AttendConference">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Attend Conference" class="btn btn-outline-secondary" />
+    </form>
 </div>
-
-<div>
-    <a asp-action="Create" asp-controller="Sponsor" asp-route-id=@Model.Id>Add Sponsor</a>
-</div>
-
-<form asp-action="AttendConference">
-    <input type="hidden" asp-for="Id" />
-    <input type="submit" value="Attend Conference" class="btn btn-outline-secondary" />
-</form>
 
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

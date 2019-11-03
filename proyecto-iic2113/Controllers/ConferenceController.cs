@@ -176,17 +176,27 @@ namespace proyecto_iic2113.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AttendConference(int id)
         {
-            // TODO: Check if user is already attending this conference
 
             var conference = await _context.Conferences.FindAsync(id);
             var currentUser = await GetCurrentUserAsync();
 
-            var conferenceUserAttendee = new ConferenceUserAttendee();
-            conferenceUserAttendee.UserAttendee = currentUser;
-            conferenceUserAttendee.Conference = conference;
+            var existingConferenceUserAttendee = await _context.ConferenceUserAttendees.SingleOrDefaultAsync(m => m.ConferenceId == conference.Id && m.ApplicationUserId == currentUser.Id);
 
-            _context.ConferenceUserAttendees.Add(conferenceUserAttendee);
-            await _context.SaveChangesAsync();
+            // Check if user is already attending this conference
+            if (existingConferenceUserAttendee != null)
+            {
+                ModelState.AddModelError(string.Empty, "You are already attending this conference");
+                // TODO: Show this error to a view
+            }
+            else
+            {
+                var conferenceUserAttendee = new ConferenceUserAttendee();
+                conferenceUserAttendee.UserAttendee = currentUser;
+                conferenceUserAttendee.Conference = conference;
+
+                _context.ConferenceUserAttendees.Add(conferenceUserAttendee);
+                await _context.SaveChangesAsync();
+            }
 
             return RedirectToAction(nameof(Details), new { id = id });
         }
