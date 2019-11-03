@@ -78,17 +78,17 @@ namespace proyecto_iic2113.Data
                 .HasForeignKey(cp => cp.ApplicationUserId);
 
             // Conference and User relationship
-            modelBuilder.Entity<ConferenceUserAssistee>()
+            modelBuilder.Entity<ConferenceUserAttendee>()
                 .HasKey(cp => new { cp.ConferenceId, cp.ApplicationUserId });
 
-            modelBuilder.Entity<ConferenceUserAssistee>()
+            modelBuilder.Entity<ConferenceUserAttendee>()
                 .HasOne(cp => cp.Conference)
-                .WithMany(c => c.ConferenceUserAssistees)
+                .WithMany(c => c.ConferenceUserAttendees)
                 .HasForeignKey(cp => cp.ConferenceId);
 
-            modelBuilder.Entity<ConferenceUserAssistee>()
-                .HasOne(cp => cp.UserAssistee)
-                .WithMany(user => user.ConferenceUserAssistees)
+            modelBuilder.Entity<ConferenceUserAttendee>()
+                .HasOne(cp => cp.UserAttendee)
+                .WithMany(user => user.ConferenceUserAttendees)
                 .HasForeignKey(cp => cp.ApplicationUserId);
         }
 

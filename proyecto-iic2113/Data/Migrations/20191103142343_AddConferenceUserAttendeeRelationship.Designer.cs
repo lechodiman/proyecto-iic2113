@@ -10,8 +10,8 @@ using proyecto_iic2113.Data;
 namespace proyecto_iic2113.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191020204526_AddConferenceUserAssisteeRelationship")]
-    partial class AddConferenceUserAssisteeRelationship
+    [Migration("20191103142343_AddConferenceUserAttendeeRelationship")]
+    partial class AddConferenceUserAttendeeRelationship
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -220,7 +220,7 @@ namespace proyecto_iic2113.Migrations
                     b.ToTable("Conferences");
                 });
 
-            modelBuilder.Entity("proyecto_iic2113.Models.ConferenceUserAssistee", b =>
+            modelBuilder.Entity("proyecto_iic2113.Models.ConferenceUserAttendee", b =>
                 {
                     b.Property<int>("ConferenceId");
 
@@ -230,7 +230,7 @@ namespace proyecto_iic2113.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("ConferenceUserAssistee");
+                    b.ToTable("ConferenceUserAttendee");
                 });
 
             modelBuilder.Entity("proyecto_iic2113.Models.Equipment", b =>
@@ -510,15 +510,15 @@ namespace proyecto_iic2113.Migrations
                         .HasForeignKey("VenueId");
                 });
 
-            modelBuilder.Entity("proyecto_iic2113.Models.ConferenceUserAssistee", b =>
+            modelBuilder.Entity("proyecto_iic2113.Models.ConferenceUserAttendee", b =>
                 {
-                    b.HasOne("proyecto_iic2113.Models.ApplicationUser", "UserAssistee")
-                        .WithMany("ConferenceUserAssistees")
+                    b.HasOne("proyecto_iic2113.Models.ApplicationUser", "UserAttendee")
+                        .WithMany("ConferenceUserAttendees")
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
-                        .WithMany("ConferenceUserAssistees")
+                        .WithMany("ConferenceUserAttendees")
                         .HasForeignKey("ConferenceId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
