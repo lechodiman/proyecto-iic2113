@@ -56,12 +56,32 @@
             </li>
         }
     </ul>
-    
+</div>
+
+<div>
+    <h2>
+        @Html.DisplayFor(model => model.Name)
+        Attendees
+    </h2>
+    <ul>
+        @foreach (var conferenceUserAttendee in Model.ConferenceUserAttendees)
+        {
+            <li>
+                @conferenceUserAttendee.UserAttendee.Email
+            </li>
+        }
+    </ul>
 </div>
 
 <div>
     <a asp-action="Create" asp-controller="Sponsor" asp-route-id=@Model.Id>Add Sponsor</a>
 </div>
+
+<form asp-action="AttendConference">
+    <input type="hidden" asp-for="Id" />
+    <input type="submit" value="Attend Conference" class="btn btn-outline-secondary" />
+</form>
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
