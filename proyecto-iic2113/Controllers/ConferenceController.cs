@@ -51,6 +51,7 @@ namespace proyecto_iic2113.Controllers
                 .Include(c => c.Sponsors)
                 .Include(c => c.Venue)
                 .Include(c => c.ConferenceUserAttendees)
+                .ThenInclude(conferenceUserAttendee => conferenceUserAttendee.UserAttendee)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (conference == null)
