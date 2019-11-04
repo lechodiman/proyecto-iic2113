@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +24,7 @@ namespace proyecto_iic2113.Data
         public DbSet<Resource> Resources { get; set; }
         public DbSet<Workshop> Workshops { get; set; }
         public DbSet<Launch> Launches { get; set; }
+        public DbSet<ConferenceUserAttendee> ConferenceUserAttendees { get; set; }
 
         internal static Task<string> ToListAsync()
         {
@@ -80,6 +82,20 @@ namespace proyecto_iic2113.Data
             modelBuilder.Entity<WorkshopExhibitor>()
                 .HasOne(cp => cp.Exhibitor)
                 .WithMany(user => user.WorkshopExhibitors)
+                .HasForeignKey(cp => cp.ApplicationUserId);
+
+            // Conference and User relationship
+            modelBuilder.Entity<ConferenceUserAttendee>()
+                .HasKey(cp => new { cp.ConferenceId, cp.ApplicationUserId });
+
+            modelBuilder.Entity<ConferenceUserAttendee>()
+                .HasOne(cp => cp.Conference)
+                .WithMany(c => c.ConferenceUserAttendees)
+                .HasForeignKey(cp => cp.ConferenceId);
+
+            modelBuilder.Entity<ConferenceUserAttendee>()
+                .HasOne(cp => cp.UserAttendee)
+                .WithMany(user => user.ConferenceUserAttendees)
                 .HasForeignKey(cp => cp.ApplicationUserId);
         }
 

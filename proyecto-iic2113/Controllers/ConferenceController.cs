@@ -50,6 +50,8 @@ namespace proyecto_iic2113.Controllers
                 .Include(c => c.Organizer)
                 .Include(c => c.Sponsors)
                 .Include(c => c.Venue)
+                .Include(c => c.ConferenceUserAttendees)
+                .ThenInclude(conferenceUserAttendee => conferenceUserAttendee.UserAttendee)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (conference == null)
@@ -169,6 +171,35 @@ namespace proyecto_iic2113.Controllers
             _context.Conferences.Remove(conference);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AttendConference(int id)
+        {
+
+            var conference = await _context.Conferences.FindAsync(id);
+            var currentUser = await GetCurrentUserAsync();
+
+            var existingConferenceUserAttendee = await _context.ConferenceUserAttendees.SingleOrDefaultAsync(m => m.ConferenceId == conference.Id && m.ApplicationUserId == currentUser.Id);
+
+            // Check if user is already attending this conference
+            if (existingConferenceUserAttendee != null)
+            {
+                ModelState.AddModelError(string.Empty, "You are already attending this conference");
+                // TODO: Show this error to a view
+            }
+            else
+            {
+                var conferenceUserAttendee = new ConferenceUserAttendee();
+                conferenceUserAttendee.UserAttendee = currentUser;
+                conferenceUserAttendee.Conference = conference;
+
+                _context.ConferenceUserAttendees.Add(conferenceUserAttendee);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Details), new { id = id });
         }
 
         private bool ConferenceExists(int id)
