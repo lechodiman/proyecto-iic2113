@@ -23,7 +23,9 @@ namespace proyecto_iic2113.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Conferences.Include(c => c.Venue);
+            var applicationDbContext = _context.Conferences.Include(c => c.Venue).Take(3);
+            var venues = _context.Venues.Take(3);
+            ViewBag.venues = venues;
             return View(await applicationDbContext.ToListAsync());
         }
 

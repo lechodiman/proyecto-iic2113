@@ -1,48 +1,65 @@
 ﻿@model IEnumerable<proyecto_iic2113.Models.Conference>
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Welcome to DCConferences";
 }
-    <body id="HomepageBody">
 
-        <h1 class="text-center">Index</h1>
+<h1 class="display-4 text-center">Welcome to DCConferences</h1>
 
-        <div class="container">
+<h3 class="text-center text-muted">Explore</h3>
 
-            @foreach (var item in Model)
-            {
-                <div class="card border-dark mb-3">
-                    <div class="card-header text-white bg-success ">
-                        <div class="row justify-content-around">
-                            <div> <a> @Html.DisplayFor(modelItem => item.DateTime) </a> </div>
-                            <div><a> Conference </a></div>
-                            <div> <a> @Html.DisplayFor(modelItem => item.Venue.Name) </a> </div>
-                        </div>
-                    </div>
+<div class="row my-3">
+    <div class="col-sm-4 text-center">
+        <a asp-controller="Conference" asp-action="Index" class="btn btn-outline-info"><i class="fas fa-user-friends"> </i>Conferences</a>
+    </div>
+    <div class="col-sm-4 text-center">
+        <a asp-controller="Event" asp-action="Index" class="btn btn-outline-info"><i class="fas fa-calendar-week"></i> Events</a>
+    </div>
+    <div class="col-sm-4 text-center">
+        <a asp-controller="Venue" asp-action="Index" class="btn btn-outline-info"><i class="fas fa-map-marker-alt"></i> Venues</a> 
+    </div>
+</div>
 
-                    <div class="card-body text-dark">
-                        <div class="row justify-content-center">
-                            <h3 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h3>
-                        </div>
-                        <blockquote class="blockquote mb-0">
-                            <div class="row justify-content-center">
-                                <p> @Html.DisplayFor(modelItem => item.Description) </p>
-                            </div>
-                        </blockquote>
-                    </div>
+<h3 class="text-center text-muted">Recent Conferences</h3>
+
+<div class="container">
+
+    @foreach (var item in Model)
+    {
+        <div class="card border-dark mb-3">
+            <div class="card-header text-white bg-success ">
+                <div class="row justify-content-around">
+                    <div> <a> @Html.DisplayFor(modelItem => item.DateTime) </a> </div>
+                    <div><a> Conference </a></div>
+                    <div> <a> @Html.DisplayFor(modelItem => item.Venue.Name) </a> </div>
                 </div>
+            </div>
 
-                <br />
-
-            }
-
-
+            <div class="card-body text-dark">
+                <div class="row justify-content-center">
+                    <h3 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h3>
+                </div>
+                <blockquote class="blockquote mb-0">
+                    <div class="row justify-content-center">
+                        <p> @Html.DisplayFor(modelItem => item.Description) </p>
+                    </div>
+                </blockquote>
+            </div>
         </div>
+        <br />
+    }
+</div>
 
-    </body>
-    
+<h3 class="text-center text-muted">Recent Venues</h3>
 
-
-
-
-
+<div class="container">
+    <div class="row">
+        @foreach (var venue in ViewBag.venues)
+        {
+            <div class="col-sm-4 shadow-lg p-3 mb-5 bg-white rounded">
+                <h3>@venue.Name</h3>
+                <p>@venue.Adress</p>
+            </div>
+        }
+    </div>
+</div>

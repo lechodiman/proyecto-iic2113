@@ -19,6 +19,7 @@
               crossorigin="anonymous"
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
     </environment>
+    <script src="https://kit.fontawesome.com/0dfb443657.js" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="~/css/site.css" />
 
@@ -27,7 +28,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">proyecto_iic2113</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DCConferences</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -36,10 +37,7 @@
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Conference" asp-action="Index">Conferences</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Conference" asp-action="Index"><i class="fas fa-user-friends"></i> Explore Conferences</a>
                         </li>
                     </ul>
                 </div>
@@ -56,7 +54,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2019 - proyecto_iic2113 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2019 - DCConferences - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
 
