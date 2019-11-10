@@ -208,5 +208,6 @@ namespace proyecto_iic2113.Controllers
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
     }
 }
