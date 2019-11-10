@@ -52,10 +52,7 @@
 
 
         <p>
-            <a  asp-action="Details" asp-controller="Venue" asp-route-id= "1"> @Html.DisplayFor(model => model.Venue.Name) </a>
-        </p>
-        <p>
-            @Html.DisplayFor(model => model.Venue.Adress)
+            <a  asp-action="Details" asp-controller="Venue" asp-route-id= "1"> @Html.DisplayFor(model => model.Venue.Name): @Html.DisplayFor(model => model.Venue.Adress)</a>
         </p>
 
         <h3 class="text-muted">Attendees</h3>
