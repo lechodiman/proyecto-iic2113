@@ -208,5 +208,12 @@ namespace proyecto_iic2113.Controllers
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
+        // [HttpGet]
+        // public IActionResult GetVenueController()
+        // {
+        //     var url = Url.Action("Details", "Venue");
+        //     return Ok(url);
+        // }
     }
 }
