@@ -52,7 +52,8 @@
 
 <b>Menus:</b>
 @foreach (var menu in Model.Menus) {
-    <a>@menu.FoodName, </a>
+<a asp-action="Details" asp-controller="Menu" asp-route-id= "@menu.Id">@menu.FoodName</a>
+<a>, </a>
 }
 
 
