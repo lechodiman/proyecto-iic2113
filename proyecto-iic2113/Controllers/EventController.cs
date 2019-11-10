@@ -28,7 +28,7 @@ namespace proyecto_iic2113.Controllers
             var parties = _context.Parties
                 .Include(party => party.Conference)
                 .Take(numberOfEventsPerType);
-            var workshops = _context.Parties
+            var workshops = _context.Workshops
                 .Include(workshop => workshop.Conference)
                 .Take(numberOfEventsPerType);
             var launches = _context.Launches
