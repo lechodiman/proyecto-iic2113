@@ -13,6 +13,15 @@ using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
 {
+    public static class StringExt
+    {
+        public static string Truncate(this string value, int maxLength)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+            return value.Length <= maxLength ? value : value.Substring(0, maxLength);
+        }
+    }
+
     [AllowAnonymous]
     public class EventController : Controller
     {
@@ -28,7 +37,7 @@ namespace proyecto_iic2113.Controllers
             var parties = _context.Parties
                 .Include(party => party.Conference)
                 .Take(numberOfEventsPerType);
-            var workshops = _context.Parties
+            var workshops = _context.Workshops
                 .Include(workshop => workshop.Conference)
                 .Take(numberOfEventsPerType);
             var launches = _context.Launches
