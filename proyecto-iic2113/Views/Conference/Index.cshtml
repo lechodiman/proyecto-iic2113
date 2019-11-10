@@ -4,55 +4,49 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1 class="text-center">Conferences</h1>
+<div class="container">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Venue)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateTime)
-            </td>
-            <td>
-                <!--/Venue/Details/1 PLACEHOLDER-->
-                <!-- No estoy teniendo acceso a las variables del item desde el html, no funcionan si son ints -->
-                <a asp-action="Details" asp-controller="Venue" asp-route-id = "1" >
-                    @Html.DisplayFor(modelItem => item.Venue.Name)
-                    @Html.DisplayFor(modelItem => item.Venue.Id)
-                </a>
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <a asp-action="Create" class="btn btn-outline-primary">Create new</a>
+
+    @foreach (var item in Model)
+    {
+        <div class="card border-dark my-3">
+            <div class="card-header text-white bg-success">
+                <div class="row justify-content-around">
+                    <div> <a> @Html.DisplayFor(modelItem => item.DateTime) </a> </div>
+                    <div><a> Conference </a></div>
+                    <div> <a> @Html.DisplayFor(modelItem => item.Venue.Name) </a> </div>
+                </div>
+            </div>
+
+            <div class="card-body text-dark">
+                <div class="row justify-content-center">
+                    <h3 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h3>
+                </div>
+                <blockquote class="blockquote mb-0">
+                    <div class="row justify-content-center">
+                        <p> @Html.DisplayFor(modelItem => item.Description) </p>
+                    </div>
+                </blockquote>
+                <div class="container">
+                    <div class="row justify-content-around">
+                        <div>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                        </div>
+                        @if (User.Identity.IsAuthenticated && ViewBag.UserId == item.Organizer.Id)
+                        {
+                            <div>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-info">Edit</a>
+                            </div>
+                            <div>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-info">Delete</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+    }
+</div>

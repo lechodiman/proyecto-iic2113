@@ -22,4 +22,8 @@
   <ItemGroup>
     <Content Remove="Views\Conference\AddSponsor.cshtml" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\css\Images\" />
+  </ItemGroup>
 </Project>

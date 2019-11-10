@@ -4,65 +4,71 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<div class="container">
+    <h1 class="display-4">@Html.DisplayFor(model => model.Name)</h1>
 
-<div>
-    <h4>Conference</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
+    <div class="container">
+        <hr>
+        <div class="row justify-content-end">
+            <form asp-action="AttendConference">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <input type="submit" value="Attend Conference" class="btn btn-outline-success" />
+            </form>
+        </div>
+
+        <div class="row justify-content-end my-3">
+            <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.Id"><i class="fas fa-pencil-alt"></i></a>
+        </div>
+
+        <h3 class="text-muted">Description</h3>
+        <p>
             @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DateTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Organizer)
-        </dt>
-        <dd class = "col-sm-10">
+        </p>
+
+        <h3 class="text-muted">Organizer</h3>
+        <p>
             @Html.DisplayFor(model => model.Organizer.Email)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Venue)
-        </dt>
-        <dd class = "col-sm-10">
+        </p>
+
+        <h3 class="text-muted">Sponsors</h3>
+        <ul class="list-group">
+            @foreach (var sponsor in Model.Sponsors) {
+                <li class="list-group-item">
+                    @sponsor.Name
+                </li>
+            }
+        </ul>
+        <div>
+            <a asp-action="Create" asp-controller="Sponsor" asp-route-id=@Model.Id class="btn btn-outline-secondary">Add Sponsor</a>
+        </div>
+
+        <h3 class="text-muted">Date</h3>
+        <p>
+            @Html.DisplayFor(model => model.DateTime)
+        </p>
+        
+        <h3 class="text-muted">Location</h3>
+        <p>
             @Html.DisplayFor(model => model.Venue.Name)
-        </dd>
-    </dl>
+        </p>
+        <p>
+            @Html.DisplayFor(model => model.Venue.Adress)
+        </p>
+
+        <h3 class="text-muted">Attendees</h3>
+        <ul class="list-group">
+            @foreach (var conferenceUserAttendee in Model.ConferenceUserAttendees)
+            {
+                <li class="list-group-item">
+                    @conferenceUserAttendee.UserAttendee.Email
+                </li>
+            }
+        </ul>
+    </div>
 </div>
 
-<div>
-    <h2>
-        @Html.DisplayFor(model => model.Name)
-        Sponsors
-    </h2>
 
-    <ul>
-        @foreach (var sponsor in Model.Sponsors) {
-            <li>
-                @sponsor.Name
-            </li>
-        }
-    </ul>
-    
-</div>
-
-<div>
-    <a asp-action="Create" asp-controller="Sponsor" asp-route-id=@Model.Id>Add Sponsor</a>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

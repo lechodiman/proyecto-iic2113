@@ -1,0 +1,33 @@
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container">
+
+    <h1 class="display-4">Events</h1>
+
+    <h3 class="text-center text-muted">Recent Parties</h3>
+
+    <div class="card-group">
+
+        @foreach (var item in ViewBag.parties) {
+
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-text text-info">@item.StartDate - @item.EndDate</p>
+                    <h5 class="card-title">@item.Name</h5>
+                    <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
+                </div>
+            </div>
+        }
+
+    </div>
+
+    <br>
+
+    <a asp-controller="Party" asp-action="Index" class="btn btn-outline-secondary">See more</a>
+
+    <h3 class="text-center text-muted">Recent Workshops</h3>
+
+</div>
+
