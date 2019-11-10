@@ -35,7 +35,7 @@
         <ul class="list-group">
             @foreach (var sponsor in Model.Sponsors) {
                 <li class="list-group-item">
-                    @sponsor.Name
+                    <a asp-action="Details" asp-controller="Sponsor" asp-route-id= "1">@sponsor.Name</a>
                 </li>
             }
         </ul>
