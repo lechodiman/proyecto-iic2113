@@ -36,6 +36,7 @@ namespace proyecto_iic2113.Controllers
 
             var launch = await _context.Launches
                 .Include(l => l.Conference)
+                .Include(l => l.Menus)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (launch == null)
             {
