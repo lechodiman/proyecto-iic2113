@@ -23,7 +23,12 @@
 
             <div class="card-body text-dark">
                 <div class="row justify-content-center">
-                    <h3 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h3>
+                    <h3 class="card-title">
+                        <a asp-action="Details" asp-route-id="@item.Id">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </a>
+                        
+                    </h3>
                 </div>
                 <blockquote class="blockquote mb-0">
                     <div class="row justify-content-center">
@@ -32,9 +37,6 @@
                 </blockquote>
                 <div class="container">
                     <div class="row justify-content-around">
-                        <div>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
-                        </div>
                         @if (User.Identity.IsAuthenticated && ViewBag.UserId == item.Organizer.Id)
                         {
                             <div>

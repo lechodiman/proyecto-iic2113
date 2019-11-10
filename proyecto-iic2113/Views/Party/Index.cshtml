@@ -52,7 +52,10 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Conference.Name)
+                <!-- Puede que falten ifs que revisen la existencia de la variable para no botar la URL -->
+                <a asp-action="Details" asp-controller="Conference" asp-route-id= "@item.Conference.Id"> 
+                    @Html.DisplayFor(modelItem => item.Conference.Name)
+                </a>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
