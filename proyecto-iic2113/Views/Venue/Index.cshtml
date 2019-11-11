@@ -7,7 +7,10 @@
 <div class="container">
     <h1 class="display-4">Venues Available</h1>
 
-    <a asp-action="Create" class="btn btn-outline-primary">Create New</a>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a asp-action="Create" class="btn btn-outline-primary">Create New</a>
+    }
 
     <div class="row my-3">
         @foreach (var venue in Model)
@@ -15,9 +18,14 @@
             <div class="col-sm-4 shadow-lg p-3 mb-5 bg-white rounded">
                 <h3>@venue.Name</h3>
                 <p>@venue.Adress</p>
-                <a asp-action="Edit" asp-route-id="@venue.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@venue.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@venue.Id">Delete</a>
+                <a asp-action="Details" asp-route-id="@venue.Id">Details</a>
+                @if (User.Identity.IsAuthenticated && ViewBag.UserId == venue.Owner.Id)
+                {
+                    <div>
+                        <a asp-action="Edit" asp-route-id="@venue.Id">Edit</a> |
+                        <a asp-action="Delete" asp-route-id="@venue.Id">Delete</a>
+                    </div>
+                }
             </div>
         }
     </div>

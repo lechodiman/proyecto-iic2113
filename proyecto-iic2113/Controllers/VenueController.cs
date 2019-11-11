@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -25,9 +26,12 @@ namespace proyecto_iic2113.Controllers
         }
 
         // GET: Venue
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Venues.ToListAsync());
+            var user = await GetCurrentUserAsync();
+            ViewBag.UserId = user?.Id;
+            return View(await _context.Venues.Include(v => v.Owner).ToListAsync());
         }
 
         // GET: Venue/Details/5
