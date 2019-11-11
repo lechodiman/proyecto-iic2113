@@ -28,7 +28,12 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Photo)
         </dd>
-    </dl>
+
+        <div>
+        <a asp-action="Create" asp-controller="Room" asp-route-id=@Model.Id class="btn btn-outline-secondary">Add Room</a>
+        </div>
+
+    </dl>ç
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |

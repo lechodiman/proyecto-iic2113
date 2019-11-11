@@ -53,7 +53,9 @@
 
         <p>
             <!-- Se caera si el modelo no tiene definida estas variables! Importante usar una seed correcta -->
-            <a  asp-action="Details" asp-controller="Venue" asp-route-id= "@Model.Venue.Id"> @Html.DisplayFor(model => model.Venue.Name): @Html.DisplayFor(model => model.Venue.Adress)</a>
+            @if(Model.Venue != null) {
+                <a  asp-action="Details" asp-controller="Venue" asp-route-id= "@Model.Venue.Id"> @Html.DisplayFor(model => model.Venue.Name): @Html.DisplayFor(model => model.Venue.Adress)</a>
+            }   
         </p>
 
 

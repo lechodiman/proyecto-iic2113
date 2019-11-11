@@ -46,9 +46,11 @@ namespace proyecto_iic2113.Controllers
         }
 
         // GET: Room/Create
-        public IActionResult Create()
-        {
-            ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name");
+        public async Task<IActionResult> Create(int? id)
+        {   
+            var venue = await _context.Venues.FindAsync(id);
+            ViewData["Venue"] = venue;
+            Console.WriteLine(venue);
             return View();
         }
 
@@ -63,7 +65,7 @@ namespace proyecto_iic2113.Controllers
             {
                 _context.Add(room);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Venue", new { id = room.VenueId });
             }
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", room.VenueId);
             return View(room);
