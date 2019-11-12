@@ -48,6 +48,16 @@
         </dd>
     </dl>
 </div>
+
+<b>Menus:</b>
+@foreach (var menu in Model.Menus) {
+    <ul class="list-group">
+        <li class="list-group-item">
+            <a asp-action="Details" asp-controller="Menu" asp-route-id= "@menu.Id">@menu.FoodName</a>
+        </li>
+    </ul>
+}
+
 <div>
     @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
     {

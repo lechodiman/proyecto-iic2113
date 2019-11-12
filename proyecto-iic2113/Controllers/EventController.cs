@@ -21,7 +21,7 @@ namespace proyecto_iic2113.Controllers
         {
             _context = context;
         }
-        public ViewResult Index()
+        public async Task<IActionResult> Index()
         {
             var numberOfEventsPerType = 3;
 
@@ -41,11 +41,11 @@ namespace proyecto_iic2113.Controllers
                 .Include(talk => talk.Conference)
                 .Take(numberOfEventsPerType);
 
-            ViewBag.parties = parties;
-            ViewBag.workshops = workshops;
-            ViewBag.launches = launches;
-            ViewBag.chats = chats;
-            ViewBag.talks = talks;
+            ViewBag.parties = await parties.ToListAsync();
+            ViewBag.workshops = await workshops.ToListAsync();
+            ViewBag.launches = await launches.ToListAsync();
+            ViewBag.chats = await chats.ToListAsync();
+            ViewBag.talks = await talks.ToListAsync();
 
             return View();
         }
