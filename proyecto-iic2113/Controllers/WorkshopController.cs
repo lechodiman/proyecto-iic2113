@@ -7,22 +7,28 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace proyecto_iic2113.Controllers
 {
     public class WorkshopController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public WorkshopController(ApplicationDbContext context)
+        public WorkshopController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Workshop
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Workshops.Include(w => w.Conference);
+            var applicationDbContext = _context.Workshops.Include(w => w.Conference).ThenInclude(c => c.Organizer);
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -36,7 +42,13 @@ namespace proyecto_iic2113.Controllers
 
             var workshop = await _context.Workshops
                 .Include(w => w.Conference)
+                .ThenInclude(conference => conference.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
+            
             if (workshop == null)
             {
                 return NotFound();
@@ -77,10 +89,18 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var workshop = await _context.Workshops.FindAsync(id);
+            var workshop = await _context.Workshops
+                .Include(w => w.Conference)
+                .ThenInclude(conference => conference.Organizer)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (workshop == null)
             {
                 return NotFound();
+            }
+            var user = await GetCurrentUserAsync();
+            if (user.Id != workshop.Conference.Organizer.Id)
+            {
+                return RedirectToAction(nameof(Index));
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", workshop.ConferenceId);
             return View(workshop);
@@ -156,5 +176,6 @@ namespace proyecto_iic2113.Controllers
         {
             return _context.Workshops.Any(e => e.Id == id);
         }
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }

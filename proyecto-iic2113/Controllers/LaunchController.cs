@@ -7,22 +7,28 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace proyecto_iic2113.Controllers
 {
     public class LaunchController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public LaunchController(ApplicationDbContext context)
+        public LaunchController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Launch
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Launches.Include(l => l.Conference);
+            var applicationDbContext = _context.Launches.Include(l => l.Conference).ThenInclude(c => c.Organizer);
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -36,7 +42,13 @@ namespace proyecto_iic2113.Controllers
 
             var launch = await _context.Launches
                 .Include(l => l.Conference)
+                .ThenInclude(conference => conference.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
+
             if (launch == null)
             {
                 return NotFound();
@@ -77,10 +89,19 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var launch = await _context.Launches.FindAsync(id);
+            var launch = await _context.Launches
+                .Include(l => l.Conference)
+                .ThenInclude(conference => conference.Organizer)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (launch == null)
             {
                 return NotFound();
+            }
+
+            var user = await GetCurrentUserAsync();
+            if (user.Id != launch.Conference.Organizer.Id)
+            {
+                return RedirectToAction(nameof(Index));
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", launch.ConferenceId);
             return View(launch);
@@ -156,5 +177,6 @@ namespace proyecto_iic2113.Controllers
         {
             return _context.Launches.Any(e => e.Id == id);
         }
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }

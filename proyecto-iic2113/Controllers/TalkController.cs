@@ -7,22 +7,28 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace proyecto_iic2113.Controllers
 {
     public class TalkController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public TalkController(ApplicationDbContext context)
+        public TalkController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Talk
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Talks.Include(t => t.Conference);
+            var applicationDbContext = _context.Talks.Include(t => t.Conference).ThenInclude(c => c.Organizer);
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -36,7 +42,13 @@ namespace proyecto_iic2113.Controllers
 
             var talk = await _context.Talks
                 .Include(t => t.Conference)
+                .ThenInclude(conference => conference.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
+            
             if (talk == null)
             {
                 return NotFound();
@@ -77,10 +89,18 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var talk = await _context.Talks.FindAsync(id);
+            var talk = await _context.Talks
+                .Include(t => t.Conference)
+                .ThenInclude(conference => conference.Organizer)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (talk == null)
             {
                 return NotFound();
+            }
+            var user = await GetCurrentUserAsync();
+            if (user.Id != talk.Conference.Organizer.Id)
+            {
+                return RedirectToAction(nameof(Index));
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", talk.ConferenceId);
             return View(talk);
@@ -156,5 +176,7 @@ namespace proyecto_iic2113.Controllers
         {
             return _context.Talks.Any(e => e.Id == id);
         }
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }

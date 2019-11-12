@@ -17,9 +17,12 @@
             </form>
         </div>
 
+        @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
+        {
         <div class="row justify-content-end my-3">
             <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.Id"><i class="fas fa-pencil-alt"></i></a>
         </div>
+        }
 
         <h3 class="text-muted">Description</h3>
         <p>
@@ -39,9 +42,13 @@
                 </li>
             }
         </ul>
-        <div>
-            <a asp-action="Create" asp-controller="Sponsor" asp-route-id=@Model.Id class="btn btn-outline-secondary">Add Sponsor</a>
-        </div>
+        
+        @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
+        {
+            <div>
+                <a asp-action="Create" asp-controller="Sponsor" asp-route-id=@Model.Id class="btn btn-outline-secondary">Add Sponsor</a>
+            </div>
+        }
 
         <h3 class="text-muted">Date</h3>
         <p>
@@ -50,11 +57,9 @@
 
         <h3 class="text-muted">Location</h3>
 
-
         <p>
             <a  asp-action="Details" asp-controller="Venue" asp-route-id= "@Model.Venue.Id"> @Html.DisplayFor(model => model.Venue.Name): @Html.DisplayFor(model => model.Venue.Adress)</a>
         </p>
-
 
         <h3 class="text-muted">Attendees</h3>
         <ul class="list-group">

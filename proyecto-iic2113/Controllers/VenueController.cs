@@ -2,9 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
 
@@ -13,16 +17,21 @@ namespace proyecto_iic2113.Controllers
     public class VenueController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public VenueController(ApplicationDbContext context)
+        public VenueController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Venue
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Venues.ToListAsync());
+            var user = await GetCurrentUserAsync();
+            ViewBag.UserId = user?.Id;
+            return View(await _context.Venues.Include(v => v.Owner).ToListAsync());
         }
 
         // GET: Venue/Details/5
@@ -34,7 +43,11 @@ namespace proyecto_iic2113.Controllers
             }
 
             var venue = await _context.Venues
+                .Include(v => v.Owner)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            var user = await GetCurrentUserAsync();
+            ViewBag.UserId = user?.Id;
             if (venue == null)
             {
                 return NotFound();
@@ -56,6 +69,9 @@ namespace proyecto_iic2113.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Adress,Photo")] Venue venue)
         {
+            ApplicationUser currentUser = await GetCurrentUserAsync();
+            venue.Owner = currentUser;
+
             if (ModelState.IsValid)
             {
                 _context.Add(venue);
@@ -73,10 +89,17 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var venue = await _context.Venues.FindAsync(id);
+            var venue = await _context.Venues
+                .Include(v => v.Owner)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (venue == null)
             {
                 return NotFound();
+            }
+            var user = await GetCurrentUserAsync();
+            if (user.Id != venue.Owner.Id)
+            {
+                return RedirectToAction(nameof(Index));
             }
             return View(venue);
         }
@@ -149,5 +172,7 @@ namespace proyecto_iic2113.Controllers
         {
             return _context.Venues.Any(e => e.Id == id);
         }
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }

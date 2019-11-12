@@ -7,22 +7,28 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace proyecto_iic2113.Controllers
 {
     public class RoomController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public RoomController(ApplicationDbContext context)
+        public RoomController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Room
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Rooms.Include(r => r.Venue);
+            var applicationDbContext = _context.Rooms.Include(r => r.Venue).ThenInclude(Venue => Venue.Owner);
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -36,7 +42,12 @@ namespace proyecto_iic2113.Controllers
 
             var room = await _context.Rooms
                 .Include(r => r.Venue)
+                .ThenInclude(Venue => Venue.Owner)
                 .FirstOrDefaultAsync(m => m.Id == id);
+                
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
             if (room == null)
             {
                 return NotFound();
@@ -77,10 +88,18 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var room = await _context.Rooms.FindAsync(id);
+            var room = await _context.Rooms
+                .Include(r => r.Venue)
+                .ThenInclude(Venue => Venue.Owner)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (room == null)
             {
                 return NotFound();
+            }
+            var user = await GetCurrentUserAsync();
+            if (user.Id != room.Venue.Owner.Id)
+            {
+                return RedirectToAction(nameof(Index));
             }
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", room.VenueId);
             return View(room);
@@ -156,5 +175,7 @@ namespace proyecto_iic2113.Controllers
         {
             return _context.Rooms.Any(e => e.Id == id);
         }
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }

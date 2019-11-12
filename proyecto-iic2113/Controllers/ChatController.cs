@@ -7,22 +7,30 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace proyecto_iic2113.Controllers
 {
     public class ChatController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ChatController(ApplicationDbContext context)
+        public ChatController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Chat
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Chat.Include(c => c.Conference).Include(c => c.Moderator);
+            var applicationDbContext = _context.Chat.Include(chat => chat.Moderator)
+                                                    .Include(chat => chat.Conference)
+                                                    .ThenInclude(conference => conference.Organizer);
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -35,9 +43,15 @@ namespace proyecto_iic2113.Controllers
             }
 
             var chat = await _context.Chat
-                .Include(c => c.Conference)
                 .Include(c => c.Moderator)
+                .Include(c => c.Conference)
+                .ThenInclude(conference => conference.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
+            
             if (chat == null)
             {
                 return NotFound();
@@ -80,11 +94,20 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var chat = await _context.Chat.FindAsync(id);
+            var chat = await _context.Chat
+                .Include(c => c.Conference)
+                .ThenInclude(conference => conference.Organizer)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (chat == null)
             {
                 return NotFound();
             }
+            var user = await GetCurrentUserAsync();
+            if (user.Id != chat.Conference.Organizer.Id)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", chat.ConferenceId);
             ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", chat.ApplicationUserId);
             return View(chat);
@@ -162,5 +185,6 @@ namespace proyecto_iic2113.Controllers
         {
             return _context.Chat.Any(e => e.Id == id);
         }
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }

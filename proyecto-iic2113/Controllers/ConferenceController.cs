@@ -54,6 +54,10 @@ namespace proyecto_iic2113.Controllers
                 .ThenInclude(conferenceUserAttendee => conferenceUserAttendee.UserAttendee)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
+
             if (conference == null)
             {
                 return NotFound();
@@ -77,7 +81,6 @@ namespace proyecto_iic2113.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,DateTime,VenueId")] Conference conference)
         {
-            // conference.Organizer = 
             ApplicationUser currentUser = await GetCurrentUserAsync();
             conference.Organizer = currentUser;
             if (ModelState.IsValid)
@@ -98,10 +101,17 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var conference = await _context.Conferences.FindAsync(id);
+            var conference = await _context.Conferences
+                .Include(c => c.Organizer)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (conference == null)
             {
                 return NotFound();
+            }
+            var user = await GetCurrentUserAsync();
+            if (user.Id != conference.Organizer.Id)
+            {
+                return RedirectToAction(nameof(Index));
             }
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", conference.VenueId);
             return View(conference);

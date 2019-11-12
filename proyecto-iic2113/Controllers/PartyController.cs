@@ -7,22 +7,28 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace proyecto_iic2113.Controllers
 {
     public class PartyController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PartyController(ApplicationDbContext context)
+        public PartyController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Party
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Parties.Include(p => p.Conference);
+            var applicationDbContext = _context.Parties.Include(p => p.Conference).ThenInclude(c => c.Organizer);
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -36,7 +42,11 @@ namespace proyecto_iic2113.Controllers
 
             var party = await _context.Parties
                 .Include(p => p.Conference)
+                .ThenInclude(conference => conference.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
             if (party == null)
             {
                 return NotFound();
@@ -77,10 +87,18 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var party = await _context.Parties.FindAsync(id);
+            var party = await _context.Parties
+                .Include(p => p.Conference)
+                .ThenInclude(conference => conference.Organizer)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (party == null)
             {
                 return NotFound();
+            }
+            var user = await GetCurrentUserAsync();
+            if (user.Id != party.Conference.Organizer.Id)
+            {
+                return RedirectToAction(nameof(Index));
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", party.ConferenceId);
             return View(party);
@@ -156,5 +174,7 @@ namespace proyecto_iic2113.Controllers
         {
             return _context.Parties.Any(e => e.Id == id);
         }
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }
