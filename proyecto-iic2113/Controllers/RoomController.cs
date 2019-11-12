@@ -88,10 +88,18 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var room = await _context.Rooms.FindAsync(id);
+            var room = await _context.Rooms
+                .Include(r => r.Venue)
+                .ThenInclude(Venue => Venue.Owner)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (room == null)
             {
                 return NotFound();
+            }
+            var user = await GetCurrentUserAsync();
+            if (user.Id != room.Venue.Owner.Id)
+            {
+                return RedirectToAction(nameof(Index));
             }
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", room.VenueId);
             return View(room);

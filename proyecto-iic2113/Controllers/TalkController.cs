@@ -89,10 +89,18 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var talk = await _context.Talks.FindAsync(id);
+            var talk = await _context.Talks
+                .Include(t => t.Conference)
+                .ThenInclude(conference => conference.Organizer)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (talk == null)
             {
                 return NotFound();
+            }
+            var user = await GetCurrentUserAsync();
+            if (user.Id != talk.Conference.Organizer.Id)
+            {
+                return RedirectToAction(nameof(Index));
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", talk.ConferenceId);
             return View(talk);

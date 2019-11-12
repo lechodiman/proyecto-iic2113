@@ -101,10 +101,17 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var conference = await _context.Conferences.FindAsync(id);
+            var conference = await _context.Conferences
+                .Include(c => c.Organizer)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (conference == null)
             {
                 return NotFound();
+            }
+            var user = await GetCurrentUserAsync();
+            if (user.Id != conference.Organizer.Id)
+            {
+                return RedirectToAction(nameof(Index));
             }
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", conference.VenueId);
             return View(conference);

@@ -89,10 +89,17 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
-            var venue = await _context.Venues.FindAsync(id);
+            var venue = await _context.Venues
+                .Include(v => v.Owner)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (venue == null)
             {
                 return NotFound();
+            }
+            var user = await GetCurrentUserAsync();
+            if (user.Id != venue.Owner.Id)
+            {
+                return RedirectToAction(nameof(Index));
             }
             return View(venue);
         }
