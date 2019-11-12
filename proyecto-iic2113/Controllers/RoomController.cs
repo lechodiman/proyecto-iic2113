@@ -42,7 +42,12 @@ namespace proyecto_iic2113.Controllers
 
             var room = await _context.Rooms
                 .Include(r => r.Venue)
+                .ThenInclude(Venue => Venue.Owner)
                 .FirstOrDefaultAsync(m => m.Id == id);
+                
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
             if (room == null)
             {
                 return NotFound();
