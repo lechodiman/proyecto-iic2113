@@ -42,7 +42,13 @@ namespace proyecto_iic2113.Controllers
 
             var talk = await _context.Talks
                 .Include(t => t.Conference)
+                .ThenInclude(conference => conference.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
+            
             if (talk == null)
             {
                 return NotFound();
