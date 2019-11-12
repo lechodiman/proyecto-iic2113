@@ -42,7 +42,13 @@ namespace proyecto_iic2113.Controllers
 
             var launch = await _context.Launches
                 .Include(l => l.Conference)
+                .ThenInclude(conference => conference.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
+
             if (launch == null)
             {
                 return NotFound();
