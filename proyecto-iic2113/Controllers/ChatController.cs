@@ -7,22 +7,30 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace proyecto_iic2113.Controllers
 {
     public class ChatController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ChatController(ApplicationDbContext context)
+        public ChatController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Chat
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Chat.Include(c => c.Conference).Include(c => c.Moderator);
+            var applicationDbContext = _context.Chat.Include(chat => chat.Moderator)
+                                                    .Include(chat => chat.Conference)
+                                                    .ThenInclude(conference => conference.Organizer);
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -162,5 +170,6 @@ namespace proyecto_iic2113.Controllers
         {
             return _context.Chat.Any(e => e.Id == id);
         }
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }
