@@ -42,7 +42,13 @@ namespace proyecto_iic2113.Controllers
 
             var workshop = await _context.Workshops
                 .Include(w => w.Conference)
+                .ThenInclude(conference => conference.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
+            
             if (workshop == null)
             {
                 return NotFound();
