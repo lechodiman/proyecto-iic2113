@@ -43,9 +43,15 @@ namespace proyecto_iic2113.Controllers
             }
 
             var chat = await _context.Chat
-                .Include(c => c.Conference)
                 .Include(c => c.Moderator)
+                .Include(c => c.Conference)
+                .ThenInclude(conference => conference.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
+            
             if (chat == null)
             {
                 return NotFound();
