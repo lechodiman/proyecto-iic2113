@@ -7,22 +7,28 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace proyecto_iic2113.Controllers
 {
     public class WorkshopController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public WorkshopController(ApplicationDbContext context)
+        public WorkshopController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Workshop
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Workshops.Include(w => w.Conference);
+            var applicationDbContext = _context.Workshops.Include(w => w.Conference).ThenInclude(c => c.Organizer);
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -156,5 +162,6 @@ namespace proyecto_iic2113.Controllers
         {
             return _context.Workshops.Any(e => e.Id == id);
         }
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }
