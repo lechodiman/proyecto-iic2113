@@ -70,6 +70,14 @@
                 </li>
             }
         </ul>
+
+       @foreach( var chat in ViewBag.Chats)
+       {
+           <div>
+               @chat.Name
+           </div>
+       }
+
     </div>
 </div>
 

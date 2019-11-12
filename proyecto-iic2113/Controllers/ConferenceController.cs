@@ -54,6 +54,18 @@ namespace proyecto_iic2113.Controllers
                 .ThenInclude(conferenceUserAttendee => conferenceUserAttendee.UserAttendee)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
+            var chats = await _context.Chat.Where(e => e.ConferenceId == id).ToListAsync();
+            var parties = await _context.Parties.Where(e => e.ConferenceId == id).ToListAsync();
+            var workshops = await _context.Workshops.Where(e => e.ConferenceId == id).ToListAsync();
+            var launches = await _context.Launches.Where(e => e.ConferenceId == id).ToListAsync();
+            var talks = await _context.Talks.Where(e => e.ConferenceId == id).ToListAsync();
+
+            ViewBag.Chats = chats;
+            ViewBag.Parties = parties;
+            ViewBag.Workshops = workshops;
+            ViewBag.Launches = launches;
+            ViewBag.Talks = talks;
+
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
             ViewBag.UserId = userId;
