@@ -42,7 +42,7 @@ namespace proyecto_iic2113.Controllers
 
             var room = await _context.Rooms
                 .Include(r => r.Venue)
-                .ThenInclude(Venue => Venue.Owner)
+                .Include(r => r.Equipments)
                 .FirstOrDefaultAsync(m => m.Id == id);
                 
             var user = await GetCurrentUserAsync();
