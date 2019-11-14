@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
 
@@ -47,10 +49,12 @@ namespace proyecto_iic2113.Controllers
         }
 
         // GET: WorkshopExhibitor/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(int? id)
         {
-            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["WorkshopId"] = new SelectList(_context.Workshops, "Id", "Discriminator");
+            var workshop = await _context.Workshops.FindAsync(id);
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Email");
+            ViewBag.Workshop = workshop;
+
             return View();
         }
 
@@ -65,10 +69,9 @@ namespace proyecto_iic2113.Controllers
             {
                 _context.Add(workshopExhibitor);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Workshop", new { id = workshopExhibitor.WorkshopId });
             }
-            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", workshopExhibitor.ApplicationUserId);
-            ViewData["WorkshopId"] = new SelectList(_context.Workshops, "Id", "Discriminator", workshopExhibitor.WorkshopId);
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Email", workshopExhibitor.ApplicationUserId);
             return View(workshopExhibitor);
         }
 

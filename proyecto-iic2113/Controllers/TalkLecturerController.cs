@@ -70,7 +70,7 @@ namespace proyecto_iic2113.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Talk", new { id = talkLecturer.TalkId });
             }
-            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", talkLecturer.ApplicationUserId);
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Email", talkLecturer.ApplicationUserId);
             return View(talkLecturer);
         }
 
