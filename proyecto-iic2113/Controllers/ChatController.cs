@@ -68,7 +68,7 @@ namespace proyecto_iic2113.Controllers
         public IActionResult Create()
         {
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name");
-            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Name");
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Email");
             return View();
         }
 
