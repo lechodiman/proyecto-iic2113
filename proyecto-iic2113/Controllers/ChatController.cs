@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
-using Microsoft.AspNetCore.Identity;
 
 namespace proyecto_iic2113.Controllers
 {
@@ -26,8 +28,8 @@ namespace proyecto_iic2113.Controllers
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Chat.Include(chat => chat.Moderator)
-                                                    .Include(chat => chat.Conference)
-                                                    .ThenInclude(conference => conference.Organizer);
+                .Include(chat => chat.Conference)
+                .ThenInclude(conference => conference.Organizer);
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
             ViewBag.UserId = userId;
@@ -47,11 +49,11 @@ namespace proyecto_iic2113.Controllers
                 .Include(c => c.Conference)
                 .ThenInclude(conference => conference.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            
+
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
             ViewBag.UserId = userId;
-            
+
             if (chat == null)
             {
                 return NotFound();
@@ -64,7 +66,7 @@ namespace proyecto_iic2113.Controllers
         public IActionResult Create()
         {
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name");
-            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Name");
             return View();
         }
 
