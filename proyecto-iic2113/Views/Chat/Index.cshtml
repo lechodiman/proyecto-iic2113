@@ -4,71 +4,20 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="container">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Moderator)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Conference)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Moderator.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Conference.Name)
-            </td>
-            <td>
-                @if (User.Identity.IsAuthenticated && ViewBag.UserId == item.Conference.Organizer.Id)
-                {
-                    <div>
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    </div>
-                }
-                else
-                {
-                    <div><a asp-action="Details" asp-route-id="@item.Id">Details</a></div>
-                }
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="row">
+
+        <div class="col">
+            <h1 class="display-4">Chats</h1>
+        </div>
+        <div class="col-end">
+            <a asp-action="Create" class="text-primary"><i class="fas fa-plus fa-4x"></i></a>
+        </div>
+    </div>
+    <hr />
+
+    <partial name="~/Views/Shared/Events.cshtml" />
+
+</div>
+
