@@ -1,4 +1,4 @@
-@model proyecto_iic2113.Models.Conference
+﻿@model proyecto_iic2113.Models.Conference
 
 @{
     ViewData["Title"] = "Details";
@@ -36,9 +36,18 @@
 
         <h3 class="text-muted">Sponsors</h3>
         <ul class="list-group">
-            @foreach (var sponsor in Model.Sponsors) {
+
+            @if (ViewBag.Sponsors.Count == 0)
+            {
                 <li class="list-group-item">
-                    <a asp-action="Details" asp-controller="Sponsor" asp-route-id= "@sponsor.Id">@sponsor.Name</a>
+                    <a class="text-info">There are no sponsors yet 😔</a>
+                </li>
+            }
+
+            @foreach (var sponsor in Model.Sponsors)
+            {
+                <li class="list-group-item">
+                    <a asp-action="Details" asp-controller="Sponsor" asp-route-id="@sponsor.Id">@sponsor.Name</a>
                 </li>
             }
         </ul>
@@ -63,6 +72,14 @@
 
         <h3 class="text-muted">Attendees</h3>
         <ul class="list-group">
+
+            @if (ViewBag.Attendees.Count == 0)
+            {
+                <li class="list-group-item">
+                    <a class="text-info">There are no attendees yet 😔</a>
+                </li>
+            }
+
             @foreach (var conferenceUserAttendee in Model.ConferenceUserAttendees)
             {
                 <li class="list-group-item">
