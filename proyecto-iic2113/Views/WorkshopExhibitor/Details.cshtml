@@ -1,0 +1,30 @@
+@model proyecto_iic2113.Models.WorkshopExhibitor
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>WorkshopExhibitor</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Exhibitor)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Exhibitor.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Workshop)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Workshop.Discriminator)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>

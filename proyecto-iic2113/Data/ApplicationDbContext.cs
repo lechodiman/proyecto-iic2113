@@ -102,5 +102,7 @@ namespace proyecto_iic2113.Data
         public DbSet<proyecto_iic2113.Models.Chat> Chat { get; set; }
 
         public DbSet<proyecto_iic2113.Models.TalkLecturer> TalkLecturer { get; set; }
+
+        public DbSet<proyecto_iic2113.Models.WorkshopExhibitor> WorkshopExhibitor { get; set; }
     }
 }
