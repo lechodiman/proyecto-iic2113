@@ -37,5 +37,5 @@
             <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
         </div>
     }
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Venue" asp-action="Details" asp-route-id="@Model.VenueId">Back to List</a>
 </div>

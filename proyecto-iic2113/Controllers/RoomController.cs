@@ -74,7 +74,7 @@ namespace proyecto_iic2113.Controllers
             {
                 _context.Add(room);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(nameof(Index));
             }
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", room.VenueId);
             return View(room);
