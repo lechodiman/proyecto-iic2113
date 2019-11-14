@@ -96,7 +96,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,DateTime,VenueId")] Conference conference)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,DateTime,EndDate,VenueId")] Conference conference)
         {
             ApplicationUser currentUser = await GetCurrentUserAsync();
             conference.Organizer = currentUser;
