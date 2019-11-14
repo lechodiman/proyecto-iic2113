@@ -50,6 +50,11 @@ namespace proyecto_iic2113.Controllers
                 .Include(c => c.Organizer)
                 .Include(c => c.Sponsors)
                 .Include(c => c.Venue)
+                .Include(c => c.Launches)
+                .Include(c => c.Workshops)
+                .Include(c => c.Parties)
+                .Include(c => c.Talks)
+                .Include(c => c.Chats)
                 .Include(c => c.ConferenceUserAttendees)
                 .ThenInclude(conferenceUserAttendee => conferenceUserAttendee.UserAttendee)
                 .FirstOrDefaultAsync(m => m.Id == id);
