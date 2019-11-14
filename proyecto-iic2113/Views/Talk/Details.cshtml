@@ -48,6 +48,9 @@
         </dd>
     </dl>
 </div>
+
+<a asp-controller="TalkLecturer" asp-action="Create" asp-route-id="@Model.Id"> add lecturer</a>
+
 <div>
     @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
     {

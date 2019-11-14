@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
-using Microsoft.AspNetCore.Identity;
 
 namespace proyecto_iic2113.Controllers
 {
@@ -44,11 +46,13 @@ namespace proyecto_iic2113.Controllers
                 .Include(t => t.Conference)
                 .ThenInclude(conference => conference.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            
+
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
             ViewBag.UserId = userId;
-            
+
+            ViewBag.Users = new SelectList(_context.Users, "Id", "Email");
+
             if (talk == null)
             {
                 return NotFound();

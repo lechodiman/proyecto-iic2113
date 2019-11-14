@@ -235,23 +235,22 @@
 
                         @foreach (var item in ViewBag.talks)
                         {
-
                             <div class="card">
                                 <div class="card-body">
                                     <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
-                                    <h5 class="card-title">@item.Name</h5>
+                                    <h5 class="card-title">
+                                        <a asp-controller="Talk" asp-action="Details" asp-route-id="@item.Id">
+                                            @item.Name
+                                        </a>
+                                    </h5>
                                     <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
                                 </div>
                             </div>
                         }
 
                     </div>
-
             </div>
-
         </div>
-
-
     </div>
 </div>
 
