@@ -71,7 +71,6 @@ namespace proyecto_iic2113.Controllers
                 return RedirectToAction("Details", "Talk", new { id = talkLecturer.TalkId });
             }
             ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", talkLecturer.ApplicationUserId);
-            ViewData["TalkId"] = new SelectList(_context.Talks, "Id", "Discriminator", talkLecturer.TalkId);
             return View(talkLecturer);
         }
 

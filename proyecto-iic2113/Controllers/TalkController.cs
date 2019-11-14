@@ -43,6 +43,8 @@ namespace proyecto_iic2113.Controllers
             }
 
             var talk = await _context.Talks
+                .Include(t => t.TalkLecturers)
+                .ThenInclude(tl => tl.Lecturer)
                 .Include(t => t.Conference)
                 .ThenInclude(conference => conference.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
