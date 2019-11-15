@@ -54,6 +54,12 @@ namespace proyecto_iic2113.Controllers
                 .ThenInclude(conferenceUserAttendee => conferenceUserAttendee.UserAttendee)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
+            var sponsors = await _context.Sponsors.Where(s => s.ConferenceId == id).ToListAsync();
+            var attendees = await _context.ConferenceUserAttendees.Where(s => s.ConferenceId == id).ToListAsync();
+
+            ViewBag.Sponsors = sponsors;
+            ViewBag.Attendees = attendees;
+
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
             ViewBag.UserId = userId;
@@ -104,11 +110,14 @@ namespace proyecto_iic2113.Controllers
             var conference = await _context.Conferences
                 .Include(c => c.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (conference == null)
             {
                 return NotFound();
             }
+
             var user = await GetCurrentUserAsync();
+
             if (user.Id != conference.Organizer.Id)
             {
                 return RedirectToAction(nameof(Index));
