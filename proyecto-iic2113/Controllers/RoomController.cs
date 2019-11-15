@@ -73,7 +73,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Photo,VenueId")] Room room)
+        public async Task<IActionResult> Create([Bind("Id,Name,Photo,Capacity,VenueId")] Room room)
         {
             if (ModelState.IsValid)
             {
