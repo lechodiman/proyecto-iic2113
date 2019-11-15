@@ -31,6 +31,14 @@
     </dl>
 </div>
 
+<b>Equipments:</b>
+@foreach (var equipment in Model.Equipments) {
+    <ul class="list-group">
+        <li class="list-group-item">
+            <a asp-action="Details" asp-controller="Equipment" asp-route-id= "@equipment.Id">@equipment.Name</a>
+        </li>
+    </ul>
+}
 
 <div>
     @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Venue.Owner.Id)

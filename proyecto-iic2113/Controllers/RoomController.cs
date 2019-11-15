@@ -45,6 +45,7 @@ namespace proyecto_iic2113.Controllers
             }
 
             var room = await _context.Rooms
+                .Include(r => r.Equipments)
                 .Include(r => r.Venue)
                 .ThenInclude(Venue => Venue.Owner)
                 .FirstOrDefaultAsync(m => m.Id == id);
