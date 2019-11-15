@@ -47,6 +47,10 @@ namespace proyecto_iic2113.Controllers
                 .Include(v => v.Owner)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
+            var rooms = await _context.Rooms.Where(r => r.VenueId == id).ToListAsync();
+            ViewBag.Rooms = rooms;
+
+
             var user = await GetCurrentUserAsync();
             ViewBag.UserId = user?.Id;
             if (venue == null)

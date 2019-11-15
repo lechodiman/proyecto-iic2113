@@ -49,9 +49,12 @@ namespace proyecto_iic2113.Controllers
                 .ThenInclude(Venue => Venue.Owner)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
+            var equipment = await _context.Equipments.Where(r => r.RoomId == id).ToListAsync();
+            ViewBag.Equipments = equipment;
+
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
-            ViewBag.UserId = userId;
+            ViewBag.User = user;
             if (room == null)
             {
                 return NotFound();
@@ -72,13 +75,13 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Photo,VenueId")] Room room)
+        public async Task<IActionResult> Create([Bind("Id,Name,Photo,Capacity,VenueId")] Room room)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(room);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Venue", new { id = room.VenueId });
             }
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", room.VenueId);
             return View(room);
@@ -103,7 +106,7 @@ namespace proyecto_iic2113.Controllers
             var user = await GetCurrentUserAsync();
             if (user.Id != room.Venue.Owner.Id)
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Venue", new { id = room.VenueId });
             }
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", room.VenueId);
             return View(room);
@@ -139,7 +142,7 @@ namespace proyecto_iic2113.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Venue", new { id = room.VenueId });
             }
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", room.VenueId);
             return View(room);
@@ -172,7 +175,7 @@ namespace proyecto_iic2113.Controllers
             var room = await _context.Rooms.FindAsync(id);
             _context.Rooms.Remove(room);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Venue", new { id = room.VenueId });
         }
 
         private bool RoomExists(int id)
