@@ -45,6 +45,7 @@ namespace proyecto_iic2113.Controllers
 
             var venue = await _context.Venues
                 .Include(v => v.Owner)
+                .Include(v => v.Rooms)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             var user = await GetCurrentUserAsync();
