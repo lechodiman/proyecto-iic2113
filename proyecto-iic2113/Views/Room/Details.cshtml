@@ -1,57 +1,73 @@
-@model proyecto_iic2113.Models.Room
+﻿@model proyecto_iic2113.Models.Room
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<div class="container">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="display-4">@Html.DisplayFor(model => model.Name)</h1>
+            </div>
+            <div class="col-end">
 
-
-
-</div>
-
-<div>
-    <h4>Room</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Photo)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Photo)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Venue)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Venue.Name)
-        </dd>
-    </dl>
-</div>
-<div>
-    @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Venue.Owner.Id)
-    {
-        <div>
-            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+            </div>
         </div>
-    }
-    <a asp-controller="Venue" asp-action="Details" asp-route-id="@Model.VenueId">Back to List</a>
-</div>
+        <hr />
 
-<b>Equipments:</b>
-@foreach (var equipment in ViewBag.Equipments)
-{
-    <ul class="list-group">
-        <li class="list-group-item">
-            <a asp-action="Details" asp-controller="Equipment" asp-route-id="@equipment.Id">@equipment.Name</a>
-        </li>
-    </ul>
-}
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Photo)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Photo)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Capacity)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Capacity)
+            </dd>
+        </dl>
+
+        <div class="row">
+            <div class="col">
+                <h1 class="display-4">Equipments</h1>
+            </div>
+            <div class="col-end">
+                <a asp-controller="Equipment" asp-action="Create"><i class="fas fa-plus fa-4x"></i></a>
+            </div>
+        </div>
+
+        @if (ViewBag.Equipments.Count == 0)
+        {
+            <li class="list-group-item">
+                <a class="text-info">There are no equipments yet 😔</a>
+            </li>
+        }
+
+        @foreach (var equipment in ViewBag.Equipments)
+        {
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col">
+                        @equipment.Name
+                    </div>
+                    <div class="col-end">
+                        <a class="btn btn-outline-secondary" asp-controller="Equipment" asp-action="Details" asp-route-id="@equipment.Id"><i class="fas fa-info fa-lg"></i></a>
+                        <a class="btn btn-outline-secondary" asp-controller="Equipment" asp-action="Edit" asp-route-id="@equipment.Id"><i class="fas fa-edit fa-lg"></i></a>
+                        <a class="btn btn-outline-secondary" asp-controller="Equipment" asp-action="Delete" asp-route-id="@equipment.Id"><i class="fas fa-trash fa-lg"></i></a>
+                    </div>
+                </div>
+            </li>
+        }
+
+        <br />
+        <div>
+            <a class="btn btn-outline-secondary" asp-controller="Venue" asp-action="Details" asp-route-id="@Model.VenueId">Back to List</a>
+        </div>
+
+    </div>
+
 
 

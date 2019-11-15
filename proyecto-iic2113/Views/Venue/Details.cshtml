@@ -48,21 +48,21 @@
 
         @foreach (var room in ViewBag.rooms)
         {
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col">
-                        @room.Name
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col">
+                            @room.Name
+                        </div>
+                        <div class="col-end">
+                            <a class="btn btn-outline-secondary" asp-controller="Room" asp-action="Details" asp-route-id="@room.Id"><i class="fas fa-info fa-lg"></i></a>
+                            @if (User.Identity.IsAuthenticated && ViewBag.UserId == room.Venue.Owner.Id)
+                            {
+                                <a class="btn btn-outline-secondary" asp-controller="Room" asp-action="Edit" asp-route-id="@room.Id"><i class="fas fa-edit fa-lg"></i></a>
+                                <a class="btn btn-outline-secondary" asp-controller="Room" asp-action="Delete" asp-route-id="@room.Id"><i class="fas fa-trash fa-lg"></i></a>
+                            }
+                        </div>
                     </div>
-                    <div class="col-end">
-                        <a class="btn btn-outline-secondary" asp-controller="Room" asp-action="Details" asp-route-id="@room.Id"><i class="fas fa-info fa-lg"></i></a>
-                        @if (User.Identity.IsAuthenticated && ViewBag.UserId == room.Venue.Owner.Id)
-                        {
-                            <a class="btn btn-outline-secondary" asp-controller="Room" asp-action="Edit" asp-route-id="@room.Id"><i class="fas fa-edit fa-lg"></i></a>
-                            <a class="btn btn-outline-secondary" asp-controller="Room" asp-action="Delete" asp-route-id="@room.Id"><i class="fas fa-trash fa-lg"></i></a>
-                        }
-                    </div>
-                </div>
-            </li>
+                </li>
         }
         <br />
         <div>

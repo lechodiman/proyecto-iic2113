@@ -63,7 +63,7 @@ namespace proyecto_iic2113.Controllers
             {
                 _context.Add(equipment);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Room", new { id = equipment.RoomId });
             }
             ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name", equipment.RoomId);
             return View(equipment);
@@ -116,7 +116,7 @@ namespace proyecto_iic2113.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Room", new { id = equipment.RoomId });
             }
             ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name", equipment.RoomId);
             return View(equipment);
@@ -149,7 +149,7 @@ namespace proyecto_iic2113.Controllers
             var equipment = await _context.Equipments.FindAsync(id);
             _context.Equipments.Remove(equipment);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Room", new { id = equipment.RoomId });
         }
 
         private bool EquipmentExists(int id)
