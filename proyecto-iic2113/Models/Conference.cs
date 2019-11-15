@@ -17,6 +17,10 @@ namespace proyecto_iic2113.Models
 
         [DataType(DataType.Date)]
         public DateTime DateTime { get; set; }
+
+        [DataType(DataType.Date)]
+        public DateTime EndDate { get; set; }
+
         public IEnumerable<Sponsor> Sponsors { get; set; }
         public ApplicationUser Organizer { get; set; }
         public int? VenueId { get; set; }
