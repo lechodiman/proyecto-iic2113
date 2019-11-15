@@ -50,6 +50,11 @@ namespace proyecto_iic2113.Controllers
                 .Include(c => c.Organizer)
                 .Include(c => c.Sponsors)
                 .Include(c => c.Venue)
+                .Include(c => c.Launches)
+                .Include(c => c.Workshops)
+                .Include(c => c.Parties)
+                .Include(c => c.Talks)
+                .Include(c => c.Chats)
                 .Include(c => c.ConferenceUserAttendees)
                 .ThenInclude(conferenceUserAttendee => conferenceUserAttendee.UserAttendee)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -59,6 +64,18 @@ namespace proyecto_iic2113.Controllers
 
             ViewBag.Sponsors = sponsors;
             ViewBag.Attendees = attendees;
+
+            var chats = await _context.Chat.Where(e => e.ConferenceId == id).ToListAsync();
+            var parties = await _context.Parties.Where(e => e.ConferenceId == id).ToListAsync();
+            var workshops = await _context.Workshops.Where(e => e.ConferenceId == id).ToListAsync();
+            var launches = await _context.Launches.Where(e => e.ConferenceId == id).ToListAsync();
+            var talks = await _context.Talks.Where(e => e.ConferenceId == id).ToListAsync();
+
+            ViewBag.Chats = chats;
+            ViewBag.Parties = parties;
+            ViewBag.Workshops = workshops;
+            ViewBag.Launches = launches;
+            ViewBag.Talks = talks;
 
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
@@ -85,7 +102,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,DateTime,VenueId")] Conference conference)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,DateTime,EndDate,VenueId")] Conference conference)
         {
             ApplicationUser currentUser = await GetCurrentUserAsync();
             conference.Organizer = currentUser;

@@ -10,20 +10,26 @@
 
         <h1 class="display-4">Events</h1>
 
+        <hr />
+
         <h3 class="text-center text-muted">Recent Parties</h3>
+
+        @if (ViewBag.parties.Count == 0) {
+            <p class="text-center text-info">There are no parties yet 😔</p>
+        }
 
         <div class="card-deck">
 
             @foreach (var item in ViewBag.parties)
             {
 
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
-                        <h5 class="card-title">@item.Name</h5>
-                        <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
-                    </div>
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
+                    <h5 class="card-title">@item.Name</h5>
+                    <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
                 </div>
+            </div>
             }
 
         </div>
@@ -34,18 +40,22 @@
 
         <h3 class="text-center text-muted">Recent Workshops</h3>
 
+        @if (ViewBag.workshops.Count == 0) {
+            <p class="text-center text-info">There are no workshops yet 😔</p>
+        }
+
         <div class="card-deck">
 
             @foreach (var item in ViewBag.workshops)
             {
 
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
-                        <h5 class="card-title">@item.Name</h5>
-                        <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
-                    </div>
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
+                    <h5 class="card-title">@item.Name</h5>
+                    <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
                 </div>
+            </div>
             }
 
         </div>
@@ -56,18 +66,22 @@
 
         <h3 class="text-center text-muted">Recent Lunches</h3>
 
+        @if (ViewBag.launches.Count == 0) {
+            <p class="text-center text-info">There are no launches yet 😔</p>
+        }
+
         <div class="card-deck">
 
             @foreach (var item in ViewBag.launches)
             {
 
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
-                        <h5 class="card-title">@item.Name</h5>
-                        <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
-                    </div>
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
+                    <h5 class="card-title">@item.Name</h5>
+                    <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
                 </div>
+            </div>
             }
 
         </div>
@@ -78,18 +92,22 @@
 
         <h3 class="text-center text-muted">Recent Chats</h3>
 
+        @if (ViewBag.chats.Count == 0) {
+            <p class="text-center text-info">There are no chats yet 😔</p>
+        }
+
         <div class="card-deck">
 
             @foreach (var item in ViewBag.chats)
             {
 
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
-                        <h5 class="card-title">@item.Name</h5>
-                        <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
-                    </div>
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
+                    <h5 class="card-title">@item.Name</h5>
+                    <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
                 </div>
+            </div>
             }
 
         </div>
@@ -100,18 +118,22 @@
 
         <h3 class="text-center text-muted">Recent Talks</h3>
 
+        @if (ViewBag.talks.Count == 0) {
+            <p class="text-center text-info">There are no talks yet 😔</p>
+        }
+
         <div class="card-deck">
 
             @foreach (var item in ViewBag.talks)
             {
 
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
-                        <h5 class="card-title">@item.Name</h5>
-                        <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
-                    </div>
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
+                    <h5 class="card-title">@item.Name</h5>
+                    <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
                 </div>
+            </div>
             }
 
         </div>
@@ -119,7 +141,4 @@
         <br />
 
         <a asp-controller="Talk" asp-action="Index" class="btn btn-outline-secondary">See more</a>
-
-
     </div>
-

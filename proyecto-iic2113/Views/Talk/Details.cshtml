@@ -48,6 +48,23 @@
         </dd>
     </dl>
 </div>
+
+
+<h3 class="text-muted">Lecturers</h3>
+<ul class="list-group">
+    @foreach (var talkLecturer in Model.TalkLecturers)
+    {
+        <li class="list-group-item">
+            @talkLecturer.Lecturer.Email
+        </li>
+    }
+</ul>
+
+@if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
+{
+    <a asp-controller="TalkLecturer" asp-action="Create" asp-route-id="@Model.Id"> add lecturer</a>
+}
+
 <div>
     @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
     {

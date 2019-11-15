@@ -35,6 +35,7 @@ namespace proyecto_iic2113.Controllers
         }
 
         // GET: Venue/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
