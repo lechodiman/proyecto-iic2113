@@ -55,8 +55,13 @@
                     </div>
                     <div class="col-end">
                         <a class="btn btn-outline-secondary" asp-controller="Equipment" asp-action="Details" asp-route-id="@equipment.Id"><i class="fas fa-info fa-lg"></i></a>
-                        <a class="btn btn-outline-secondary" asp-controller="Equipment" asp-action="Edit" asp-route-id="@equipment.Id"><i class="fas fa-edit fa-lg"></i></a>
-                        <a class="btn btn-outline-secondary" asp-controller="Equipment" asp-action="Delete" asp-route-id="@equipment.Id"><i class="fas fa-trash fa-lg"></i></a>
+
+                        @if (User.Identity.IsAuthenticated && ViewBag.User == Model.Venue.Owner)
+                        {
+                            <a class="btn btn-outline-secondary" asp-controller="Equipment" asp-action="Edit" asp-route-id="@equipment.Id"><i class="fas fa-edit fa-lg"></i></a>
+                            <a class="btn btn-outline-secondary" asp-controller="Equipment" asp-action="Delete" asp-route-id="@equipment.Id"><i class="fas fa-trash fa-lg"></i></a>
+                        }
+
                     </div>
                 </div>
             </li>

@@ -52,7 +52,7 @@ namespace proyecto_iic2113.Controllers
 
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
-            ViewBag.UserId = userId;
+            ViewBag.User = user;
             if (room == null)
             {
                 return NotFound();
