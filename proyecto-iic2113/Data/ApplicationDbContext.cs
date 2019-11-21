@@ -25,6 +25,7 @@ namespace proyecto_iic2113.Data
         public DbSet<Workshop> Workshops { get; set; }
         public DbSet<Launch> Launches { get; set; }
         public DbSet<ConferenceUserAttendee> ConferenceUserAttendees { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         internal static Task<string> ToListAsync()
         {
