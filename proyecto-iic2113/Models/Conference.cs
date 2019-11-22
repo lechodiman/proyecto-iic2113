@@ -32,5 +32,8 @@ namespace proyecto_iic2113.Models
         public IEnumerable<Talk> Talks { get; set; }
         public IEnumerable<Party> Parties { get; set; }
         public IEnumerable<Chat> Chats { get; set; }
+
+        public int FranchiseId { get; set; }
+		public Conference Franchise { get; set; }
     }
 }
