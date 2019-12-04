@@ -23,13 +23,18 @@
             @Html.DisplayFor(model => model.Description)
         </dd>
 
-        @foreach (var conference in ViewBag.conferences)
+        <p> </p>
+    </dl>
+
+<h3 class="text-muted">Conferences</h3>
+
+@foreach (var conference in ViewBag.conferences)
             {
                 <li class="list-group-item">
                     <a asp-action="Details" asp-controller="Conference" asp-route-id="@conference.Id">@conference.Name</a>
                 </li>
             }
-    </dl>
+
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
