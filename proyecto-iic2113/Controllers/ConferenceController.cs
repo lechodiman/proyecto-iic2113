@@ -94,7 +94,7 @@ namespace proyecto_iic2113.Controllers
         public IActionResult Create()
         {
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name");
-            ViewData["FranchiseId"] = new SelectList(_context.Venues, "Id", "Name");
+            ViewData["FranchiseId"] = new SelectList(_context.Franchise, "Id", "Name");
             return View();
         }
 
