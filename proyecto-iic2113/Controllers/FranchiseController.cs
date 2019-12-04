@@ -34,11 +34,17 @@ namespace proyecto_iic2113.Controllers
             }
 
             var franchise = await _context.Franchise
+                .Include(c => c.Conferences)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (franchise == null)
             {
                 return NotFound();
             }
+
+            var conferences = await _context.Conferences.Where(e => e.FranchiseId == id).ToListAsync();
+            ViewBag.Conferences = conferences;
+
 
             return View(franchise);
         }
