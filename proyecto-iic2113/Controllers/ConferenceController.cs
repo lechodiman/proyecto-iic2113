@@ -49,6 +49,7 @@ namespace proyecto_iic2113.Controllers
             var conference = await _context.Conferences
                 .Include(c => c.Organizer)
                 .Include(c => c.Sponsors)
+                .Include(c => c.Franchise)
                 .Include(c => c.Venue)
                 .Include(c => c.Launches)
                 .Include(c => c.Workshops)
