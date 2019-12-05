@@ -69,6 +69,7 @@ namespace proyecto_iic2113.Controllers
         public IActionResult Create()
         {
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name");
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name");
             return View();
         }
 
@@ -77,7 +78,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Subject,Id,Name,StartDate,EndDate,Description,ConferenceId")] Talk talk)
+        public async Task<IActionResult> Create([Bind("Subject,Id,Name,StartDate,EndDate,Description,ConferenceId,RoomId")] Talk talk)
         {
             if (ModelState.IsValid)
             {
@@ -86,6 +87,7 @@ namespace proyecto_iic2113.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", talk.ConferenceId);
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name", talk.RoomId);
             return View(talk);
         }
 

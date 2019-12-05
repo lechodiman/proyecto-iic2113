@@ -45,6 +45,7 @@ namespace proyecto_iic2113.Controllers
             }
 
             var launch = await _context.Launches
+                .Include(p => p.Room)
                 .Include(l => l.Menus)
                 .Include(l => l.Conference)
                 .ThenInclude(conference => conference.Organizer)
@@ -66,6 +67,7 @@ namespace proyecto_iic2113.Controllers
         public IActionResult Create()
         {
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name");
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name");
             return View();
         }
 
@@ -74,7 +76,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IsAllYouCanEat,Id,Name,StartDate,EndDate,Description,ConferenceId")] Launch launch)
+        public async Task<IActionResult> Create([Bind("IsAllYouCanEat,Id,Name,StartDate,EndDate,Description,ConferenceId,RoomId")] Launch launch)
         {
             if (ModelState.IsValid)
             {
@@ -83,6 +85,7 @@ namespace proyecto_iic2113.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", launch.ConferenceId);
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name", launch.RoomId);
             return View(launch);
         }
 

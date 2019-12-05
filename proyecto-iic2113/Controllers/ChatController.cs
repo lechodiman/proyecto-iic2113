@@ -47,6 +47,7 @@ namespace proyecto_iic2113.Controllers
             }
 
             var chat = await _context.Chat
+                .Include(p => p.Room)
                 .Include(c => c.Moderator)
                 .Include(c => c.Conference)
                 .ThenInclude(conference => conference.Organizer)
@@ -69,6 +70,7 @@ namespace proyecto_iic2113.Controllers
         {
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name");
             ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Email");
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name");
             return View();
         }
 
@@ -77,7 +79,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ApplicationUserId,Id,Name,StartDate,EndDate,Description,ConferenceId")] Chat chat)
+        public async Task<IActionResult> Create([Bind("ApplicationUserId,Id,Name,StartDate,EndDate,Description,ConferenceId,RoomId")] Chat chat)
         {
             if (ModelState.IsValid)
             {
@@ -87,6 +89,8 @@ namespace proyecto_iic2113.Controllers
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", chat.ConferenceId);
             ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", chat.ApplicationUserId);
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name", chat.RoomId);
+
             return View(chat);
         }
 
