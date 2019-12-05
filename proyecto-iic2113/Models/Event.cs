@@ -24,5 +24,8 @@ namespace proyecto_iic2113.Models
 
 		public int ConferenceId { get; set; }
 		public Conference Conference { get; set; }
-	}
+
+        public int RoomId { get; set; }
+        public Room Room { get; set; }
+    }
 }
