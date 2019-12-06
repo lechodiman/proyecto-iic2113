@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,8 +22,11 @@ namespace proyecto_iic2113.Controllers
             _context = context;
         }
 
-        // GET: Review
-        public async Task<IActionResult> Index()
+        // GET: Events/2/Reviews
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("Events/{id}/Reviews")]
+        public async Task<IActionResult> Index(int id)
         {
             var applicationDbContext = _context.Reviews.Include(r => r.ApplicationUser).Include(r => r.Event);
             return View(await applicationDbContext.ToListAsync());
@@ -158,6 +162,14 @@ namespace proyecto_iic2113.Controllers
             _context.Reviews.Remove(review);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("test/{id}/hello")]
+        public string SuperTestRoute(int id)
+        {
+            return "hello" + id;
         }
 
         private bool ReviewExists(int id)
