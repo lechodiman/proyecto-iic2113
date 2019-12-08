@@ -48,6 +48,7 @@ namespace proyecto_iic2113.Controllers
         // POST: Review/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Event/{id}/Reviews/Create")]
         public async Task<IActionResult> Create([Bind("Rating,Body,EventId")] Review review)
         {
             var currentUser = await GetCurrentUserAsync();
@@ -75,44 +76,36 @@ namespace proyecto_iic2113.Controllers
             {
                 return NotFound();
             }
-            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Email", review.ApplicationUserId);
-            ViewData["EventId"] = new SelectList(_context.Events, "Id", "Name", review.EventId);
             return View(review);
         }
 
         // POST: Review/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Rating,Body")] Review review)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Rating,Body,EventId,ApplicationUserId")] Review review)
         {
-            if (id != review.Id)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return View(review);
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(review);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ReviewExists(review.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Update(review);
+                await _context.SaveChangesAsync();
             }
-            return View(review);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ReviewExists(review.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction("Index", "Review", new { id = review.EventId });
         }
 
         // GET: Review/Delete/5

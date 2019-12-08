@@ -50,6 +50,15 @@
         </dd>
     </dl>
 </div>
+
+<a asp-action="Index" asp-controller="Review" asp-route-id="@Model.Id">
+    See all Reviews
+</a>
+
+<a asp-action="Create" asp-controller="Review" asp-route-id="@Model.Id">
+    Add Review
+</a>
+
 <div>
     @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
     {
