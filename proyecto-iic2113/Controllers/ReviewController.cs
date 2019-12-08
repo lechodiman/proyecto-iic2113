@@ -136,7 +136,7 @@ namespace proyecto_iic2113.Controllers
             var review = await _context.Reviews.FindAsync(id);
             _context.Reviews.Remove(review);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Review", new { id = review.EventId });
         }
 
         private bool ReviewExists(int id)
