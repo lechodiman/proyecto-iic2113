@@ -24,5 +24,7 @@ namespace proyecto_iic2113.Models
 
 		public int ConferenceId { get; set; }
 		public Conference Conference { get; set; }
+
+		public IEnumerable<Review> Reviews { get; set; }
 	}
 }

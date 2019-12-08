@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,65 +17,48 @@ namespace proyecto_iic2113.Controllers
     public class ReviewController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ReviewController(ApplicationDbContext context)
+        public ReviewController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        // GET: Events/2/Reviews
         [AllowAnonymous]
-        [HttpGet]
-        [Route("Events/{id}/Reviews")]
+        [Route("Event/{id}/Reviews")]
         public async Task<IActionResult> Index(int id)
         {
-            var applicationDbContext = _context.Reviews.Include(r => r.ApplicationUser).Include(r => r.Event);
+            var applicationDbContext = _context.Reviews
+                .Where(r => r.EventId == id)
+                .Include(r => r.ApplicationUser)
+                .Include(r => r.Event);
+
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Review/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [HttpGet]
+        [Route("Event/{id}/Reviews/Create")]
+        public IActionResult Create(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var review = await _context.Reviews
-                .Include(r => r.ApplicationUser)
-                .Include(r => r.Event)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (review == null)
-            {
-                return NotFound();
-            }
-
-            return View(review);
-        }
-
-        // GET: Review/Create
-        public IActionResult Create()
-        {
-            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Email");
-            ViewData["EventId"] = new SelectList(_context.Events, "Id", "Name");
+            ViewBag.EventId = id;
             return View();
         }
 
         // POST: Review/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Rating,Body,EventId,ApplicationUserId")] Review review)
+        public async Task<IActionResult> Create([Bind("Rating,Body,EventId")] Review review)
         {
+            var currentUser = await GetCurrentUserAsync();
+            review.ApplicationUser = currentUser;
+
             if (ModelState.IsValid)
             {
                 _context.Add(review);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Review", new { id = review.EventId });
             }
-            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", review.ApplicationUserId);
-            ViewData["EventId"] = new SelectList(_context.Events, "Id", "Name", review.EventId);
             return View(review);
         }
 
@@ -101,7 +85,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Rating,Body,EventId,ApplicationUserId")] Review review)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Rating,Body")] Review review)
         {
             if (id != review.Id)
             {
@@ -128,8 +112,6 @@ namespace proyecto_iic2113.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Email", review.ApplicationUserId);
-            ViewData["EventId"] = new SelectList(_context.Events, "Id", "Name", review.EventId);
             return View(review);
         }
 
@@ -164,17 +146,11 @@ namespace proyecto_iic2113.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("test/{id}/hello")]
-        public string SuperTestRoute(int id)
-        {
-            return "hello" + id;
-        }
-
         private bool ReviewExists(int id)
         {
             return _context.Reviews.Any(e => e.Id == id);
         }
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }
