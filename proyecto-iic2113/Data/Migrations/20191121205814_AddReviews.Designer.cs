@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using proyecto_iic2113.Data;
@@ -9,9 +10,10 @@ using proyecto_iic2113.Data;
 namespace proyecto_iic2113.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191121205814_AddReviews")]
+    partial class AddReviews
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -204,8 +206,6 @@ namespace proyecto_iic2113.Migrations
 
                     b.Property<DateTime>("EndDate");
 
-                    b.Property<int>("FranchiseId");
-
                     b.Property<string>("Name")
                         .IsRequired();
 
@@ -214,8 +214,6 @@ namespace proyecto_iic2113.Migrations
                     b.Property<int?>("VenueId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FranchiseId");
 
                     b.HasIndex("OrganizerId");
 
@@ -280,21 +278,6 @@ namespace proyecto_iic2113.Migrations
                     b.ToTable("Events");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Event");
-                });
-
-            modelBuilder.Entity("proyecto_iic2113.Models.Franchise", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Franchise");
                 });
 
             modelBuilder.Entity("proyecto_iic2113.Models.Menu", b =>
@@ -560,11 +543,6 @@ namespace proyecto_iic2113.Migrations
 
             modelBuilder.Entity("proyecto_iic2113.Models.Conference", b =>
                 {
-                    b.HasOne("proyecto_iic2113.Models.Franchise", "Franchise")
-                        .WithMany("Conferences")
-                        .HasForeignKey("FranchiseId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("proyecto_iic2113.Models.ApplicationUser", "Organizer")
                         .WithMany("Conferences")
                         .HasForeignKey("OrganizerId");
