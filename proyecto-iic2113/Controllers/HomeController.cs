@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using proyecto_iic2113.Data;
@@ -16,10 +18,13 @@ namespace proyecto_iic2113.Controllers
     [AllowAnonymous]
     public class HomeController : Controller
     {
-        private ApplicationDbContext _context;
-        public HomeController(ApplicationDbContext context)
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
         public async Task<IActionResult> Index()
         {
@@ -28,6 +33,41 @@ namespace proyecto_iic2113.Controllers
             ViewBag.venues = venues;
             return View(await applicationDbContext.ToListAsync());
         }
+
+        public async Task<IActionResult> Notifications()
+        {
+            var applicationDbContext = _context.Notifications.Include(c => c.Conference).Include(c => c.Event);
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            ViewBag.UserId = userId;
+            return View(await applicationDbContext.ToListAsync());
+        }
+
+        public IActionResult Create()
+        {
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name");
+            ViewData["EventId"] = new SelectList(_context.Events, "Id", "Name");
+            return View();
+        }
+
+        // POST: Launch/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Date,Id,Body,Receiver,ConferenceId,EventId")] Notifications notification)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(notification);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", notification.ConferenceId);
+            ViewData["EventId"] = new SelectList(_context.Events, "Id", "Name", notification.EventId);
+            return View(notification);
+        }
+
 
         public IActionResult Privacy()
         {
@@ -39,5 +79,6 @@ namespace proyecto_iic2113.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }
