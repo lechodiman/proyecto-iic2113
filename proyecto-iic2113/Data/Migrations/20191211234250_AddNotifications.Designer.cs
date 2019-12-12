@@ -10,7 +10,7 @@ using proyecto_iic2113.Data;
 namespace proyecto_iic2113.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191211005618_AddNotifications")]
+    [Migration("20191211234250_AddNotifications")]
     partial class AddNotifications
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -592,12 +592,12 @@ namespace proyecto_iic2113.Migrations
                         .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
-                        .WithMany()
+                        .WithMany("Notifications")
                         .HasForeignKey("ConferenceId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("proyecto_iic2113.Models.Event", "Event")
-                        .WithMany()
+                        .WithMany("Notifications")
                         .HasForeignKey("EventId");
                 });
 

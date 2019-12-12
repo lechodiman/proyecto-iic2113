@@ -36,7 +36,7 @@ namespace proyecto_iic2113.Controllers
 
         public async Task<IActionResult> Notifications()
         {
-            var applicationDbContext = _context.Notifications.Include(c => c.Conference).Include(c => c.Event);
+            var applicationDbContext = _context.Notifications.Include(c => c.Conference).Include(c => c.Event).Include(c => c.Receiver);
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
             ViewBag.UserId = userId;
@@ -46,8 +46,10 @@ namespace proyecto_iic2113.Controllers
         public IActionResult Create()
         {
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name");
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Email");
             ViewData["EventId"] = new SelectList(_context.Events, "Id", "Name");
             return View();
+
         }
 
         // POST: Launch/Create
@@ -65,6 +67,7 @@ namespace proyecto_iic2113.Controllers
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", notification.ConferenceId);
             ViewData["EventId"] = new SelectList(_context.Events, "Id", "Name", notification.EventId);
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Email", notification.ApplicationUserId);
             return View(notification);
         }
 

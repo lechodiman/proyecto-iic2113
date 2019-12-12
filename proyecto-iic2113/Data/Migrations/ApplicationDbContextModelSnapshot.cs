@@ -590,12 +590,12 @@ namespace proyecto_iic2113.Migrations
                         .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
-                        .WithMany()
+                        .WithMany("Notifications")
                         .HasForeignKey("ConferenceId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("proyecto_iic2113.Models.Event", "Event")
-                        .WithMany()
+                        .WithMany("Notifications")
                         .HasForeignKey("EventId");
                 });
 
