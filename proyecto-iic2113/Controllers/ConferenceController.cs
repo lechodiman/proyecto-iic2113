@@ -199,9 +199,21 @@ namespace proyecto_iic2113.Controllers
                 return NotFound();
             }
 
+            var events = await _context.Events
+                .Where(e => e.ConferenceId == id)
+                .ToListAsync();
+
             var averageCalculator = new AverageCalculator(_context);
             var averageRating = await averageCalculator.CalculateConferenceAverageAsync(id);
             ViewBag.averageRating = averageRating;
+
+            var eventsAverageReviews = events
+                .Select(async e => await averageCalculator.CalculateEventAverageAsync(e.Id))
+                .Select(task => task.Result)
+                .ToList();
+
+            ViewBag.eventsAverageReviews = eventsAverageReviews;
+            ViewBag.events = events;
 
             return View(conference);
         }

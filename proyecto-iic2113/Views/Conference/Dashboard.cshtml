@@ -27,6 +27,25 @@
 
         <h1 class="display-4">Events Reviews</h1>
 
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Average Review</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (var i=0; i<ViewBag.events.Count; i++) {
+                    
+                    <tr>
+                        <td scope="row">@ViewBag.events[i].Name</td>
+                        <td>@ViewBag.eventsAverageReviews[i]</td>
+                    </tr>
+                
+                }
+            </tbody>
+        </table>
+
     </div>
 </div>
 
