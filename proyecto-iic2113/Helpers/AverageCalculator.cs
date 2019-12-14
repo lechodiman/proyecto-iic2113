@@ -22,6 +22,21 @@ namespace proyecto_iic2113.Helpers
             _context = context;
         }
 
+        public async Task<double> CalculateUserTalkAverageAsync(string userId)
+        {
+            var filterTalks = await _context.TalkLecturers
+                .Where(talkLecturer => talkLecturer.Lecturer.Id == userId)
+                .Select(talkLecturer => talkLecturer.Talk)
+                .ToListAsync();
+
+            var talksAverageRatings = filterTalks
+                .Select(async talk => await CalculateEventAverageAsync(talk.Id))
+                .Select(task => task.Result)
+                .ToList();
+            var averageRating = talksAverageRatings.Count > 0 ? talksAverageRatings.Average() : 0.0;
+            return averageRating;
+        }
+
         public async Task<double> CalculateEventAverageAsync(int? eventId)
         {
             var reviews = await _context.Reviews
