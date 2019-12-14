@@ -50,6 +50,11 @@ namespace proyecto_iic2113.Controllers
                 .ThenInclude(conference => conference.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
+            var eventAttendees = await _context.EventUserAttendees
+                .Where(t => t.EventId == id)
+                .ToListAsync();
+            ViewBag.numberOfAttendees = eventAttendees.Count;
+
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
             ViewBag.UserId = userId;
@@ -74,7 +79,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IsAllYouCanEat,Id,Name,StartDate,EndDate,Description,ConferenceId")] Launch launch)
+        public async Task<IActionResult> Create([Bind("IsAllYouCanEat,Id,Name,StartDate,EndDate,Description,ConferenceId,Capacity")] Launch launch)
         {
             if (ModelState.IsValid)
             {
@@ -117,7 +122,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IsAllYouCanEat,Id,Name,StartDate,EndDate,Description,ConferenceId")] Launch launch)
+        public async Task<IActionResult> Edit(int id, [Bind("IsAllYouCanEat,Id,Name,StartDate,EndDate,Description,ConferenceId,Capacity")] Launch launch)
         {
             if (id != launch.Id)
             {

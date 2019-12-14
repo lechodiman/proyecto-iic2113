@@ -48,6 +48,12 @@ namespace proyecto_iic2113.Controllers
                 .Include(p => p.Conference)
                 .ThenInclude(conference => conference.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            var eventAttendees = await _context.EventUserAttendees
+                .Where(t => t.EventId == id)
+                .ToListAsync();
+            ViewBag.numberOfAttendees = eventAttendees.Count;
+
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
             ViewBag.UserId = userId;
@@ -71,7 +77,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("HasOpenBar,Id,Name,StartDate,EndDate,Description,ConferenceId")] Party party)
+        public async Task<IActionResult> Create([Bind("HasOpenBar,Id,Name,StartDate,EndDate,Description,ConferenceId,Capacity")] Party party)
         {
             if (ModelState.IsValid)
             {
@@ -113,7 +119,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("HasOpenBar,Id,Name,StartDate,EndDate,Description,ConferenceId")] Party party)
+        public async Task<IActionResult> Edit(int id, [Bind("HasOpenBar,Id,Name,StartDate,EndDate,Description,ConferenceId,Capacity")] Party party)
         {
             if (id != party.Id)
             {

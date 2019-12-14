@@ -54,7 +54,6 @@ namespace proyecto_iic2113.Controllers
             var eventAttendees = await _context.EventUserAttendees
                 .Where(t => t.EventId == id)
                 .ToListAsync();
-
             ViewBag.numberOfAttendees = eventAttendees.Count;
 
             var user = await GetCurrentUserAsync();
