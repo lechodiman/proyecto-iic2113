@@ -82,13 +82,25 @@ namespace proyecto_iic2113.Controllers
             var currentEvent = await _context.Events.FindAsync(id);
             var currentUser = await GetCurrentUserAsync();
 
-            var existingEventUserAttendee = await _context.EventUserAttendees.SingleOrDefaultAsync(m => m.EventId == currentEvent.Id && m.ApplicationUserId == currentUser.Id);
+            var existingEventUserAttendee = await _context.EventUserAttendees
+                .SingleOrDefaultAsync(m => m.EventId == currentEvent.Id && m.ApplicationUserId == currentUser.Id);
+
+            var eventAttendees = await _context.EventUserAttendees
+                .Where(t => t.EventId == id)
+                .ToListAsync();
+
+            if (eventAttendees.Count + 1 > currentEvent.Capacity)
+            {
+                // TODO: Show error
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
 
             // Check if user is already attending this conference
             if (existingEventUserAttendee != null)
             {
                 ModelState.AddModelError(string.Empty, "You are already attending this conference");
-                // TODO: Show this error to a view
+
+                return Redirect(Request.Headers["Referer"].ToString());
             }
             else
             {
@@ -100,7 +112,7 @@ namespace proyecto_iic2113.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToAction("Details", "Conference", new { id = currentEvent.Id });
+            return Redirect(Request.Headers["Referer"].ToString());
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);

@@ -8,16 +8,23 @@
     <div class="row">
         <div class="col">
             <h1 class="display-4">@Html.DisplayFor(model => model.Name)</h1>
+            <p class="lead">
+                @ViewBag.numberOfAttendees / @Html.DisplayFor(model => model.Capacity) 
+            </p>
         </div>
-        @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
-        {
             <div class="col-end">
-                <a asp-action="Dashboard" asp-controller="Event" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
+                <form asp-action="AttendEvent" asp-controller="Event" asp-route-id="@Model.Id">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <input type="submit" value="Attend Event" class="btn btn-outline-success" />
+                </form>
+            @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
+            {
+                <a asp-action="Dashboard" asp-controller="Event" asp-route-id="@Model.Id" class="btn btn-outline-secondary mt-2">
                     <i class="fas fa-chart-line"></i>
                     Dashboard
                 </a>
-            </div>
-        }
+            }
+        </div>
     </div>
     <hr />
     <dl class="row">
