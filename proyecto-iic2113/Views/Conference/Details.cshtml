@@ -40,7 +40,10 @@
             {
                 <div class="col-end">
                     <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.Id"><i class="fas fa-pencil-alt"></i></a>
-                    <a asp-action="Dashboard" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Dashboard</a>
+                    <a asp-action="Dashboard" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
+                        <i class="fas fa-chart-line"></i>
+                        Dashboard
+                    </a>
                 </div>
             }
         </div>
@@ -207,7 +210,7 @@
 
                 @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
                 {
-                    <a asp-controller="Workshop" asp-action="Create"><i class="fas fa-plus fa-sm"></i></a>
+                    <a asp-controller="Launch" asp-action="Create"><i class="fas fa-plus fa-sm"></i></a>
                 }
                 
                 @if (ViewBag.launches.Count == 0)
