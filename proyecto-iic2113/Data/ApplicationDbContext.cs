@@ -25,6 +25,7 @@ namespace proyecto_iic2113.Data
         public DbSet<Workshop> Workshops { get; set; }
         public DbSet<Launch> Launches { get; set; }
         public DbSet<ConferenceUserAttendee> ConferenceUserAttendees { get; set; }
+        public DbSet<EventUserAttendee> EventUserAttendees { get; set; }
         public DbSet<Review> Reviews { get; set; }
 
         internal static Task<string> ToListAsync()
@@ -97,6 +98,17 @@ namespace proyecto_iic2113.Data
             modelBuilder.Entity<ConferenceUserAttendee>()
                 .HasOne(cp => cp.UserAttendee)
                 .WithMany(user => user.ConferenceUserAttendees)
+                .HasForeignKey(cp => cp.ApplicationUserId);
+
+            // Event and User relationship
+            modelBuilder.Entity<EventUserAttendee>()
+                .HasOne(cp => cp.Event)
+                .WithMany(c => c.EventUserAttendees)
+                .HasForeignKey(cp => cp.EventId);
+
+            modelBuilder.Entity<EventUserAttendee>()
+                .HasOne(cp => cp.UserAttendee)
+                .WithMany(user => user.EventUserAttendees)
                 .HasForeignKey(cp => cp.ApplicationUserId);
         }
 

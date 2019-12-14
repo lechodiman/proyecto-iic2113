@@ -17,5 +17,6 @@ namespace proyecto_iic2113.Models
         public IEnumerable<ConferenceUserAttendee> ConferenceUserAttendees { get; set; }
 
         public IEnumerable<Venue> Venues { get; set; }
+        public IEnumerable<EventUserAttendee> EventUserAttendees { get; set; }
     }
 }
