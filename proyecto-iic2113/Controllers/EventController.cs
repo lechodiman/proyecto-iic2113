@@ -64,6 +64,7 @@ namespace proyecto_iic2113.Controllers
             var ratings = reviews.Select(x => x.Rating).ToList();
             var averageRating = ratings.Count > 0 ? ratings.Average() : 0.0;
             ViewBag.averageRating = averageRating;
+            ViewBag.numberOfReviews = ratings.Count;
             return View();
         }
     }
