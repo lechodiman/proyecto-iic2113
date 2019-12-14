@@ -36,12 +36,12 @@ namespace proyecto_iic2113.Controllers
         public async Task<IActionResult> Evaluation()
         {
             var currentUser = await GetCurrentUserAsync();
+            if (currentUser == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
             var averageCalculator = new AverageCalculator(_context);
             var averageRating = await averageCalculator.CalculateUserTalkAverageAsync(currentUser.Id);
-            Console.WriteLine("---------------------------");
-            Console.WriteLine("ESTE VALOR QUIERO VER");
-            Console.WriteLine(averageRating);
-            Console.WriteLine("---------------------------");
             ViewBag.averageRating = averageRating;
 
             var filterTalk = await _context.TalkLecturers
