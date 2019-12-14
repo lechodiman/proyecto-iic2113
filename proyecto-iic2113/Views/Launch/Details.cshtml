@@ -4,10 +4,23 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
 
-<div>
-    <h4>Launch</h4>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1 class="display-4">@Html.DisplayFor(model => model.Name)</h1>
+        </div>
+        @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
+        {
+            <div class="col-end">
+                <a asp-action="Dashboard" asp-controller="Event" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard
+                </a>
+            </div>
+        }
+    </div>
+
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -49,35 +62,38 @@
             </a>
         </dd>
     </dl>
+
+    <b>Menus:</b>
+    @foreach (var menu in Model.Menus) {
+        <ul class="list-group">
+            <li class="list-group-item">
+                <a asp-action="Details" asp-controller="Menu" asp-route-id= "@menu.Id">@menu.FoodName</a>
+            </li>
+        </ul>
+    }
+
+    <h3>
+        <a asp-action="Index" asp-controller="Review" asp-route-id="@Model.Id">
+            Reviews
+        </a>
+    </h3>
+
+    <a asp-action="Create" asp-controller="Review" asp-route-id="@Model.Id">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+    </a>
+
+    <div>
+        @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
+        {
+            <div>
+                <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+                <a asp-action="Index">Back to List</a>
+            </div>
+        }
+        else
+        {
+            <div><a asp-action="Index">Back to List</a></div>
+        }
+    </div>
 </div>
 
-<b>Menus:</b>
-@foreach (var menu in Model.Menus) {
-    <ul class="list-group">
-        <li class="list-group-item">
-            <a asp-action="Details" asp-controller="Menu" asp-route-id= "@menu.Id">@menu.FoodName</a>
-        </li>
-    </ul>
-}
-
-<a asp-action="Index" asp-controller="Review" asp-route-id="@Model.Id">
-    See all Reviews
-</a>
-
-<a asp-action="Create" asp-controller="Review" asp-route-id="@Model.Id">
-    Add Review
-</a>
-
-<div>
-    @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
-    {
-        <div>
-            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-            <a asp-action="Index">Back to List</a>
-        </div>
-    }
-    else
-    {
-        <div><a asp-action="Index">Back to List</a></div>
-    }
-</div>

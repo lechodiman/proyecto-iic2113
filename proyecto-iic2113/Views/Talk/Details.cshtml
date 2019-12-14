@@ -4,10 +4,22 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1 class="display-4">@Html.DisplayFor(model => model.Name)</h1>
+        </div>
+        @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
+        {
+            <div class="col-end">
+                <a asp-action="Dashboard" asp-controller="Event" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard
+                </a>
+            </div>
+        }
+    </div>
 
-<div>
-    <h4>Talk</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -49,42 +61,47 @@
             </a>
         </dd>
     </dl>
-</div>
 
+    <h3 class="text-muted">Lecturers</h3>
 
-<h3 class="text-muted">Lecturers</h3>
-<ul class="list-group">
-    @foreach (var talkLecturer in Model.TalkLecturers)
-    {
-        <li class="list-group-item">
-            @talkLecturer.Lecturer.Email
-        </li>
-    }
-</ul>
+    <ul class="list-group">
+        @foreach (var talkLecturer in Model.TalkLecturers)
+        {
+            <li class="list-group-item">
+                @talkLecturer.Lecturer.Email
+            </li>
+        }
+    </ul>
 
-@if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
-{
-    <a asp-controller="TalkLecturer" asp-action="Create" asp-route-id="@Model.Id"> add lecturer</a>
-}
-
-<a asp-action="Index" asp-controller="Review" asp-route-id="@Model.Id">
-    See all Reviews
-</a>
-
-<a asp-action="Create" asp-controller="Review" asp-route-id="@Model.Id">
-    Add Review
-</a>
-
-<div>
     @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
     {
-        <div>
-            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-            <a asp-action="Index">Back to List</a>
-        </div>
+        <a asp-controller="TalkLecturer" asp-action="Create" asp-route-id="@Model.Id">
+            <i class="fas fa-plus"></i>
+        </a>
     }
-    else
-    {
-        <div><a asp-action="Index">Back to List</a></div>
-    }
+    <h3>
+        <a asp-action="Index" asp-controller="Review" asp-route-id="@Model.Id">
+            Reviews
+        </a>
+    </h3>
+
+    <a asp-action="Create" asp-controller="Review" asp-route-id="@Model.Id">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+    </a>
+
+    <div>
+        @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
+        {
+            <div>
+                <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+                <a asp-action="Index">Back to List</a>
+            </div>
+        }
+        else
+        {
+            <div><a asp-action="Index">Back to List</a></div>
+        }
+    </div>
 </div>
+
+

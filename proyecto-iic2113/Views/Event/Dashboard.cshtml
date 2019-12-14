@@ -1,0 +1,34 @@
+@model proyecto_iic2113.Models.Event
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1 class="display-4">@Html.DisplayFor(model => model.Name) Dashboard</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <hr>
+
+        <h3 class="text-muted">Average Review</h3>
+        <p>
+            Average Review is based on the average rating of its reviews.
+        </p>
+        <p>
+            Based on @ViewBag.numberOfReviews reviews
+        </p>
+        <p>
+           Average Rating: @ViewBag.averageRating
+        </p>
+
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

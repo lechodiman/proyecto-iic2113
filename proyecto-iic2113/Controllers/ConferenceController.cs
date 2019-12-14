@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using proyecto_iic2113.Data;
+using proyecto_iic2113.Helpers;
 using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
@@ -179,6 +180,41 @@ namespace proyecto_iic2113.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", conference.VenueId);
+            return View(conference);
+        }
+
+        // GET: Conference/Dashboard/5
+        public async Task<IActionResult> Dashboard(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var conference = await _context.Conferences
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (conference == null)
+            {
+                return NotFound();
+            }
+
+            var events = await _context.Events
+                .Where(e => e.ConferenceId == id)
+                .ToListAsync();
+
+            var averageCalculator = new AverageCalculator(_context);
+            var averageRating = await averageCalculator.CalculateConferenceAverageAsync(id);
+            ViewBag.averageRating = averageRating;
+
+            var eventsAverageReviews = events
+                .Select(async e => await averageCalculator.CalculateEventAverageAsync(e.Id))
+                .Select(task => task.Result)
+                .ToList();
+
+            ViewBag.eventsAverageReviews = eventsAverageReviews;
+            ViewBag.events = events;
+
             return View(conference);
         }
 
