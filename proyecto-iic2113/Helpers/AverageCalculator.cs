@@ -24,25 +24,11 @@ namespace proyecto_iic2113.Helpers
 
         public async Task<double> CalculateUserTalkAverageAsync(string userId)
         {
-            var talks = await _context.Talks
-                .Include(talk => talk.TalkLecturers)
-                .ThenInclude(talkLecture => talkLecture.Lecturer)        
+            var filterTalks = await _context.TalkLecturers
+                .Where(talkLecturer => talkLecturer.Lecturer.Id == userId)
+                .Select(talkLecturer => talkLecturer.Talk)
                 .ToListAsync();
-            
-            var filterTalks = new List<Talk>();
-            Console.WriteLine("---------------");
-            foreach (var talk in talks)
-            {
-                foreach (var talkLecture in talk.TalkLecturers)
-                {
-                    if (talkLecture.Lecturer.Id == userId)
-                    {
-                        filterTalks.Add(talk);
-                        Console.WriteLine(talk.Name);
-                    }
-                }
-            }
-            Console.WriteLine("---------------");
+
             var talksAverageRatings = filterTalks
                 .Select(async talk => await CalculateEventAverageAsync(talk.Id))
                 .Select(task => task.Result)
