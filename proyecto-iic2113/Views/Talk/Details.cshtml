@@ -75,6 +75,10 @@
     Add Review
 </a>
 
+<a asp-action="Dashboard" asp-controller="Event" asp-route-id="@Model.Id">
+    Dashboard
+</a>
+
 <div>
     @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
     {

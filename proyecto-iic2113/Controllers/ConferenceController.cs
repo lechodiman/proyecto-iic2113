@@ -182,6 +182,26 @@ namespace proyecto_iic2113.Controllers
             return View(conference);
         }
 
+        // GET: Conference/Dashboard/5
+        public async Task<IActionResult> Dashboard(int? id)
+        {
+            // TODO: calculate average review based on average review of events
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var conference = await _context.Conferences
+                .Include(c => c.Venue)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (conference == null)
+            {
+                return NotFound();
+            }
+
+            return View(conference);
+        }
+
         // GET: Conference/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
