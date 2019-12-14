@@ -32,5 +32,20 @@ namespace proyecto_iic2113.Helpers
             var averageRating = ratings.Count > 0 ? ratings.Average() : 0.0;
             return averageRating;
         }
+
+        public async Task<double> CalculateConferenceAverageAsync(int? conferenceId)
+        {
+            var events = await _context.Events
+                .Where(e => e.ConferenceId == conferenceId)
+                .ToListAsync();
+
+            var eventsAverageRatings = events
+                .Select(async e => await CalculateEventAverageAsync(e.Id))
+                .Select(task => task.Result)
+                .ToList();
+
+            var averageRating = eventsAverageRatings.Count > 0 ? eventsAverageRatings.Average() : 0.0;
+            return averageRating;
+        }
     }
 }

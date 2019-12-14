@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using proyecto_iic2113.Data;
+using proyecto_iic2113.Helpers;
 using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
@@ -185,19 +186,22 @@ namespace proyecto_iic2113.Controllers
         // GET: Conference/Dashboard/5
         public async Task<IActionResult> Dashboard(int? id)
         {
-            // TODO: calculate average review based on average review of events
             if (id == null)
             {
                 return NotFound();
             }
 
             var conference = await _context.Conferences
-                .Include(c => c.Venue)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (conference == null)
             {
                 return NotFound();
             }
+
+            var averageCalculator = new AverageCalculator(_context);
+            var averageRating = await averageCalculator.CalculateConferenceAverageAsync(id);
+            ViewBag.averageRating = averageRating;
 
             return View(conference);
         }
