@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using proyecto_iic2113.Data;
+using proyecto_iic2113.Helpers;
 using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
@@ -61,11 +62,12 @@ namespace proyecto_iic2113.Controllers
                 .Where(r => r.EventId == id)
                 .ToListAsync();
 
-            var ratings = reviews.Select(x => x.Rating).ToList();
-            var averageRating = ratings.Count > 0 ? ratings.Average() : 0.0;
+            var averageCalculator = new AverageCalculator(_context);
+            var averageRating = await averageCalculator.CalculateEventAverageAsync(id);
             ViewBag.averageRating = averageRating;
-            ViewBag.numberOfReviews = ratings.Count;
+            ViewBag.numberOfReviews = reviews.Count;
             return View();
         }
+
     }
 }
