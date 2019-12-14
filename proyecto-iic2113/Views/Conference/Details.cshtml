@@ -34,7 +34,10 @@
                 <i class="far fa-calendar-alt fa-lg"></i> From @Html.DisplayFor(model => model.DateTime) to @Html.DisplayFor(model => model.EndDate)
             </div>
             <div class="col">
-                <i3 class="fas fa-map-marker-alt fa-lg"></i3><a asp-action="Details" asp-controller="Venue" asp-route-id="@Model.Venue.Id"> @Html.DisplayFor(model => model.Venue.Name): @Html.DisplayFor(model => model.Venue.Adress)</a>
+                @if (Model.VenueId != null)
+                {
+                    <i3 class="fas fa-map-marker-alt fa-lg"></i3><a asp-action="Details" asp-controller="Venue" asp-route-id="@Model.Venue.Id"> @Html.DisplayFor(model => model.Venue.Name): @Html.DisplayFor(model => model.Venue.Adress)</a>
+                }
             </div>
             @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
             {
