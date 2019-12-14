@@ -28,11 +28,6 @@ namespace proyecto_iic2113.Data
         public DbSet<EventUserAttendee> EventUserAttendees { get; set; }
         public DbSet<Review> Reviews { get; set; }
 
-        internal static Task<string> ToListAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

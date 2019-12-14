@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,10 +19,14 @@ namespace proyecto_iic2113.Controllers
     public class EventController : Controller
     {
         private ApplicationDbContext _context;
-        public EventController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public EventController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+
         public async Task<IActionResult> Index()
         {
             var numberOfEventsPerType = 3;
@@ -69,5 +74,35 @@ namespace proyecto_iic2113.Controllers
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AttendEvent(int id)
+        {
+
+            var currentEvent = await _context.Events.FindAsync(id);
+            var currentUser = await GetCurrentUserAsync();
+
+            var existingEventUserAttendee = await _context.EventUserAttendees.SingleOrDefaultAsync(m => m.EventId == currentEvent.Id && m.ApplicationUserId == currentUser.Id);
+
+            // Check if user is already attending this conference
+            if (existingEventUserAttendee != null)
+            {
+                ModelState.AddModelError(string.Empty, "You are already attending this conference");
+                // TODO: Show this error to a view
+            }
+            else
+            {
+                var eventUserAttendee = new EventUserAttendee();
+                eventUserAttendee.UserAttendee = currentUser;
+                eventUserAttendee.Event = currentEvent;
+
+                _context.EventUserAttendees.Add(eventUserAttendee);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", "Conference", new { id = currentEvent.Id });
+        }
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }
