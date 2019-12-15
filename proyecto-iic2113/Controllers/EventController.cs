@@ -79,6 +79,8 @@ namespace proyecto_iic2113.Controllers
         public async Task<IActionResult> AttendEvent(int id)
         {
             var currentEvent = await _context.Events.FindAsync(id);
+            _context.Entry(currentEvent).Reference(e => e.Conference).Load();
+
             var currentUser = await GetCurrentUserAsync();
             var attendanceHelper = new AttendanceHelper(_context);
 
@@ -109,8 +111,8 @@ namespace proyecto_iic2113.Controllers
             }
 
             var eventUserAttendee = new EventUserAttendee();
-            eventUserAttendee.UserAttendee = currentUser;
-            eventUserAttendee.Event = currentEvent;
+            eventUserAttendee.ApplicationUserId = currentUser.Id;
+            eventUserAttendee.EventId = currentEvent.Id;
 
             _context.EventUserAttendees.Add(eventUserAttendee);
             await _context.SaveChangesAsync();
