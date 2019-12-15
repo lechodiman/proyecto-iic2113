@@ -22,6 +22,35 @@ namespace proyecto_iic2113.Helpers
             _context = context;
         }
 
+        public async Task<double> CalculateFranchisesAverageAsync(string userId)
+        {
+            // This method calculates the average of all franchises of someone
+            var franchises = await _context.Franchises
+                .Where(franchise => franchise.Organizer.Id == userId)
+                .ToListAsync();
+            var franchisesAverageRaitings = franchises
+                .Select(async franchise => await CalculateFranchiseAverageAsync(franchise.Id))
+                .Select(task => task.Result)
+                .ToList();
+            var averageRating = franchisesAverageRaitings.Count > 0 ? franchisesAverageRaitings.Average() : 0.0;
+            return averageRating;
+        }
+
+        public async Task<double> CalculateFranchiseAverageAsync(int? franchiseId)
+        {
+            // This method calculates the average of ONE franchise
+            var conferences = await _context.Conferences
+                .Where(conference => conference.FranchiseId == franchiseId)
+                .ToListAsync();
+            var conferencesAverageRaitings = conferences
+                .Select(async conference => await CalculateConferenceAverageAsync(conference.Id))
+                .Select(task => task.Result)
+                .ToList();
+            var averageRating = conferencesAverageRaitings.Count > 0 ? conferencesAverageRaitings.Average() : 0.0;
+            return averageRating;
+            
+        }
+
         public async Task<double> CalculateUserTalkAverageAsync(string userId)
         {
             var filterTalks = await _context.TalkLecturers
