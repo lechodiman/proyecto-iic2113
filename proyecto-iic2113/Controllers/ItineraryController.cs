@@ -51,9 +51,6 @@ namespace proyecto_iic2113.Controllers
                     }
                 ).Where(a => a.ApplicationUserId == currentUser.Id).ToListAsync();
 
-            //La data esta
-            Console.WriteLine("----------");
-            Console.WriteLine(query[0]);
             ViewBag.Conferences = query;
 
             var events = await _context.EventUserAttendees.Where(a => a.ApplicationUserId == currentUser.Id).ToListAsync();
