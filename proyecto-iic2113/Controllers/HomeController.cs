@@ -27,7 +27,7 @@ namespace proyecto_iic2113.Controllers
         private IFlasher _flasher;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(ApplicationDbContext context, IFlasher f)
+        public HomeController(ApplicationDbContext context, IFlasher f, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _flasher = f;
