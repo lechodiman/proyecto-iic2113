@@ -5,9 +5,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-
+using System.Collections.Generic;
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
+using System;
 
 namespace proyecto_iic2113.Controllers
 {
@@ -30,8 +31,29 @@ namespace proyecto_iic2113.Controllers
         {
             ApplicationUser currentUser = await GetCurrentUserAsync();
 
-            var conferences = await _context.ConferenceUserAttendees.Where(a => a.ApplicationUserId == currentUser.Id).ToListAsync();
-            ViewBag.Conferences = conferences;
+            //var conferences = await _context.ConferenceUserAttendees.Where(a => a.ApplicationUserId == currentUser.Id).ToListAsync();
+
+
+            var query = await _context.ConferenceUserAttendees
+                .Join(
+                    _context.Conferences,
+                    attendance => attendance.ConferenceId,
+                    conference => conference.Id,
+                    (attendance, conference) => new AttendanceView
+                    {
+                        ConferenceId = conference.Id,
+                        Name = conference.Name,
+                        Venue = conference.Venue.Name,
+                        EndDate = conference.EndDate,
+                        DateTime = conference.DateTime,
+                        
+                    }
+                ).ToListAsync();
+
+            //La data esta
+            Console.WriteLine("----------");
+            Console.WriteLine(query[0]);
+            ViewBag.Conferences = query;
 
             var events = await _context.EventUserAttendees.Where(a => a.ApplicationUserId == currentUser.Id).ToListAsync();
             ViewBag.Events = events;

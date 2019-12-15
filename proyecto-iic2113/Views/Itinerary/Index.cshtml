@@ -1,4 +1,4 @@
-@model Tuple<Conference,Event>
+@model proyecto_iic2113.Models.AttendanceView
 @{
     ViewData["Title"] = "Index";
 }
@@ -7,7 +7,8 @@
 <h3 class="text-muted">Conferences Itinerary</h3>
 @foreach (var conference in ViewBag.conferences)
             {
+                
                 <li class="list-group-item">
-                    <a asp-action="Details" asp-controller="Conference" asp-route-id="@conference.ConferenceId">@conference.ConferenceId</a>
+                    <a asp-action="Details" asp-controller="Conference" asp-route-id="@conference.ConferenceId">@conference.Name</a>
                 </li>
             }
