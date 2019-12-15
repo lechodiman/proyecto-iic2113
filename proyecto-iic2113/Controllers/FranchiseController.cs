@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
 using Microsoft.AspNetCore.Identity;
+using proyecto_iic2113.Helpers;
 
 namespace proyecto_iic2113.Controllers
 {
@@ -17,6 +18,69 @@ namespace proyecto_iic2113.Controllers
         {
             _context = context;
             _userManager = userManager;
+        }
+
+        // GET: Franchise/Dashboard
+        public async Task<IActionResult> MyEvaluation()
+        {
+            var currentUser = await GetCurrentUserAsync();
+            if (currentUser == null){
+                // TODO: should redirect to home page
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewBag.UserId = currentUser?.Id;
+            var averageCalculator = new AverageCalculator(_context);
+            var averageRating = await averageCalculator.CalculateFranchisesAverageAsync(currentUser.Id);
+            ViewBag.averageRating = averageRating;
+
+            var franchises = await _context.Franchises
+                .Where(franchise => franchise.Organizer.Id == currentUser.Id)
+                .ToListAsync();
+
+            var franchisesAverageReviews = franchises
+                .Select(async franchise => await averageCalculator.CalculateFranchiseAverageAsync(franchise.Id))
+                .Select(task => task.Result)
+                .ToList();
+
+            ViewBag.franchisesAverageReviews = franchisesAverageReviews;
+            ViewBag.franchises = franchises;
+            return View();
+        }
+
+        // GET: Franchise/Dashboard/1
+        public async Task<IActionResult> Dashboard(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var franchise = await _context.Franchises
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (franchise == null)
+            {
+                return NotFound();
+            }
+
+            var conferences = await _context.Conferences
+                .Where(conference => conference.FranchiseId == id)
+                .ToListAsync();
+
+            var averageCalculator = new AverageCalculator(_context);
+            var averageRating = await averageCalculator.CalculateFranchiseAverageAsync(id);
+            ViewBag.averageRating = averageRating;
+
+            var conferencesAverageReviews = conferences
+                .Select(async conference => await averageCalculator.CalculateConferenceAverageAsync(conference.Id))
+                .Select(task => task.Result)
+                .ToList();
+
+            ViewBag.conferencesAverageReviews = conferencesAverageReviews;
+            ViewBag.conferences = conferences;
+
+            return View(franchise);
         }
 
         // GET: Franchise
@@ -35,6 +99,7 @@ namespace proyecto_iic2113.Controllers
 
             var franchise = await _context.Franchise
                 .Include(c => c.Conferences)
+                .Include(f => f.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (franchise == null)
@@ -60,7 +125,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description")] Franchise franchise)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Orga")] Franchise franchise)
         {
             ApplicationUser currentUser = await GetCurrentUserAsync();
             franchise.Organizer = currentUser;
@@ -104,7 +169,9 @@ namespace proyecto_iic2113.Controllers
             if (ModelState.IsValid)
             {
                 try
-                {
+                {   
+                    var currentUser = await GetCurrentUserAsync();
+                    franchise.Organizer = currentUser;
                     _context.Update(franchise);
                     await _context.SaveChangesAsync();
                 }
