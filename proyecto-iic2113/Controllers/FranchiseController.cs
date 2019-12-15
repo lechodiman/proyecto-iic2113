@@ -1,22 +1,22 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using proyecto_iic2113.Data;
 using proyecto_iic2113.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace proyecto_iic2113.Controllers
 {
     public class FranchiseController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public FranchiseController(ApplicationDbContext context)
+        public FranchiseController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Franchise
@@ -62,6 +62,8 @@ namespace proyecto_iic2113.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description")] Franchise franchise)
         {
+            ApplicationUser currentUser = await GetCurrentUserAsync();
+            franchise.Organizer = currentUser;
             if (ModelState.IsValid)
             {
                 _context.Add(franchise);
@@ -155,5 +157,7 @@ namespace proyecto_iic2113.Controllers
         {
             return _context.Franchise.Any(e => e.Id == id);
         }
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }
