@@ -26,5 +26,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\css\Images\" />
+    <Folder Include="Views\Itinerary\" />
   </ItemGroup>
 </Project>

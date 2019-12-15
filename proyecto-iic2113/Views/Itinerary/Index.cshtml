@@ -1,0 +1,13 @@
+@model Tuple<Conference,Event>
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<h3 class="text-muted">Conferences Itinerary</h3>
+@foreach (var conference in ViewBag.conferences)
+            {
+                <li class="list-group-item">
+                    <a asp-action="Details" asp-controller="Conference" asp-route-id="@conference.ConferenceId">@conference.ConferenceId</a>
+                </li>
+            }
