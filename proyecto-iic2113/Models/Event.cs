@@ -26,5 +26,9 @@ namespace proyecto_iic2113.Models
 		public Conference Conference { get; set; }
 
 		public IEnumerable<Review> Reviews { get; set; }
+		public IEnumerable<EventUserAttendee> EventUserAttendees { get; set; }
+
+		[Required]
+		public int Capacity { get; set; }
 	}
 }
