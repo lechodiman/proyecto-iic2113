@@ -4,14 +4,19 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Core.Flash;
+using Core.Flash.Extensions;
+using Core.Flash.Model;
+using Core.Flash.Mvc;
+
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 
 using proyecto_iic2113.Data;
-using proyecto_iic2113.Models;
 using proyecto_iic2113.Helpers;
+using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
 {
@@ -19,12 +24,16 @@ namespace proyecto_iic2113.Controllers
     public class HomeController : Controller
     {
         private ApplicationDbContext _context;
+        private IFlasher _flasher;
         private readonly UserManager<ApplicationUser> _userManager;
-        public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+
+        public HomeController(ApplicationDbContext context, IFlasher f, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _flasher = f;
             _userManager = userManager;
         }
+
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Conferences.Include(c => c.Venue).Take(3);

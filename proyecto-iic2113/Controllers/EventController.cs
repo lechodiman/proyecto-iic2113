@@ -4,7 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Core.Flash;
+
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,14 +17,20 @@ using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
 {
-    [AllowAnonymous]
     public class EventController : Controller
     {
         private ApplicationDbContext _context;
-        public EventController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IFlasher _flasher;
+
+        public EventController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IFlasher flasher)
         {
+            _flasher = flasher;
             _context = context;
+            _userManager = userManager;
         }
+
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var numberOfEventsPerType = 3;
@@ -69,5 +78,52 @@ namespace proyecto_iic2113.Controllers
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AttendEvent(int id)
+        {
+            var currentEvent = await _context.Events.FindAsync(id);
+            _context.Entry(currentEvent).Reference(e => e.Conference).Load();
+
+            var currentUser = await GetCurrentUserAsync();
+            var attendanceHelper = new AttendanceHelper(_context);
+
+            var eventAttendees = await _context.EventUserAttendees
+                .Where(t => t.EventId == id)
+                .ToListAsync();
+
+            var isAttendingConference = await attendanceHelper.IsUserAttendingConference(currentUser, currentEvent.Conference);
+
+            var isUserAttendingEvent = await attendanceHelper.IsUserAttendingEvent(currentUser, currentEvent);
+
+            if (!isAttendingConference)
+            {
+                _flasher.Flash("Danger", "You must attend the conference to attend an event.");
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+
+            if (eventAttendees.Count + 1 > currentEvent.Capacity)
+            {
+                _flasher.Flash("Danger", "Event is already full.");
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+
+            if (isUserAttendingEvent)
+            {
+                _flasher.Flash("Danger", "You are already attending this event");
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+
+            var eventUserAttendee = new EventUserAttendee();
+            eventUserAttendee.ApplicationUserId = currentUser.Id;
+            eventUserAttendee.EventId = currentEvent.Id;
+
+            _context.EventUserAttendees.Add(eventUserAttendee);
+            await _context.SaveChangesAsync();
+
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }
