@@ -30,10 +30,7 @@ namespace proyecto_iic2113.Controllers
         public async Task<IActionResult> Index()
         {
             ApplicationUser currentUser = await GetCurrentUserAsync();
-
-            //var conferences = await _context.ConferenceUserAttendees.Where(a => a.ApplicationUserId == currentUser.Id).ToListAsync();
-
-
+        
             var query = await _context.ConferenceUserAttendees
                 .Join(
                     _context.Conferences,
@@ -53,8 +50,27 @@ namespace proyecto_iic2113.Controllers
 
             ViewBag.Conferences = query;
 
-            var events = await _context.EventUserAttendees.Where(a => a.ApplicationUserId == currentUser.Id).ToListAsync();
-            ViewBag.Events = events;
+
+
+            var query2 = await _context.EventUserAttendees
+                .Join(
+                    _context.Events,
+                    attendance => attendance.EventId,
+                    event_i => event_i.Id,
+                    (attendance, event_i) => new AttendanceViewEvent
+                    {
+                        ConferenceId = event_i.Id,
+                        Name = event_i.Name,
+                        EndDate = event_i.EndDate,
+                        StartDate = event_i.StartDate,
+                        ApplicationUserId = attendance.ApplicationUserId
+
+                    }
+                ).Where(e => e.ApplicationUserId == currentUser.Id).ToListAsync();
+
+
+            //var events = await _context.EventUserAttendees.Where(a => a.ApplicationUserId == currentUser.Id).ToListAsync();
+            ViewBag.Events = query2;
 
 
 
