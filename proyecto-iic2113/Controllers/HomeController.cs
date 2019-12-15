@@ -10,10 +10,12 @@ using Core.Flash.Model;
 using Core.Flash.Mvc;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using proyecto_iic2113.Data;
+using proyecto_iic2113.Helpers;
 using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
@@ -23,11 +25,15 @@ namespace proyecto_iic2113.Controllers
     {
         private ApplicationDbContext _context;
         private IFlasher _flasher;
+        private readonly UserManager<ApplicationUser> _userManager;
+
         public HomeController(ApplicationDbContext context, IFlasher f)
         {
             _context = context;
             _flasher = f;
+            _userManager = userManager;
         }
+
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Conferences.Include(c => c.Venue).Take(3);
@@ -36,6 +42,31 @@ namespace proyecto_iic2113.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        public async Task<IActionResult> Evaluation()
+        {
+            var currentUser = await GetCurrentUserAsync();
+            if (currentUser == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            var averageCalculator = new AverageCalculator(_context);
+            var averageRating = await averageCalculator.CalculateUserTalkAverageAsync(currentUser.Id);
+            ViewBag.averageRating = averageRating;
+
+            var filterTalk = await _context.TalkLecturers
+                .Where(talkLecturer => talkLecturer.Lecturer.Id == currentUser.Id)
+                .Select(talkLecturer => talkLecturer.Talk)
+                .ToListAsync();
+
+            var talksAverageReviews = filterTalk
+                .Select(async talk => await averageCalculator.CalculateEventAverageAsync(talk.Id))
+                .Select(task => task.Result)
+                .ToList();
+
+            ViewBag.talksAverageReviews = talksAverageReviews;
+            ViewBag.talks = filterTalk;
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();
@@ -46,5 +77,6 @@ namespace proyecto_iic2113.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }

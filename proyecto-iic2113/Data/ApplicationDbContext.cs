@@ -18,6 +18,7 @@ namespace proyecto_iic2113.Data
         public DbSet<Sponsor> Sponsors { get; set; }
         public DbSet<Conference> Conferences { get; set; }
         public DbSet<Talk> Talks { get; set; }
+        public DbSet<TalkLecturer> TalkLecturers { get; set; }
         public DbSet<Venue> Venues { get; set; }
         public DbSet<Equipment> Equipments { get; set; }
         public DbSet<Party> Parties { get; set; }
