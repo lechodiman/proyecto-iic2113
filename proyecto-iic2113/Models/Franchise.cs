@@ -15,6 +15,8 @@ namespace proyecto_iic2113.Models
         public string Name { get; set; }
         public string Description { get; set; }
 
+        public ApplicationUser Organizer { get; set; }
+
         public IEnumerable<Conference> Conferences { get; set; }
     }
 }

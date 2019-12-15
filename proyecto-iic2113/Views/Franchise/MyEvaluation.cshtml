@@ -1,0 +1,65 @@
+@model proyecto_iic2113.Models.Franchise
+
+@{
+    ViewData["Title"] = "Your Franchises Evaluation";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1 class="display-4">@Html.DisplayFor(model => model.Id) Your Franchises Evaluation</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <hr>
+
+        <br />
+
+        <h3 class="text-muted">Average Review</h3>
+        <p class="text-small">
+            Average Review is based on the average review of its talks.
+        </p>
+
+        <p>
+           Average Rating: @ViewBag.averageRating
+        </p>
+
+        @if (ViewBag.franchises.Count > 0)
+        {
+            <h1 class="display-4">Franchises Reviews</h1>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Average Review</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i=0; i<ViewBag.franchises.Count; i++) {
+                        
+                        <tr>
+                            <td scope="row">
+                                <a asp-controller="Franchise" asp-action="Dashborad" asp-route-id="@ViewBag.franchises[i].Id">
+                                    @ViewBag.franchises[i].Name
+                                </a>
+                            </td>
+                            <td>@ViewBag.franchisesAverageReviews[i]</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else 
+        {
+            <h1 class="display-4">You don't have any Franchises Reviews </h1>
+        }
+
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -97,10 +97,12 @@ namespace proyecto_iic2113.Controllers
 
         // GET: Conference/Create
         [Authorize]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            ApplicationUser currentUser = await GetCurrentUserAsync();
+
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name");
-            ViewData["FranchiseId"] = new SelectList(_context.Franchise, "Id", "Name");
+            ViewData["FranchiseId"] = new SelectList(_context.Franchise.Where(f => f.Organizer.Id == currentUser.Id), "Id", "Name");
             return View();
         }
 
@@ -120,7 +122,7 @@ namespace proyecto_iic2113.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", conference.VenueId);
-            ViewData["FranchiseId"] = new SelectList(_context.Venues, "Id", "Name", conference.FranchiseId);
+            ViewData["FranchiseId"] = new SelectList(_context.Franchise.Where(f => f.Organizer.Id == currentUser.Id), "Id", "Name", conference.FranchiseId);
             return View(conference);
         }
 
