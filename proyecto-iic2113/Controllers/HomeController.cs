@@ -42,42 +42,40 @@ namespace proyecto_iic2113.Controllers
                 .Where(c => c.Receiver.Id == userId)
                 .Include(c => c.Conference)
                 .Include(c => c.Event);
-            ViewBag.UserId = userId;
             return View(await applicationDbContext.ToListAsync());
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> DeleteNotification(int? id)
         {
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name");
-            ViewData["EventId"] = new SelectList(_context.Events, "Id", "Name");
-            return View();
-
-        }
-
-        // POST: Launch/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Date,Body,ConferenceId,EventId")] Notifications notification)
-        {
-            var attendees = await _context.ConferenceUserAttendees.Where(s => s.ConferenceId == notification.ConferenceId).ToListAsync();
-            ViewBag.Attendees = attendees;
-            if (ModelState.IsValid)
+            if (id == null)
             {
-                foreach (var attendee in ViewBag.Attendees)
-                {
-                        notification.ApplicationUserId = attendee.ApplicationUserId;
-                        _context.Add(notification);
-                        await _context.SaveChangesAsync();
-                    
-                }
-                return RedirectToAction(nameof(Notifications));
+                return NotFound();
             }
-            ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", notification.ConferenceId);
-            ViewData["EventId"] = new SelectList(_context.Events, "Id", "Name", notification.EventId);
+
+            var notification = await _context.Notifications
+                .Include(r => r.Receiver)
+                .Include(r => r.Conference)
+                .Include(r => r.Event)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (notification == null)
+            {
+                return NotFound();
+            }
+
             return View(notification);
         }
+
+        // POST: Review/Delete/5
+        [HttpPost, ActionName("DeleteNotification")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var notification = await _context.Notifications.FindAsync(id);
+            _context.Notifications.Remove(notification);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Notifications", "Home");
+        }
+
 
         public IActionResult Privacy()
         {

@@ -43,272 +43,279 @@
                 </div>
             }
         </div>
-
         <br />
-
-        <h3 class="text-muted">Description</h3>
-        <p>
-            @Html.DisplayFor(model => model.Description)
-        </p>
-
-
-        <h3 class="text-muted">Sponsors</h3>
-
-        <ul class="list-group">
-
-            @if (ViewBag.Sponsors.Count == 0)
+        <div class="row">
+            @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
             {
-                <li class="list-group-item">
-                    <a class="text-info">There are no sponsors yet 😔</a>
-                </li>
+                <div class="col"><h3 class="text-muted">Description</h3></div>
+                <div class="col-end">
+                    <a class="btn btn-outline-primary" asp-action="CreateNotification" asp-route-id="@Model.Id"><i class="fas fa-paper-plane"></i></a>
+                </div>
             }
+        </div>
 
-            @foreach (var sponsor in Model.Sponsors)
-            {
-                <li class="list-group-item">
-                    <a asp-action="Details" asp-controller="Sponsor" asp-route-id="@sponsor.Id">@sponsor.Name</a>
-                </li>
-            }
-        </ul>
-
-        @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
-        {
-            <div class="mt-2">
-                <a asp-action="Create" asp-controller="Sponsor" asp-route-id=@Model.Id class="btn btn-outline-secondary">Add Sponsor</a>
-            </div>
-        }
-
-        <br />
-
-        <h3 class="text-muted">Attendees</h3>
+            <p>
+                @Html.DisplayFor(model => model.Description)
+            </p>
 
 
-        <ul class="list-group">
-            @if (ViewBag.Attendees.Count == 0)
-            {
-                <li class="list-group-item">
-                    <a class="text-info">There are no attendees yet 😔</a>
-                </li>
-            }
-            
-            @foreach (var conferenceUserAttendee in Model.ConferenceUserAttendees)
-            {
-                <li class="list-group-item">
-                    @conferenceUserAttendee.UserAttendee.Email
-                </li>
-            }
-        </ul>
+            <h3 class="text-muted">Sponsors</h3>
 
-        <br />
+            <ul class="list-group">
 
-        <h1 class="display-4">Events</h1>
-
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="parties-tab" data-toggle="tab" href="#parties" role="tab" aria-controls="parties" aria-selected="true">Parties</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="workshop-tab" data-toggle="tab" href="#workshop" role="tab" aria-controls="workshop" aria-selected="false">Workshop</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="lunches-tab" data-toggle="tab" href="#lunches" role="tab" aria-controls="lunches" aria-selected="false">Lunches</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="chats-tab" data-toggle="tab" href="#chats" role="tab" aria-controls="chats" aria-selected="false">Chats</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="talks-tab" data-toggle="tab" href="#talks" role="tab" aria-controls="talks" aria-selected="false">Talks</a>
-            </li>
-        </ul>
-
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="parties" role="tabpanel" aria-labelledby="parties-tab">
-
-                @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
+                @if (ViewBag.Sponsors.Count == 0)
                 {
-                    <a asp-controller="Party" asp-action="Create" ><i class="fas fa-plus fa-sm"></i></a>
+                    <li class="list-group-item">
+                        <a class="text-info">There are no sponsors yet 😔</a>
+                    </li>
                 }
 
-                @if (ViewBag.parties.Count == 0)
+                @foreach (var sponsor in Model.Sponsors)
                 {
-                    <div class="card">
-                        <div class="card-body">
-                            <p class="card-title text-center text-info">There are no parties yet 😔</p>
-                        </div>
-                    </div>
+                    <li class="list-group-item">
+                        <a asp-action="Details" asp-controller="Sponsor" asp-route-id="@sponsor.Id">@sponsor.Name</a>
+                    </li>
+                }
+            </ul>
+
+            @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
+            {
+                <div class="mt-2">
+                    <a asp-action="Create" asp-controller="Sponsor" asp-route-id=@Model.Id class="btn btn-outline-secondary">Add Sponsor</a>
+                </div>
+            }
+
+            <br />
+
+            <h3 class="text-muted">Attendees</h3>
+
+
+            <ul class="list-group">
+                @if (ViewBag.Attendees.Count == 0)
+                {
+                    <li class="list-group-item">
+                        <a class="text-info">There are no attendees yet 😔</a>
+                    </li>
                 }
 
-                <div class="card-columns">
+                @foreach (var conferenceUserAttendee in Model.ConferenceUserAttendees)
+                {
+                    <li class="list-group-item">
+                        @conferenceUserAttendee.UserAttendee.Email
+                    </li>
+                }
+            </ul>
 
-                    @foreach (var item in ViewBag.parties)
+            <br />
+
+            <h1 class="display-4">Events</h1>
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="parties-tab" data-toggle="tab" href="#parties" role="tab" aria-controls="parties" aria-selected="true">Parties</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="workshop-tab" data-toggle="tab" href="#workshop" role="tab" aria-controls="workshop" aria-selected="false">Workshop</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="lunches-tab" data-toggle="tab" href="#lunches" role="tab" aria-controls="lunches" aria-selected="false">Lunches</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="chats-tab" data-toggle="tab" href="#chats" role="tab" aria-controls="chats" aria-selected="false">Chats</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="talks-tab" data-toggle="tab" href="#talks" role="tab" aria-controls="talks" aria-selected="false">Talks</a>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="parties" role="tabpanel" aria-labelledby="parties-tab">
+
+                    @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
                     {
+                        <a asp-controller="Party" asp-action="Create"><i class="fas fa-plus fa-sm"></i></a>
+                    }
 
+                    @if (ViewBag.parties.Count == 0)
+                    {
                         <div class="card">
                             <div class="card-body">
-                                <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
-                                <h5 class="card-title">
-                                    <a asp-controller="Party" asp-action="Details" asp-route-id="@item.Id">
-                                        @item.Name
-                                    </a>
-                                </h5>
-                                <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
+                                <p class="card-title text-center text-info">There are no parties yet 😔</p>
                             </div>
                         </div>
                     }
 
-                </div>
+                    <div class="card-columns">
 
-            </div>
-            <div class="tab-pane fade" id="workshop" role="tabpanel" aria-labelledby="workshop-tab">
-
-                @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
-                {
-                    <a asp-controller="Workshop" asp-action="Create"><i class="fas fa-plus fa-sm"></i></a>
-                }
-
-                @if (ViewBag.workshops.Count == 0)
-                {
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-title text-center text-info">There are no workshops yet 😔</p>
-                    </div>
-                </div>
-                }
-
-                <div class="card-columns">
-
-                    @foreach (var item in ViewBag.workshops)
+                        @foreach (var item in ViewBag.parties)
                         {
 
-                    <div class="card">
-                        <div class="card-body">
-                            <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
-                            <h5 class="card-title">
-                                <a asp-controller="Workshop" asp-action="Details" asp-route-id="@item.Id">
-                                    @item.Name
-                                </a>
-                            </h5>
-                            <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
-                        </div>
-                    </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
+                                    <h5 class="card-title">
+                                        <a asp-controller="Party" asp-action="Details" asp-route-id="@item.Id">
+                                            @item.Name
+                                        </a>
+                                    </h5>
+                                    <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
+                                </div>
+                            </div>
                         }
 
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="lunches" role="tabpanel" aria-labelledby="lunches-tab">
-
-                @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
-                {
-                    <a asp-controller="Workshop" asp-action="Create"><i class="fas fa-plus fa-sm"></i></a>
-                }
-                
-                @if (ViewBag.launches.Count == 0)
-                {
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-title text-center text-info">There are no lunches yet 😔</p>
                     </div>
+
                 </div>
-                }
+                <div class="tab-pane fade" id="workshop" role="tabpanel" aria-labelledby="workshop-tab">
 
-                <div class="card-columns">
-
-                    @foreach (var item in ViewBag.launches)
+                    @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
                     {
-
-                    <div class="card">
-                        <div class="card-body">
-                            <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
-                            <h5 class="card-title">
-                                <a asp-controller="Launch" asp-action="Details" asp-route-id="@item.Id">
-                                    @item.Name
-                                </a>
-                            </h5>
-                            <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
-                        </div>
-                    </div>
+                        <a asp-controller="Workshop" asp-action="Create"><i class="fas fa-plus fa-sm"></i></a>
                     }
 
-                </div>
-
-            </div>
-
-            <div class="tab-pane fade" id="chats" role="tabpanel" aria-labelledby="chats-tab">
-
-                @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
-                {
-                    <a asp-controller="Chat" asp-action="Create"><i class="fas fa-plus fa-sm"></i></a>
-                }
-
-                @if (ViewBag.chats.Count == 0)
+                    @if (ViewBag.workshops.Count == 0)
                     {
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-title text-center text-info">There are no chats yet 😔</p>
-                    </div>
-                </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-title text-center text-info">There are no workshops yet 😔</p>
+                            </div>
+                        </div>
                     }
 
-                <div class="card-columns">
+                    <div class="card-columns">
 
-                    @foreach (var item in ViewBag.chats)
+                        @foreach (var item in ViewBag.workshops)
                         {
 
-                    <div class="card">
-                        <div class="card-body">
-                            <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
-                            <h5 class="card-title">
-                                <a asp-controller="Chat" asp-action="Details" asp-route-id="@item.Id">
-                                    @item.Name
-                                </a>
-                            </h5>
-                            <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
-                        </div>
-                    </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
+                                    <h5 class="card-title">
+                                        <a asp-controller="Workshop" asp-action="Details" asp-route-id="@item.Id">
+                                            @item.Name
+                                        </a>
+                                    </h5>
+                                    <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
+                                </div>
+                            </div>
                         }
+
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="lunches" role="tabpanel" aria-labelledby="lunches-tab">
+
+                    @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
+                    {
+                        <a asp-controller="Workshop" asp-action="Create"><i class="fas fa-plus fa-sm"></i></a>
+                    }
+
+                    @if (ViewBag.launches.Count == 0)
+                    {
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-title text-center text-info">There are no lunches yet 😔</p>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="card-columns">
+
+                        @foreach (var item in ViewBag.launches)
+                        {
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
+                                    <h5 class="card-title">
+                                        <a asp-controller="Launch" asp-action="Details" asp-route-id="@item.Id">
+                                            @item.Name
+                                        </a>
+                                    </h5>
+                                    <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
 
                 </div>
 
-            </div>
+                <div class="tab-pane fade" id="chats" role="tabpanel" aria-labelledby="chats-tab">
 
-            <div class="tab-pane fade" id="talks" role="tabpanel" aria-labelledby="talks-tab">
+                    @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
+                    {
+                        <a asp-controller="Chat" asp-action="Create"><i class="fas fa-plus fa-sm"></i></a>
+                    }
 
-                @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
-                {
-                    <a asp-controller="Talk" asp-action="Create"><i class="fas fa-plus fa-sm"></i></a>
-                }
-
-                @if (ViewBag.talks.Count == 0)
-                {
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-title text-center text-info">There are no talks yet 😔</p>
-                    </div>
-                </div>
-                }
-
-                <div class="card-columns">
-                    @foreach (var item in ViewBag.talks)
-                        {
-                    <div class="card">
-                        <div class="card-body">
-                            <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
-                            <h5 class="card-title">
-                                <a asp-controller="Talk" asp-action="Details" asp-route-id="@item.Id">
-                                    @item.Name
-                                </a>
-                            </h5>
-                            <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
+                    @if (ViewBag.chats.Count == 0)
+                    {
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-title text-center text-info">There are no chats yet 😔</p>
+                            </div>
                         </div>
-                    </div>
+                    }
+
+                    <div class="card-columns">
+
+                        @foreach (var item in ViewBag.chats)
+                        {
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
+                                    <h5 class="card-title">
+                                        <a asp-controller="Chat" asp-action="Details" asp-route-id="@item.Id">
+                                            @item.Name
+                                        </a>
+                                    </h5>
+                                    <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
+                                </div>
+                            </div>
                         }
 
+                    </div>
+
+                </div>
+
+                <div class="tab-pane fade" id="talks" role="tabpanel" aria-labelledby="talks-tab">
+
+                    @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
+                    {
+                        <a asp-controller="Talk" asp-action="Create"><i class="fas fa-plus fa-sm"></i></a>
+                    }
+
+                    @if (ViewBag.talks.Count == 0)
+                    {
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-title text-center text-info">There are no talks yet 😔</p>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="card-columns">
+                        @foreach (var item in ViewBag.talks)
+                        {
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
+                                    <h5 class="card-title">
+                                        <a asp-controller="Talk" asp-action="Details" asp-route-id="@item.Id">
+                                            @item.Name
+                                        </a>
+                                    </h5>
+                                    <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 
 @section Scripts {
