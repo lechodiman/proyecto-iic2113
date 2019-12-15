@@ -13,10 +13,16 @@
             </p>
         </div>
         <div class="col-end">
+            @if (ViewBag.isUserAttendingEvent)
+            {
+                <p> <i class="fa fa-check" aria-hidden="true"></i> Already attending </p>    
+            } else 
+            {
                 <form asp-action="AttendEvent" asp-controller="Event" asp-route-id="@Model.Id">
                     <div asp-validation-summary="All" class="text-danger"></div>
                     <input type="submit" value="Attend Event" class="btn btn-outline-success" />
                 </form>
+            }
             @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
             {
                 <a asp-action="Dashboard" asp-controller="Event" asp-route-id="@Model.Id" class="btn btn-outline-secondary mt-2">

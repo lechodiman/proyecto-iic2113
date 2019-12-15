@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using proyecto_iic2113.Data;
+using proyecto_iic2113.Helpers;
 using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
@@ -57,6 +58,10 @@ namespace proyecto_iic2113.Controllers
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
             ViewBag.UserId = userId;
+
+            var attendanceHelper = new AttendanceHelper(_context);
+            ViewBag.isUserAttendingEvent = user != null ? await attendanceHelper.IsUserAttendingEvent(user, party) : false;
+
             if (party == null)
             {
                 return NotFound();

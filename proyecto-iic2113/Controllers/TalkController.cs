@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using proyecto_iic2113.Data;
+using proyecto_iic2113.Helpers;
 using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
@@ -61,6 +62,9 @@ namespace proyecto_iic2113.Controllers
             ViewBag.UserId = userId;
 
             ViewBag.Users = new SelectList(_context.Users, "Id", "Email");
+
+            var attendanceHelper = new AttendanceHelper(_context);
+            ViewBag.isUserAttendingEvent = user != null ? await attendanceHelper.IsUserAttendingEvent(user, talk) : false;
 
             if (talk == null)
             {

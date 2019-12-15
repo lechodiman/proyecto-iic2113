@@ -15,7 +15,6 @@ using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
 {
-    [AllowAnonymous]
     public class EventController : Controller
     {
         private ApplicationDbContext _context;
@@ -27,6 +26,7 @@ namespace proyecto_iic2113.Controllers
             _userManager = userManager;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var numberOfEventsPerType = 3;
@@ -78,16 +78,22 @@ namespace proyecto_iic2113.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AttendEvent(int id)
         {
-
             var currentEvent = await _context.Events.FindAsync(id);
             var currentUser = await GetCurrentUserAsync();
-
-            var existingEventUserAttendee = await _context.EventUserAttendees
-                .SingleOrDefaultAsync(m => m.EventId == currentEvent.Id && m.ApplicationUserId == currentUser.Id);
+            var attendanceHelper = new AttendanceHelper(_context);
 
             var eventAttendees = await _context.EventUserAttendees
                 .Where(t => t.EventId == id)
                 .ToListAsync();
+
+            var isAttendingConference = await attendanceHelper.IsUserAttendingConference(currentUser, currentEvent.Conference);
+
+            var isUserAttendingEvent = await attendanceHelper.IsUserAttendingEvent(currentUser, currentEvent);
+
+            if (!isAttendingConference)
+            {
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
 
             if (eventAttendees.Count + 1 > currentEvent.Capacity)
             {
@@ -95,22 +101,19 @@ namespace proyecto_iic2113.Controllers
                 return Redirect(Request.Headers["Referer"].ToString());
             }
 
-            // Check if user is already attending this conference
-            if (existingEventUserAttendee != null)
+            if (isUserAttendingEvent)
             {
                 ModelState.AddModelError(string.Empty, "You are already attending this conference");
 
                 return Redirect(Request.Headers["Referer"].ToString());
             }
-            else
-            {
-                var eventUserAttendee = new EventUserAttendee();
-                eventUserAttendee.UserAttendee = currentUser;
-                eventUserAttendee.Event = currentEvent;
 
-                _context.EventUserAttendees.Add(eventUserAttendee);
-                await _context.SaveChangesAsync();
-            }
+            var eventUserAttendee = new EventUserAttendee();
+            eventUserAttendee.UserAttendee = currentUser;
+            eventUserAttendee.Event = currentEvent;
+
+            _context.EventUserAttendees.Add(eventUserAttendee);
+            await _context.SaveChangesAsync();
 
             return Redirect(Request.Headers["Referer"].ToString());
         }
