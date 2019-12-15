@@ -1,0 +1,28 @@
+﻿@model IEnumerable<proyecto_iic2113.Models.Notifications>
+
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<h1>Notifications</h1>
+<hr />
+
+<div class="container">
+
+    @foreach (var item in Model)
+    {
+
+        <div class="card bg-light mb-3" style="max-width: 70rem;">
+            <div class="card-header text-center">
+                <div class="row justify-content-around">
+                    <div> <a> @Html.DisplayFor(modelItem => item.Date) </a> </div>
+                    <div><a> @Html.DisplayFor(modelItem => item.Conference.Name) </a></div>
+                    <div><a asp-action="DeleteNotification" asp-route-id="@item.Id"><i class="fas fa-trash fa-lg"></i></a> </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="card-text">@Html.DisplayFor(modelItem => item.Body)</p>
+            </div>
+        </div>
+    }
+</div> 

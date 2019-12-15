@@ -285,6 +285,46 @@ namespace proyecto_iic2113.Controllers
             return _context.Conferences.Any(e => e.Id == id);
         }
 
+        [HttpGet]
+        [Route("Conference/Details/{id}/CreateNotification")]
+        public IActionResult CreateNotification(int? id)
+        {
+            ViewBag.ConferenceId = id;
+            return View();
+        }
+
+        // POST: Launch/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Conference/Details/{id}/CreateNotification")]
+        public async Task<IActionResult> CreateNotification([Bind("Body,ConferenceId")] Notifications notification)
+        {
+            var attendees = await _context.ConferenceUserAttendees.Where(s => s.ConferenceId == notification.ConferenceId).ToListAsync();
+            ViewBag.Attendees = attendees;
+
+            if (ModelState.IsValid)
+            {
+                foreach (var attendee in ViewBag.Attendees)
+                {
+                    var userNotification = new Notifications();
+                    userNotification.ApplicationUserId = attendee.ApplicationUserId;
+                    userNotification.ConferenceId = notification.ConferenceId;
+                    userNotification.Body = notification.Body;
+                    userNotification.Date = DateTime.Now;
+                    _context.Notifications.Add(userNotification);
+                    await _context.SaveChangesAsync();
+
+                }
+                return RedirectToAction("Details", "Conference", new { id = notification.ConferenceId });
+            }
+            return View(notification);
+        }
+
+
+
+
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
     }

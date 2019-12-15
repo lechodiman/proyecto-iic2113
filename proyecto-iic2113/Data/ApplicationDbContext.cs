@@ -28,6 +28,8 @@ namespace proyecto_iic2113.Data
         public DbSet<ConferenceUserAttendee> ConferenceUserAttendees { get; set; }
         public DbSet<EventUserAttendee> EventUserAttendees { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<Notifications> Notifications { get; set; }
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
