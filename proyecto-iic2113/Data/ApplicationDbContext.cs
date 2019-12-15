@@ -29,7 +29,7 @@ namespace proyecto_iic2113.Data
         public DbSet<EventUserAttendee> EventUserAttendees { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Franchise> Franchises { get; set; }
-
+        public DbSet<Notifications> Notifications { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

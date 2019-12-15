@@ -53,7 +53,16 @@
 
         <br />
 
-        <h3 class="text-muted">Description</h3>
+        <div class="row">
+            @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
+            {
+                <div class="col"><h3 class="text-muted">Description</h3></div>
+                <div class="col-end">
+                    <a class="btn btn-outline-primary" asp-action="CreateNotification" asp-route-id="@Model.Id"><i class="fas fa-paper-plane"></i></a>
+                </div>
+            }
+        </div>
+
         <p>
             @Html.DisplayFor(model => model.Description)
         </p>
@@ -61,7 +70,7 @@
 
         <h3 class="text-muted">Franchise</h3>
         <p>
-                <a asp-action="Details" asp-controller="Franchise" asp-route-id="@Model.Franchise.Id"> @Html.DisplayFor(model => model.Franchise.Name) </a>
+            <a asp-action="Details" asp-controller="Franchise" asp-route-id="@Model.Franchise.Id"> @Html.DisplayFor(model => model.Franchise.Name) </a>
         </p>
 
 
@@ -103,7 +112,7 @@
                     <a class="text-info">There are no attendees yet 😔</a>
                 </li>
             }
-            
+
             @foreach (var conferenceUserAttendee in Model.ConferenceUserAttendees)
             {
                 <li class="list-group-item">
@@ -139,7 +148,7 @@
 
                 @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
                 {
-                    <a asp-controller="Party" asp-action="Create" ><i class="fas fa-plus fa-sm"></i></a>
+                    <a asp-controller="Party" asp-action="Create"><i class="fas fa-plus fa-sm"></i></a>
                 }
 
                 @if (ViewBag.parties.Count == 0)
@@ -181,30 +190,30 @@
 
                 @if (ViewBag.workshops.Count == 0)
                 {
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-title text-center text-info">There are no workshops yet 😔</p>
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-title text-center text-info">There are no workshops yet 😔</p>
+                        </div>
                     </div>
-                </div>
                 }
 
                 <div class="card-columns">
 
                     @foreach (var item in ViewBag.workshops)
-                        {
+                    {
 
-                    <div class="card">
-                        <div class="card-body">
-                            <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
-                            <h5 class="card-title">
-                                <a asp-controller="Workshop" asp-action="Details" asp-route-id="@item.Id">
-                                    @item.Name
-                                </a>
-                            </h5>
-                            <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
+                                <h5 class="card-title">
+                                    <a asp-controller="Workshop" asp-action="Details" asp-route-id="@item.Id">
+                                        @item.Name
+                                    </a>
+                                </h5>
+                                <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
+                            </div>
                         </div>
-                    </div>
-                        }
+                    }
 
                 </div>
             </div>
@@ -215,14 +224,14 @@
                 {
                     <a asp-controller="Launch" asp-action="Create"><i class="fas fa-plus fa-sm"></i></a>
                 }
-                
+
                 @if (ViewBag.launches.Count == 0)
                 {
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-title text-center text-info">There are no lunches yet 😔</p>
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-title text-center text-info">There are no lunches yet 😔</p>
+                        </div>
                     </div>
-                </div>
                 }
 
                 <div class="card-columns">
@@ -230,17 +239,17 @@
                     @foreach (var item in ViewBag.launches)
                     {
 
-                    <div class="card">
-                        <div class="card-body">
-                            <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
-                            <h5 class="card-title">
-                                <a asp-controller="Launch" asp-action="Details" asp-route-id="@item.Id">
-                                    @item.Name
-                                </a>
-                            </h5>
-                            <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
+                                <h5 class="card-title">
+                                    <a asp-controller="Launch" asp-action="Details" asp-route-id="@item.Id">
+                                        @item.Name
+                                    </a>
+                                </h5>
+                                <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
+                            </div>
                         </div>
-                    </div>
                     }
 
                 </div>
@@ -255,31 +264,31 @@
                 }
 
                 @if (ViewBag.chats.Count == 0)
-                    {
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-title text-center text-info">There are no chats yet 😔</p>
+                {
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-title text-center text-info">There are no chats yet 😔</p>
+                        </div>
                     </div>
-                </div>
-                    }
+                }
 
                 <div class="card-columns">
 
                     @foreach (var item in ViewBag.chats)
-                        {
+                    {
 
-                    <div class="card">
-                        <div class="card-body">
-                            <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
-                            <h5 class="card-title">
-                                <a asp-controller="Chat" asp-action="Details" asp-route-id="@item.Id">
-                                    @item.Name
-                                </a>
-                            </h5>
-                            <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
+                                <h5 class="card-title">
+                                    <a asp-controller="Chat" asp-action="Details" asp-route-id="@item.Id">
+                                        @item.Name
+                                    </a>
+                                </h5>
+                                <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
+                            </div>
                         </div>
-                    </div>
-                        }
+                    }
 
                 </div>
 
@@ -294,28 +303,28 @@
 
                 @if (ViewBag.talks.Count == 0)
                 {
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-title text-center text-info">There are no talks yet 😔</p>
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-title text-center text-info">There are no talks yet 😔</p>
+                        </div>
                     </div>
-                </div>
                 }
 
                 <div class="card-columns">
                     @foreach (var item in ViewBag.talks)
-                        {
-                    <div class="card">
-                        <div class="card-body">
-                            <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
-                            <h5 class="card-title">
-                                <a asp-controller="Talk" asp-action="Details" asp-route-id="@item.Id">
-                                    @item.Name
-                                </a>
-                            </h5>
-                            <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
+                    {
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-text text-info">From @item.StartDate.ToString(date_format) to @item.EndDate.ToString(date_format)</p>
+                                <h5 class="card-title">
+                                    <a asp-controller="Talk" asp-action="Details" asp-route-id="@item.Id">
+                                        @item.Name
+                                    </a>
+                                </h5>
+                                <footer class="blockquote-footer">This event belongs to <cite title="Source Title">@item.Conference.Name</cite></footer>
+                            </div>
                         </div>
-                    </div>
-                        }
+                    }
 
                 </div>
             </div>

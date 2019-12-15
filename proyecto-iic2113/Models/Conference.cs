@@ -35,5 +35,6 @@ namespace proyecto_iic2113.Models
 
         public int FranchiseId { get; set; }
 		public Franchise Franchise { get; set; }
+        public IEnumerable<Notifications> Notifications { get; set; }
     }
 }
