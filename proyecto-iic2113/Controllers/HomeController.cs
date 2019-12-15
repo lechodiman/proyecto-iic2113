@@ -4,6 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Core.Flash;
+using Core.Flash.Extensions;
+using Core.Flash.Model;
+using Core.Flash.Mvc;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +22,11 @@ namespace proyecto_iic2113.Controllers
     public class HomeController : Controller
     {
         private ApplicationDbContext _context;
-        public HomeController(ApplicationDbContext context)
+        private IFlasher _flasher;
+        public HomeController(ApplicationDbContext context, IFlasher f)
         {
             _context = context;
+            _flasher = f;
         }
         public async Task<IActionResult> Index()
         {

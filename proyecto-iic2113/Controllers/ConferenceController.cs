@@ -4,6 +4,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
+using Core.Flash;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,11 +22,13 @@ namespace proyecto_iic2113.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IFlasher _flasher;
 
-        public ConferenceController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ConferenceController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IFlasher flasher)
         {
             _context = context;
             _userManager = userManager;
+            _flasher = flasher;
         }
 
         // GET: Conference
@@ -261,8 +265,7 @@ namespace proyecto_iic2113.Controllers
             // Check if user is already attending this conference
             if (existingConferenceUserAttendee != null)
             {
-                ModelState.AddModelError(string.Empty, "You are already attending this conference");
-                // TODO: Show this error to a view
+                _flasher.Flash("Danger", "You are already attending this conference");
             }
             else
             {

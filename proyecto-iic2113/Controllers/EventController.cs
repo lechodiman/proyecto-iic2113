@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Core.Flash;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,9 +21,11 @@ namespace proyecto_iic2113.Controllers
     {
         private ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IFlasher _flasher;
 
-        public EventController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public EventController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IFlasher flasher)
         {
+            _flasher = flasher;
             _context = context;
             _userManager = userManager;
         }
@@ -94,19 +98,19 @@ namespace proyecto_iic2113.Controllers
 
             if (!isAttendingConference)
             {
+                _flasher.Flash("Danger", "You must attend the conference to attend an event.");
                 return Redirect(Request.Headers["Referer"].ToString());
             }
 
             if (eventAttendees.Count + 1 > currentEvent.Capacity)
             {
-                // TODO: Show error
+                _flasher.Flash("Danger", "Event is already full.");
                 return Redirect(Request.Headers["Referer"].ToString());
             }
 
             if (isUserAttendingEvent)
             {
-                ModelState.AddModelError(string.Empty, "You are already attending this conference");
-
+                _flasher.Flash("Danger", "You are already attending this event");
                 return Redirect(Request.Headers["Referer"].ToString());
             }
 
