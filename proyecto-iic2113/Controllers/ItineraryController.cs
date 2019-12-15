@@ -46,9 +46,10 @@ namespace proyecto_iic2113.Controllers
                         Venue = conference.Venue.Name,
                         EndDate = conference.EndDate,
                         DateTime = conference.DateTime,
+                        ApplicationUserId = attendance.ApplicationUserId
                         
                     }
-                ).ToListAsync();
+                ).Where(a => a.ApplicationUserId == currentUser.Id).ToListAsync();
 
             //La data esta
             Console.WriteLine("----------");
