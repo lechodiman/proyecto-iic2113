@@ -49,7 +49,6 @@ namespace proyecto_iic2113.Controllers
         public IActionResult Create()
         {
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name");
-            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Email");
             ViewData["EventId"] = new SelectList(_context.Events, "Id", "Name");
             return View();
 
@@ -60,17 +59,23 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Date,Id,Body,ApplicationUserId,ConferenceId,EventId")] Notifications notification)
+        public async Task<IActionResult> Create([Bind("Date,Body,ConferenceId,EventId")] Notifications notification)
         {
+            var attendees = await _context.ConferenceUserAttendees.Where(s => s.ConferenceId == notification.ConferenceId).ToListAsync();
+            ViewBag.Attendees = attendees;
             if (ModelState.IsValid)
             {
-                _context.Add(notification);
-                await _context.SaveChangesAsync();
+                foreach (var attendee in ViewBag.Attendees)
+                {
+                        notification.ApplicationUserId = attendee.ApplicationUserId;
+                        _context.Add(notification);
+                        await _context.SaveChangesAsync();
+                    
+                }
                 return RedirectToAction(nameof(Notifications));
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", notification.ConferenceId);
             ViewData["EventId"] = new SelectList(_context.Events, "Id", "Name", notification.EventId);
-            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Email", notification.ApplicationUserId);
             return View(notification);
         }
 
