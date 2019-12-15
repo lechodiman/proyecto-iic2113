@@ -38,10 +38,5 @@ namespace proyecto_iic2113.Helpers
 
             return conferenceUserAttendees != null;
         }
-
-        internal Task<bool> IsUserAttendingEvent(ApplicationUser user, object talk)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
