@@ -69,6 +69,7 @@ namespace proyecto_iic2113.Controllers
             return View();
         }
 
+        [Authorize]
         public async Task<IActionResult> Notifications()
         {
             var user = await GetCurrentUserAsync();
@@ -77,6 +78,7 @@ namespace proyecto_iic2113.Controllers
                 .Where(c => c.Receiver.Id == userId)
                 .Include(c => c.Conference)
                 .Include(c => c.Event);
+            ViewBag.userId = userId;
             return View(await applicationDbContext.ToListAsync());
         }
 

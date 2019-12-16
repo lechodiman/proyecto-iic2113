@@ -9,6 +9,12 @@
 
 <div class="container">
 
+    @if (ViewBag.userId == null)
+    {
+        <br />
+        <h3 class="text-center"> You must registrate to get notifications! </h3>
+    }
+
     @foreach (var item in Model)
     {
 

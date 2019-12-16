@@ -32,7 +32,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Event</th>
+                        <th>Franchise</th>
                         <th>Average Review</th>
                     </tr>
                 </thead>
@@ -41,7 +41,7 @@
                         
                         <tr>
                             <td scope="row">
-                                <a asp-controller="Franchise" asp-action="Dashborad" asp-route-id="@ViewBag.franchises[i].Id">
+                                <a asp-controller="Franchise" asp-action="Dashboard" asp-route-id="@ViewBag.franchises[i].Id">
                                     @ViewBag.franchises[i].Name
                                 </a>
                             </td>
