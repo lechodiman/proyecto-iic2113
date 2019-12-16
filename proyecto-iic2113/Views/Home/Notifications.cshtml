@@ -16,7 +16,11 @@
             <div class="card-header text-center">
                 <div class="row justify-content-around">
                     <div> <a> @Html.DisplayFor(modelItem => item.Date) </a> </div>
-                    <div><a> @Html.DisplayFor(modelItem => item.Conference.Name) </a></div>
+                    <div> <a> <i class="fas fa-user-friends"> </i> : @Html.DisplayFor(modelItem => item.Conference.Name) </a></div>
+                    @if (item.Event != null)
+                    {
+                        <div><a><i class="fas fa-calendar-week"></i> : @Html.DisplayFor(modelItem => item.Event.Name)</a></div>
+                    }
                     <div><a asp-action="DeleteNotification" asp-route-id="@item.Id"><i class="fas fa-trash fa-lg"></i></a> </div>
                 </div>
             </div>

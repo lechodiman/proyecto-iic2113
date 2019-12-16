@@ -4,98 +4,102 @@
     ViewData["Title"] = "Details";
 }
 
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <h1 class="display-4">@Html.DisplayFor(model => model.Name)</h1>
-            <p class="lead">
-                @ViewBag.numberOfAttendees / @Html.DisplayFor(model => model.Capacity) 
-            </p>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="display-4">@Html.DisplayFor(model => model.Name)</h1>
+                <p class="lead">
+                    @ViewBag.numberOfAttendees / @Html.DisplayFor(model => model.Capacity)
+                </p>
+            </div>
+            <div class="col-end">
+                @if (ViewBag.isUserAttendingEvent)
+                {
+                    <p> <i class="fa fa-check" aria-hidden="true"></i> Already attending </p>
+                }
+                else
+                {
+                    <form asp-action="AttendEvent" asp-controller="Event" asp-route-id="@Model.Id">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <input type="submit" value="Attend Event" class="btn btn-outline-success" />
+                    </form>
+                }
+                @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
+                {
+                    <a class="btn btn-outline-primary" asp-controller="Event" asp-action="CreateNotification" asp-route-id="@Model.Id"><i class="fas fa-paper-plane"></i></a>
+                    <a asp-action="Dashboard" asp-controller="Event" asp-route-id="@Model.Id" class="btn btn-outline-secondary mt-2">
+                        <i class="fas fa-chart-line"></i>
+                        Dashboard
+                    </a>
+
+                }
+            </div>
         </div>
-        <div class="col-end">
-            @if (ViewBag.isUserAttendingEvent)
-            {
-                <p> <i class="fa fa-check" aria-hidden="true"></i> Already attending </p>    
-            } else 
-            {
-                <form asp-action="AttendEvent" asp-controller="Event" asp-route-id="@Model.Id">
-                    <div asp-validation-summary="All" class="text-danger"></div>
-                    <input type="submit" value="Attend Event" class="btn btn-outline-success" />
-                </form>
-            }
+
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.HasOpenBar)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.HasOpenBar)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.StartDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.StartDate)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.EndDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.EndDate)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Conference)
+            </dt>
+            <dd class="col-sm-10">
+                <a asp-action="Details" asp-controller="Conference" asp-route-id="@Model.Conference.Id">
+                    @Html.DisplayFor(model => model.Conference.Name)
+                </a>
+            </dd>
+        </dl>
+        <h3>
+            <a asp-action="Index" asp-controller="Review" asp-route-id="@Model.Id">
+                Reviews
+            </a>
+        </h3>
+
+        <a asp-action="Create" asp-controller="Review" asp-route-id="@Model.Id">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+        </a>
+
+        <div>
             @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
             {
-                <a asp-action="Dashboard" asp-controller="Event" asp-route-id="@Model.Id" class="btn btn-outline-secondary mt-2">
-                    <i class="fas fa-chart-line"></i>
-                    Dashboard
-                </a>
+                <div>
+                    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+                    <a asp-action="Index">Back to List</a>
+                </div>
+            }
+            else
+            {
+                <div><a asp-action="Index">Back to List</a></div>
             }
         </div>
     </div>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HasOpenBar)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HasOpenBar)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Conference)
-        </dt>
-        <dd class = "col-sm-10">
-            <a asp-action="Details" asp-controller="Conference" asp-route-id="@Model.Conference.Id">
-            @Html.DisplayFor(model => model.Conference.Name)
-            </a>
-        </dd>
-    </dl>
-    <h3>
-        <a asp-action="Index" asp-controller="Review" asp-route-id="@Model.Id">
-            Reviews
-        </a>
-    </h3>
-
-    <a asp-action="Create" asp-controller="Review" asp-route-id="@Model.Id">
-        <i class="fa fa-plus" aria-hidden="true"></i>
-    </a>
-
-    <div>
-        @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
-        {
-            <div>
-                <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-                <a asp-action="Index">Back to List</a>
-            </div>
-        }
-        else
-        {
-            <div><a asp-action="Index">Back to List</a></div>
-        }
-    </div>
-</div>
 
 

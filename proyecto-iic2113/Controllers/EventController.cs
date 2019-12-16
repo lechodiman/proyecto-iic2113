@@ -124,6 +124,43 @@ namespace proyecto_iic2113.Controllers
             return Redirect(Request.Headers["Referer"].ToString());
         }
 
+        [HttpGet]
+        public IActionResult CreateNotification(int? id)
+        {
+            ViewBag.EventId = id;
+            return View();
+        }
+
+        // POST: Launch/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateNotification([Bind("Body,EventId")] Notifications notification)
+        {
+            var attendees = await _context.EventUserAttendees.Where(s => s.EventId == notification.EventId).ToListAsync();
+            ViewBag.Attendees = attendees;
+            var eventid = await _context.Events.Where(e => e.Id == notification.EventId).ToListAsync();
+
+            if (ModelState.IsValid)
+            {
+                foreach (var attendee in ViewBag.Attendees)
+                {
+                    var userNotification = new Notifications();
+                    userNotification.ApplicationUserId = attendee.ApplicationUserId;
+                    userNotification.ConferenceId = eventid[0].ConferenceId;
+                    userNotification.EventId = notification.EventId;
+                    userNotification.Body = notification.Body;
+                    userNotification.Date = DateTime.Now;
+                    _context.Notifications.Add(userNotification);
+                    await _context.SaveChangesAsync();
+
+                }
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+            return View(notification);
+        }
+
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }
