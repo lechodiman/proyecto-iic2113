@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using proyecto_iic2113.Data;
@@ -9,9 +10,10 @@ using proyecto_iic2113.Data;
 namespace proyecto_iic2113.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191215225829_AddNotifications")]
+    partial class AddNotifications
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -312,11 +314,7 @@ namespace proyecto_iic2113.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<string>("OrganizerId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("OrganizerId");
 
                     b.ToTable("Franchise");
                 });
@@ -647,168 +645,158 @@ namespace proyecto_iic2113.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-
-            modelBuilder.Entity("proyecto_iic2113.Models.Franchise", b =>
+            modelBuilder.Entity("proyecto_iic2113.Models.EventUserAttendee", b =>
                 {
-                    b.HasOne("proyecto_iic2113.Models.ApplicationUser", "Organizer")
-                        .WithMany()
-                        .HasForeignKey("OrganizerId");
+                    b.HasOne("proyecto_iic2113.Models.ApplicationUser", "UserAttendee")
+                        .WithMany("EventUserAttendees")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("proyecto_iic2113.Models.Event", "Event")
+                        .WithMany("EventUserAttendees")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
-                    modelBuilder.Entity("proyecto_iic2113.Models.EventUserAttendee", b =>
-                        {
-                            b.HasOne("proyecto_iic2113.Models.ApplicationUser", "UserAttendee")
-                                .WithMany("EventUserAttendees")
-                                .HasForeignKey("ApplicationUserId");
+            modelBuilder.Entity("proyecto_iic2113.Models.Menu", b =>
+                {
+                    b.HasOne("proyecto_iic2113.Models.Launch", "Launch")
+                        .WithMany("Menus")
+                        .HasForeignKey("LaunchId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                            b.HasOne("proyecto_iic2113.Models.Event", "Event")
-                                .WithMany("EventUserAttendees")
-                                .HasForeignKey("EventId")
-                                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity("proyecto_iic2113.Models.Notifications", b =>
+                {
+                    b.HasOne("proyecto_iic2113.Models.ApplicationUser", "Receiver")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
 
-                        });
+                    b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
+                        .WithMany("Notifications")
+                        .HasForeignKey("ConferenceId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    modelBuilder.Entity("proyecto_iic2113.Models.Menu", b =>
-                        {
-                            b.HasOne("proyecto_iic2113.Models.Launch", "Launch")
-                                .WithMany("Menus")
-                                .HasForeignKey("LaunchId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
+                    b.HasOne("proyecto_iic2113.Models.Event", "Event")
+                        .WithMany("Notifications")
+                        .HasForeignKey("EventId");
+                });
 
-                    modelBuilder.Entity("proyecto_iic2113.Models.Notifications", b =>
-                        {
-                            b.HasOne("proyecto_iic2113.Models.ApplicationUser", "Receiver")
-                                .WithMany()
-                                .HasForeignKey("ApplicationUserId");
+            modelBuilder.Entity("proyecto_iic2113.Models.Resource", b =>
+                {
+                    b.HasOne("proyecto_iic2113.Models.Workshop", "Workshop")
+                        .WithMany("Resources")
+                        .HasForeignKey("WorkshopId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                            b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
-                                .WithMany("Notifications")
-                                .HasForeignKey("ConferenceId")
-                                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity("proyecto_iic2113.Models.Review", b =>
+                {
+                    b.HasOne("proyecto_iic2113.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
 
-                            b.HasOne("proyecto_iic2113.Models.Event", "Event")
-                                .WithMany("Notifications")
-                                .HasForeignKey("EventId");
-                        });
+                    b.HasOne("proyecto_iic2113.Models.Event", "Event")
+                        .WithMany("Reviews")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                    modelBuilder.Entity("proyecto_iic2113.Models.Resource", b =>
-                        {
-                            b.HasOne("proyecto_iic2113.Models.Workshop", "Workshop")
-                                .WithMany("Resources")
-                                .HasForeignKey("WorkshopId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
+            modelBuilder.Entity("proyecto_iic2113.Models.Room", b =>
+                {
+                    b.HasOne("proyecto_iic2113.Models.Venue", "Venue")
+                        .WithMany("Rooms")
+                        .HasForeignKey("VenueId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                    modelBuilder.Entity("proyecto_iic2113.Models.Review", b =>
-                        {
-                            b.HasOne("proyecto_iic2113.Models.ApplicationUser", "ApplicationUser")
-                                .WithMany()
-                                .HasForeignKey("ApplicationUserId");
+            modelBuilder.Entity("proyecto_iic2113.Models.Sponsor", b =>
+                {
+                    b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
+                        .WithMany("Sponsors")
+                        .HasForeignKey("ConferenceId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                            b.HasOne("proyecto_iic2113.Models.Event", "Event")
-                                .WithMany("Reviews")
-                                .HasForeignKey("EventId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
+            modelBuilder.Entity("proyecto_iic2113.Models.TalkLecturer", b =>
+                {
+                    b.HasOne("proyecto_iic2113.Models.ApplicationUser", "Lecturer")
+                        .WithMany("TalkLecturers")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    modelBuilder.Entity("proyecto_iic2113.Models.Room", b =>
-                        {
-                            b.HasOne("proyecto_iic2113.Models.Venue", "Venue")
-                                .WithMany("Rooms")
-                                .HasForeignKey("VenueId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
+                    b.HasOne("proyecto_iic2113.Models.Talk", "Talk")
+                        .WithMany("TalkLecturers")
+                        .HasForeignKey("TalkId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                    modelBuilder.Entity("proyecto_iic2113.Models.Sponsor", b =>
-                        {
-                            b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
-                                .WithMany("Sponsors")
-                                .HasForeignKey("ConferenceId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
+            modelBuilder.Entity("proyecto_iic2113.Models.Venue", b =>
+                {
+                    b.HasOne("proyecto_iic2113.Models.ApplicationUser", "Owner")
+                        .WithMany("Venues")
+                        .HasForeignKey("OwnerId");
+                });
 
-                    modelBuilder.Entity("proyecto_iic2113.Models.TalkLecturer", b =>
-                        {
-                            b.HasOne("proyecto_iic2113.Models.ApplicationUser", "Lecturer")
-                                .WithMany("TalkLecturers")
-                                .HasForeignKey("ApplicationUserId")
-                                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity("proyecto_iic2113.Models.WorkshopExhibitor", b =>
+                {
+                    b.HasOne("proyecto_iic2113.Models.ApplicationUser", "Exhibitor")
+                        .WithMany("WorkshopExhibitors")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                            b.HasOne("proyecto_iic2113.Models.Talk", "Talk")
-                                .WithMany("TalkLecturers")
-                                .HasForeignKey("TalkId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
+                    b.HasOne("proyecto_iic2113.Models.Workshop", "Workshop")
+                        .WithMany("WorkshopExhibitors")
+                        .HasForeignKey("WorkshopId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                    modelBuilder.Entity("proyecto_iic2113.Models.Venue", b =>
-                        {
-                            b.HasOne("proyecto_iic2113.Models.ApplicationUser", "Owner")
-                                .WithMany("Venues")
-                                .HasForeignKey("OwnerId");
-                        });
+            modelBuilder.Entity("proyecto_iic2113.Models.Chat", b =>
+                {
+                    b.HasOne("proyecto_iic2113.Models.ApplicationUser", "Moderator")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
 
-                    modelBuilder.Entity("proyecto_iic2113.Models.WorkshopExhibitor", b =>
-                        {
-                            b.HasOne("proyecto_iic2113.Models.ApplicationUser", "Exhibitor")
-                                .WithMany("WorkshopExhibitors")
-                                .HasForeignKey("ApplicationUserId")
-                                .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
+                        .WithMany("Chats")
+                        .HasForeignKey("ConferenceId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                            b.HasOne("proyecto_iic2113.Models.Workshop", "Workshop")
-                                .WithMany("WorkshopExhibitors")
-                                .HasForeignKey("WorkshopId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
+            modelBuilder.Entity("proyecto_iic2113.Models.Launch", b =>
+                {
+                    b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
+                        .WithMany("Launches")
+                        .HasForeignKey("ConferenceId")
+                        .HasConstraintName("FK_Events_Conferences_ConferenceId1")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                    modelBuilder.Entity("proyecto_iic2113.Models.Chat", b =>
-                        {
-                            b.HasOne("proyecto_iic2113.Models.ApplicationUser", "Moderator")
-                                .WithMany()
-                                .HasForeignKey("ApplicationUserId");
+            modelBuilder.Entity("proyecto_iic2113.Models.Party", b =>
+                {
+                    b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
+                        .WithMany("Parties")
+                        .HasForeignKey("ConferenceId")
+                        .HasConstraintName("FK_Events_Conferences_ConferenceId2")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                            b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
-                                .WithMany("Chats")
-                                .HasForeignKey("ConferenceId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
+            modelBuilder.Entity("proyecto_iic2113.Models.Talk", b =>
+                {
+                    b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
+                        .WithMany("Talks")
+                        .HasForeignKey("ConferenceId")
+                        .HasConstraintName("FK_Events_Conferences_ConferenceId3")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                    modelBuilder.Entity("proyecto_iic2113.Models.Launch", b =>
-                        {
-                            b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
-                                .WithMany("Launches")
-                                .HasForeignKey("ConferenceId")
-                                .HasConstraintName("FK_Events_Conferences_ConferenceId1")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-
-                    modelBuilder.Entity("proyecto_iic2113.Models.Party", b =>
-                        {
-                            b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
-                                .WithMany("Parties")
-                                .HasForeignKey("ConferenceId")
-                                .HasConstraintName("FK_Events_Conferences_ConferenceId2")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-
-                    modelBuilder.Entity("proyecto_iic2113.Models.Talk", b =>
-                        {
-                            b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
-                                .WithMany("Talks")
-                                .HasForeignKey("ConferenceId")
-                                .HasConstraintName("FK_Events_Conferences_ConferenceId3")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-
-                    modelBuilder.Entity("proyecto_iic2113.Models.Workshop", b =>
-                        {
-                            b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
-                                .WithMany("Workshops")
-                                .HasForeignKey("ConferenceId")
-                                .HasConstraintName("FK_Events_Conferences_ConferenceId4")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
-                
+            modelBuilder.Entity("proyecto_iic2113.Models.Workshop", b =>
+                {
+                    b.HasOne("proyecto_iic2113.Models.Conference", "Conference")
+                        .WithMany("Workshops")
+                        .HasForeignKey("ConferenceId")
+                        .HasConstraintName("FK_Events_Conferences_ConferenceId4")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 #pragma warning restore 612, 618
         }
     }

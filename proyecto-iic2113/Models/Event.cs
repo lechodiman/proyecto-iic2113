@@ -30,5 +30,6 @@ namespace proyecto_iic2113.Models
 
 		[Required]
 		public int Capacity { get; set; }
-	}
+        public IEnumerable<Notifications> Notifications { get; set; }
+    }
 }

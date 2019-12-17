@@ -1,4 +1,4 @@
-﻿@model proyecto_iic2113.Models.Conference
+@model proyecto_iic2113.Models.Franchise
 
 @{
     ViewData["Title"] = "Dashboard";
@@ -18,14 +18,14 @@
 
         <h3 class="text-muted">Average Review</h3>
         <p class="text-small">
-            Average Review is based on the average review of its events.
+            Average Review is based on the average review of its conferences.
         </p>
 
         <p>
            Average Rating: @ViewBag.averageRating
         </p>
 
-        <h1 class="display-4">Events Reviews</h1>
+        <h1 class="display-4">Conferences Reviews</h1>
 
         <table class="table">
             <thead>
@@ -35,11 +35,11 @@
                 </tr>
             </thead>
             <tbody>
-                @for (var i=0; i<ViewBag.events.Count; i++) {
+                @for (var i=0; i<ViewBag.conferences.Count; i++) {
                     
                     <tr>
-                        <td scope="row">@ViewBag.events[i].Name</td>
-                        <td>@ViewBag.eventsAverageReviews[i]</td>
+                        <td scope="row">@ViewBag.conferences[i].Name</td>
+                        <td>@ViewBag.conferencesAverageReviews[i]</td>
                     </tr>
                 
                 }
