@@ -1,49 +1,35 @@
 @model IEnumerable<proyecto_iic2113.Models.Review>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Reviews for Event";
 }
 
-<h1>Index</h1>
+<h1 class="display-4">Reviews for Event</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Rating)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Body)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Event)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ApplicationUser)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rating)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Body)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Event.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApplicationUser.Email)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@foreach (var item in Model) 
+{
+    <div class="card">
+        <div class="card-header">
+            <div class="container">
+                <div class="row justify-content-around">
+                    <div class="col">
+                        Rating: @Html.DisplayFor(modelItem => item.Rating)
+                    </div>
+                    @if (User.Identity.IsAuthenticated && ViewBag.UserId == item.ApplicationUserId)
+                    {
+                        <div class="col-end">
+                            <a asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit"></i></a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <blockquote class="blockquote mb-0">
+                <p>@Html.DisplayFor(modelItem => item.Body)</p>
+                <footer class="blockquote-footer">Review by <cite title="Source Title">@Html.DisplayFor(modelItem => item.ApplicationUser.Email)</cite></footer>
+            </blockquote>
+        </div>
+    </div>
 }
-    </tbody>
-</table>

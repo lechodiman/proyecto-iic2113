@@ -33,7 +33,9 @@ namespace proyecto_iic2113.Controllers
                 .Where(r => r.EventId == id)
                 .Include(r => r.ApplicationUser)
                 .Include(r => r.Event);
-
+            var currentUser = await GetCurrentUserAsync();
+            ViewBag.UserId = currentUser.Id;
+            ViewBag.EventId = id;
             return View(await applicationDbContext.ToListAsync());
         }
 
