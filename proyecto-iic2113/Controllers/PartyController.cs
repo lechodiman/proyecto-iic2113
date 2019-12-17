@@ -71,9 +71,10 @@ namespace proyecto_iic2113.Controllers
         }
 
         // GET: Party/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name");
+            ViewBag.ConferenceId = id;
             return View();
         }
 
@@ -82,13 +83,13 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("HasOpenBar,Id,Name,StartDate,EndDate,Description,ConferenceId,Capacity")] Party party)
+        public async Task<IActionResult> Create([Bind("HasOpenBar,Name,StartDate,EndDate,Description,ConferenceId,Capacity")] Party party)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(party);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Conference", new { id = party.ConferenceId });
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", party.ConferenceId);
             return View(party);

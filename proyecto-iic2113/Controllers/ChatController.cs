@@ -74,10 +74,11 @@ namespace proyecto_iic2113.Controllers
         }
 
         // GET: Chat/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name");
             ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Email");
+            ViewBag.ConferenceId = id;
             return View();
         }
 
@@ -86,13 +87,13 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ApplicationUserId,Id,Name,StartDate,EndDate,Description,ConferenceId,Capacity")] Chat chat)
+        public async Task<IActionResult> Create([Bind("ApplicationUserId,Name,StartDate,EndDate,Description,ConferenceId,Capacity")] Chat chat)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(chat);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Conference", new { id = chat.ConferenceId });
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", chat.ConferenceId);
             ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", chat.ApplicationUserId);

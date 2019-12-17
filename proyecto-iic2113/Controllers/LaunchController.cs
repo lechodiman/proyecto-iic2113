@@ -72,9 +72,10 @@ namespace proyecto_iic2113.Controllers
         }
 
         // GET: Launch/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name");
+            ViewBag.ConferenceId = id;
             return View();
         }
 
@@ -83,13 +84,13 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IsAllYouCanEat,Id,Name,StartDate,EndDate,Description,ConferenceId,Capacity")] Launch launch)
+        public async Task<IActionResult> Create([Bind("IsAllYouCanEat,Name,StartDate,EndDate,Description,ConferenceId,Capacity")] Launch launch)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(launch);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Conference", new { id = launch.ConferenceId });
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", launch.ConferenceId);
             return View(launch);
