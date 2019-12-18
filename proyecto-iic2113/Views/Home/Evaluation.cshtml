@@ -1,0 +1,62 @@
+@model proyecto_iic2113.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "User Evaluation Talks";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1 class="display-4">@Html.DisplayFor(model => model.Id) User Evaluation Talks</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <hr>
+
+        <br />
+
+        <h3 class="text-muted">Average Review</h3>
+        <p class="text-small">
+            Average Review is based on the average review of its talks.
+        </p>
+
+        <p>
+           Average Rating: @ViewBag.averageRating
+        </p>
+
+        @if (ViewBag.averageRating > 0)
+        {
+            <h1 class="display-4">Talks Reviews</h1>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Average Review</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i=0; i<ViewBag.talks.Count; i++) {
+                        
+                        <tr>
+                            <td scope="row">@ViewBag.talks[i].Name</td>
+                            <td>@ViewBag.talksAverageReviews[i]</td>
+                        </tr>
+                    
+                    }
+                </tbody>
+            </table>
+        }
+        else 
+        {
+            <h1 class="display-4">You don't have any Talk Review </h1>
+        }
+
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

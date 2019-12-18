@@ -4,6 +4,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
+using Core.Flash;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using proyecto_iic2113.Data;
+using proyecto_iic2113.Helpers;
 using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
@@ -19,11 +22,13 @@ namespace proyecto_iic2113.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IFlasher _flasher;
 
-        public ConferenceController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ConferenceController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IFlasher flasher)
         {
             _context = context;
             _userManager = userManager;
+            _flasher = flasher;
         }
 
         // GET: Conference
@@ -49,6 +54,7 @@ namespace proyecto_iic2113.Controllers
             var conference = await _context.Conferences
                 .Include(c => c.Organizer)
                 .Include(c => c.Sponsors)
+                .Include(c => c.Franchise)
                 .Include(c => c.Venue)
                 .Include(c => c.Launches)
                 .Include(c => c.Workshops)
@@ -94,6 +100,7 @@ namespace proyecto_iic2113.Controllers
         public IActionResult Create()
         {
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name");
+            ViewData["FranchiseId"] = new SelectList(_context.Franchise, "Id", "Name");
             return View();
         }
 
@@ -102,7 +109,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,DateTime,EndDate,VenueId")] Conference conference)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,DateTime,EndDate,VenueId,FranchiseId")] Conference conference)
         {
             ApplicationUser currentUser = await GetCurrentUserAsync();
             conference.Organizer = currentUser;
@@ -113,6 +120,7 @@ namespace proyecto_iic2113.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", conference.VenueId);
+            ViewData["FranchiseId"] = new SelectList(_context.Venues, "Id", "Name", conference.FranchiseId);
             return View(conference);
         }
 
@@ -179,6 +187,41 @@ namespace proyecto_iic2113.Controllers
             return View(conference);
         }
 
+        // GET: Conference/Dashboard/5
+        public async Task<IActionResult> Dashboard(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var conference = await _context.Conferences
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (conference == null)
+            {
+                return NotFound();
+            }
+
+            var events = await _context.Events
+                .Where(e => e.ConferenceId == id)
+                .ToListAsync();
+
+            var averageCalculator = new AverageCalculator(_context);
+            var averageRating = await averageCalculator.CalculateConferenceAverageAsync(id);
+            ViewBag.averageRating = averageRating;
+
+            var eventsAverageReviews = events
+                .Select(async e => await averageCalculator.CalculateEventAverageAsync(e.Id))
+                .Select(task => task.Result)
+                .ToList();
+
+            ViewBag.eventsAverageReviews = eventsAverageReviews;
+            ViewBag.events = events;
+
+            return View(conference);
+        }
+
         // GET: Conference/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -222,8 +265,7 @@ namespace proyecto_iic2113.Controllers
             // Check if user is already attending this conference
             if (existingConferenceUserAttendee != null)
             {
-                ModelState.AddModelError(string.Empty, "You are already attending this conference");
-                // TODO: Show this error to a view
+                _flasher.Flash("Danger", "You are already attending this conference");
             }
             else
             {

@@ -34,12 +34,19 @@
                 <i class="far fa-calendar-alt fa-lg"></i> From @Html.DisplayFor(model => model.DateTime) to @Html.DisplayFor(model => model.EndDate)
             </div>
             <div class="col">
-                <i3 class="fas fa-map-marker-alt fa-lg"></i3><a asp-action="Details" asp-controller="Venue" asp-route-id="@Model.Venue.Id"> @Html.DisplayFor(model => model.Venue.Name): @Html.DisplayFor(model => model.Venue.Adress)</a>
+                @if (Model.VenueId != null)
+                {
+                    <i3 class="fas fa-map-marker-alt fa-lg"></i3><a asp-action="Details" asp-controller="Venue" asp-route-id="@Model.Venue.Id"> @Html.DisplayFor(model => model.Venue.Name): @Html.DisplayFor(model => model.Venue.Adress)</a>
+                }
             </div>
             @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
             {
                 <div class="col-end">
                     <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.Id"><i class="fas fa-pencil-alt"></i></a>
+                    <a asp-action="Dashboard" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
+                        <i class="fas fa-chart-line"></i>
+                        Dashboard
+                    </a>
                 </div>
             }
         </div>
@@ -49,6 +56,12 @@
         <h3 class="text-muted">Description</h3>
         <p>
             @Html.DisplayFor(model => model.Description)
+        </p>
+
+
+        <h3 class="text-muted">Franchise</h3>
+        <p>
+                <a asp-action="Details" asp-controller="Franchise" asp-route-id="@Model.Franchise.Id"> @Html.DisplayFor(model => model.Franchise.Name) </a>
         </p>
 
 
@@ -200,7 +213,7 @@
 
                 @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Organizer.Id)
                 {
-                    <a asp-controller="Workshop" asp-action="Create"><i class="fas fa-plus fa-sm"></i></a>
+                    <a asp-controller="Launch" asp-action="Create"><i class="fas fa-plus fa-sm"></i></a>
                 }
                 
                 @if (ViewBag.launches.Count == 0)

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using proyecto_iic2113.Data;
+using proyecto_iic2113.Helpers;
 using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
@@ -50,9 +51,21 @@ namespace proyecto_iic2113.Controllers
                 .ThenInclude(conference => conference.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
+<<<<<<< HEAD
+=======
+            var eventAttendees = await _context.EventUserAttendees
+                .Where(t => t.EventId == id)
+                .ToListAsync();
+            ViewBag.numberOfAttendees = eventAttendees.Count;
+
+>>>>>>> dev
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
             ViewBag.UserId = userId;
+
+            var attendanceHelper = new AttendanceHelper(_context);
+            ViewBag.isUserAttendingEvent = user != null ? await attendanceHelper.IsUserAttendingEvent(user, party) : false;
+
             if (party == null)
             {
                 return NotFound();
@@ -74,7 +87,9 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("HasOpenBar,Id,Name,StartDate,EndDate,Description,ConferenceId, RoomId")] Party party)
+
+        public async Task<IActionResult> Create([Bind("HasOpenBar,Id,Name,StartDate,EndDate,Description,ConferenceId,Capacity,RoomId")] Party party)
+
         {
             if (ModelState.IsValid)
             {
@@ -117,7 +132,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("HasOpenBar,Id,Name,StartDate,EndDate,Description,ConferenceId")] Party party)
+        public async Task<IActionResult> Edit(int id, [Bind("HasOpenBar,Id,Name,StartDate,EndDate,Description,ConferenceId,Capacity")] Party party)
         {
             if (id != party.Id)
             {

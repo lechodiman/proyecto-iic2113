@@ -18,6 +18,7 @@ namespace proyecto_iic2113.Data
         public DbSet<Sponsor> Sponsors { get; set; }
         public DbSet<Conference> Conferences { get; set; }
         public DbSet<Talk> Talks { get; set; }
+        public DbSet<TalkLecturer> TalkLecturers { get; set; }
         public DbSet<Venue> Venues { get; set; }
         public DbSet<Equipment> Equipments { get; set; }
         public DbSet<Party> Parties { get; set; }
@@ -25,11 +26,8 @@ namespace proyecto_iic2113.Data
         public DbSet<Workshop> Workshops { get; set; }
         public DbSet<Launch> Launches { get; set; }
         public DbSet<ConferenceUserAttendee> ConferenceUserAttendees { get; set; }
-
-        internal static Task<string> ToListAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public DbSet<EventUserAttendee> EventUserAttendees { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -97,6 +95,17 @@ namespace proyecto_iic2113.Data
                 .HasOne(cp => cp.UserAttendee)
                 .WithMany(user => user.ConferenceUserAttendees)
                 .HasForeignKey(cp => cp.ApplicationUserId);
+
+            // Event and User relationship
+            modelBuilder.Entity<EventUserAttendee>()
+                .HasOne(cp => cp.Event)
+                .WithMany(c => c.EventUserAttendees)
+                .HasForeignKey(cp => cp.EventId);
+
+            modelBuilder.Entity<EventUserAttendee>()
+                .HasOne(cp => cp.UserAttendee)
+                .WithMany(user => user.EventUserAttendees)
+                .HasForeignKey(cp => cp.ApplicationUserId);
         }
 
         public DbSet<proyecto_iic2113.Models.Chat> Chat { get; set; }
@@ -104,5 +113,7 @@ namespace proyecto_iic2113.Data
         public DbSet<proyecto_iic2113.Models.TalkLecturer> TalkLecturer { get; set; }
 
         public DbSet<proyecto_iic2113.Models.WorkshopExhibitor> WorkshopExhibitor { get; set; }
+
+        public DbSet<proyecto_iic2113.Models.Franchise> Franchise { get; set; }
     }
 }

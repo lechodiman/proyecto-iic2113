@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using proyecto_iic2113.Data;
+using proyecto_iic2113.Helpers;
 using proyecto_iic2113.Models;
 
 namespace proyecto_iic2113.Controllers
@@ -53,9 +54,17 @@ namespace proyecto_iic2113.Controllers
                 .ThenInclude(conference => conference.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
+            var eventAttendees = await _context.EventUserAttendees
+                .Where(t => t.EventId == id)
+                .ToListAsync();
+            ViewBag.numberOfAttendees = eventAttendees.Count;
+
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
             ViewBag.UserId = userId;
+
+            var attendanceHelper = new AttendanceHelper(_context);
+            ViewBag.isUserAttendingEvent = user != null ? await attendanceHelper.IsUserAttendingEvent(user, chat) : false;
 
             if (chat == null)
             {
@@ -79,7 +88,9 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ApplicationUserId,Id,Name,StartDate,EndDate,Description,ConferenceId,RoomId")] Chat chat)
+
+        public async Task<IActionResult> Create([Bind("ApplicationUserId,Id,Name,StartDate,EndDate,Description,ConferenceId,Capacity,RoomId")] Chat chat)
+
         {
             if (ModelState.IsValid)
             {
@@ -126,7 +137,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ApplicationUserId,Id,Name,StartDate,EndDate,Description,ConferenceId")] Chat chat)
+        public async Task<IActionResult> Edit(int id, [Bind("ApplicationUserId,Id,Name,StartDate,EndDate,Description,ConferenceId,Capacity")] Chat chat)
         {
             if (id != chat.Id)
             {

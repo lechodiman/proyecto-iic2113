@@ -204,6 +204,8 @@ namespace proyecto_iic2113.Migrations
 
                     b.Property<DateTime>("EndDate");
 
+                    b.Property<int>("FranchiseId");
+
                     b.Property<string>("Name")
                         .IsRequired();
 
@@ -212,6 +214,8 @@ namespace proyecto_iic2113.Migrations
                     b.Property<int?>("VenueId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FranchiseId");
 
                     b.HasIndex("OrganizerId");
 
@@ -257,6 +261,8 @@ namespace proyecto_iic2113.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("Capacity");
+
                     b.Property<int>("ConferenceId");
 
                     b.Property<string>("Description");
@@ -280,6 +286,39 @@ namespace proyecto_iic2113.Migrations
                     b.ToTable("Events");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Event");
+                });
+
+            modelBuilder.Entity("proyecto_iic2113.Models.EventUserAttendee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ApplicationUserId");
+
+                    b.Property<int>("EventId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("EventUserAttendees");
+                });
+
+            modelBuilder.Entity("proyecto_iic2113.Models.Franchise", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Franchise");
                 });
 
             modelBuilder.Entity("proyecto_iic2113.Models.Menu", b =>
@@ -315,6 +354,30 @@ namespace proyecto_iic2113.Migrations
                     b.HasIndex("WorkshopId");
 
                     b.ToTable("Resources");
+                });
+
+            modelBuilder.Entity("proyecto_iic2113.Models.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ApplicationUserId");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasMaxLength(1000);
+
+                    b.Property<int>("EventId");
+
+                    b.Property<int>("Rating");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("proyecto_iic2113.Models.Room", b =>
@@ -521,6 +584,11 @@ namespace proyecto_iic2113.Migrations
 
             modelBuilder.Entity("proyecto_iic2113.Models.Conference", b =>
                 {
+                    b.HasOne("proyecto_iic2113.Models.Franchise", "Franchise")
+                        .WithMany("Conferences")
+                        .HasForeignKey("FranchiseId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("proyecto_iic2113.Models.ApplicationUser", "Organizer")
                         .WithMany("Conferences")
                         .HasForeignKey("OrganizerId");
@@ -551,11 +619,23 @@ namespace proyecto_iic2113.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+<<<<<<< HEAD
             modelBuilder.Entity("proyecto_iic2113.Models.Event", b =>
                 {
                     b.HasOne("proyecto_iic2113.Models.Room", "Room")
                         .WithMany()
                         .HasForeignKey("RoomId")
+=======
+            modelBuilder.Entity("proyecto_iic2113.Models.EventUserAttendee", b =>
+                {
+                    b.HasOne("proyecto_iic2113.Models.ApplicationUser", "UserAttendee")
+                        .WithMany("EventUserAttendees")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("proyecto_iic2113.Models.Event", "Event")
+                        .WithMany("EventUserAttendees")
+                        .HasForeignKey("EventId")
+>>>>>>> dev
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -572,6 +652,18 @@ namespace proyecto_iic2113.Migrations
                     b.HasOne("proyecto_iic2113.Models.Workshop", "Workshop")
                         .WithMany("Resources")
                         .HasForeignKey("WorkshopId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("proyecto_iic2113.Models.Review", b =>
+                {
+                    b.HasOne("proyecto_iic2113.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("proyecto_iic2113.Models.Event", "Event")
+                        .WithMany("Reviews")
+                        .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

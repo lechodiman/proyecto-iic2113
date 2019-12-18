@@ -27,5 +27,11 @@ namespace proyecto_iic2113.Models
 
         public int RoomId { get; set; }
         public Room Room { get; set; }
-    }
+
+		public IEnumerable<Review> Reviews { get; set; }
+		public IEnumerable<EventUserAttendee> EventUserAttendees { get; set; }
+
+		[Required]
+		public int Capacity { get; set; }
+	}
 }

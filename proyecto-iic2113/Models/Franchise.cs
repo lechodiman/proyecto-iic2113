@@ -14,5 +14,7 @@ namespace proyecto_iic2113.Models
         [Required(ErrorMessage = "Name cannot be blank")]
         public string Name { get; set; }
         public string Description { get; set; }
+
+        public IEnumerable<Conference> Conferences { get; set; }
     }
 }
