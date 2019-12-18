@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -38,5 +39,6 @@ namespace proyecto_iic2113.Helpers
 
             return conferenceUserAttendees != null;
         }
+
     }
 }

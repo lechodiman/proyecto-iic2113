@@ -83,6 +83,18 @@ namespace proyecto_iic2113.Controllers
             ViewBag.Launches = launches;
             ViewBag.Talks = talks;
 
+            var averageCalculator = new AverageCalculator(_context);
+            var ChatsAttendees = await averageCalculator.CalculateNumberOfEventAttendeesAsync(chats);
+            ViewBag.ChatsAttendees = ChatsAttendees;
+            var PartiessAttendees = await averageCalculator.CalculateNumberOfEventAttendeesAsync(parties);
+            ViewBag.PartiessAttendees = PartiessAttendees;
+            var WorkshopsAttendees = await averageCalculator.CalculateNumberOfEventAttendeesAsync(workshops);
+            ViewBag.WorkshopsAttendees = WorkshopsAttendees;
+            var LaunchesAttendees = await averageCalculator.CalculateNumberOfEventAttendeesAsync(launches);
+            ViewBag.LaunchesAttendees = LaunchesAttendees;
+            var TalksAttendees = await averageCalculator.CalculateNumberOfEventAttendeesAsync(talks);
+            ViewBag.TalksAttendees = TalksAttendees;
+
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
             ViewBag.UserId = userId;
@@ -99,7 +111,7 @@ namespace proyecto_iic2113.Controllers
         [Authorize]
         public async Task<IActionResult> Create()
         {
-            ApplicationUser currentUser = await GetCurrentUserAsync();
+            var currentUser = await GetCurrentUserAsync();
 
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name");
             ViewData["FranchiseId"] = new SelectList(_context.Franchise.Where(f => f.Organizer.Id == currentUser.Id), "Id", "Name");
@@ -111,7 +123,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,DateTime,EndDate,VenueId,FranchiseId")] Conference conference)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,DateTime,EndDate,Capacity,VenueId,FranchiseId")] Conference conference)
         {
             ApplicationUser currentUser = await GetCurrentUserAsync();
             conference.Organizer = currentUser;
@@ -129,6 +141,8 @@ namespace proyecto_iic2113.Controllers
         // GET: Conference/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var currentUser = await GetCurrentUserAsync();
+
             if (id == null)
             {
                 return NotFound();
@@ -150,6 +164,7 @@ namespace proyecto_iic2113.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", conference.VenueId);
+            ViewData["FranchiseId"] = new SelectList(_context.Franchise.Where(f => f.Organizer.Id == currentUser.Id), "Id", "Name", conference.FranchiseId);
             return View(conference);
         }
 
@@ -158,7 +173,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,DateTime,VenueId")] Conference conference)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,DateTime,EndDate,Capacity,VenueId,FranchiseId")] Conference conference)
         {
             if (id != conference.Id)
             {
@@ -261,7 +276,6 @@ namespace proyecto_iic2113.Controllers
 
             var conference = await _context.Conferences.FindAsync(id);
             var currentUser = await GetCurrentUserAsync();
-
             var existingConferenceUserAttendee = await _context.ConferenceUserAttendees.SingleOrDefaultAsync(m => m.ConferenceId == conference.Id && m.ApplicationUserId == currentUser.Id);
 
             // Check if user is already attending this conference
@@ -323,9 +337,6 @@ namespace proyecto_iic2113.Controllers
             }
             return View(notification);
         }
-
-
-
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
