@@ -51,14 +51,12 @@ namespace proyecto_iic2113.Controllers
                 .ThenInclude(conference => conference.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-<<<<<<< HEAD
-=======
+
             var eventAttendees = await _context.EventUserAttendees
                 .Where(t => t.EventId == id)
                 .ToListAsync();
             ViewBag.numberOfAttendees = eventAttendees.Count;
 
->>>>>>> dev
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
             ViewBag.UserId = userId;
