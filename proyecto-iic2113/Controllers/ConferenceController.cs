@@ -95,7 +95,6 @@ namespace proyecto_iic2113.Controllers
             var TalksAttendees = await averageCalculator.CalculateNumberOfEventAttendeesAsync(talks);
             ViewBag.TalksAttendees = TalksAttendees;
 
-
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
             ViewBag.UserId = userId;
@@ -112,7 +111,7 @@ namespace proyecto_iic2113.Controllers
         [Authorize]
         public async Task<IActionResult> Create()
         {
-            ApplicationUser currentUser = await GetCurrentUserAsync();
+            var currentUser = await GetCurrentUserAsync();
 
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name");
             ViewData["FranchiseId"] = new SelectList(_context.Franchise.Where(f => f.Organizer.Id == currentUser.Id), "Id", "Name");
@@ -142,6 +141,8 @@ namespace proyecto_iic2113.Controllers
         // GET: Conference/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var currentUser = await GetCurrentUserAsync();
+
             if (id == null)
             {
                 return NotFound();
@@ -163,6 +164,7 @@ namespace proyecto_iic2113.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name", conference.VenueId);
+            ViewData["FranchiseId"] = new SelectList(_context.Franchise.Where(f => f.Organizer.Id == currentUser.Id), "Id", "Name", conference.FranchiseId);
             return View(conference);
         }
 
@@ -171,7 +173,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,DateTime,VenueId")] Conference conference)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,DateTime,VenueId,FranchiseId")] Conference conference)
         {
             if (id != conference.Id)
             {
@@ -335,9 +337,6 @@ namespace proyecto_iic2113.Controllers
             }
             return View(notification);
         }
-
-
-
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
