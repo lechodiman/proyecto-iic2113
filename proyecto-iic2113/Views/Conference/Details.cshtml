@@ -17,13 +17,16 @@
                 @ViewBag.Attendees.Count / @Html.DisplayFor(model => model.Capacity)
             </p>
         </div>
-        <div class="col-end">
-            <form asp-action="AttendConference">
-                <div asp-validation-summary="All" class="text-danger"></div>
-                <input type="hidden" asp-for="Id" />
-                <input type="submit" value="Attend Conference" class="btn btn-outline-success" />
-            </form>
-        </div>
+        @if (ViewBag.Attendees.Count < Model.Capacity)
+        {
+            <div class="col-end">
+                <form asp-action="AttendConference">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <input type="submit" value="Attend Conference" class="btn btn-outline-success" />
+                </form>
+            </div>
+        }
     </div>
 
     <div class="container">
