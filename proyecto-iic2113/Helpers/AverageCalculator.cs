@@ -91,5 +91,22 @@ namespace proyecto_iic2113.Helpers
             var averageRating = eventsAverageRatings.Count > 0 ? eventsAverageRatings.Average() : 0.0;
             return averageRating;
         }
+
+       public async Task<int> CalculateNumberOfEventAttendeesAsync<T>(List<T> collection) where T:Event
+        {
+            int attendees = 0;
+            foreach (var item in collection)
+            {
+                var eventAttendees = await _context.EventUserAttendees
+                .Where(t => t.EventId == item.Id)
+                .ToListAsync();
+                attendees += eventAttendees.Count;
+            }
+            return attendees;
+        }
+
+
+
+
     }
 }

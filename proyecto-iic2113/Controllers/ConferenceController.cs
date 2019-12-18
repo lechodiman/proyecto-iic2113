@@ -83,6 +83,19 @@ namespace proyecto_iic2113.Controllers
             ViewBag.Launches = launches;
             ViewBag.Talks = talks;
 
+            var averageCalculator = new AverageCalculator(_context);
+            var ChatsAttendees = await averageCalculator.CalculateNumberOfEventAttendeesAsync(chats);
+            ViewBag.ChatsAttendees = ChatsAttendees;
+            var PartiessAttendees = await averageCalculator.CalculateNumberOfEventAttendeesAsync(parties);
+            ViewBag.PartiessAttendees = PartiessAttendees;
+            var WorkshopsAttendees = await averageCalculator.CalculateNumberOfEventAttendeesAsync(workshops);
+            ViewBag.WorkshopsAttendees = WorkshopsAttendees;
+            var LaunchesAttendees = await averageCalculator.CalculateNumberOfEventAttendeesAsync(launches);
+            ViewBag.LaunchesAttendees = LaunchesAttendees;
+            var TalksAttendees = await averageCalculator.CalculateNumberOfEventAttendeesAsync(talks);
+            ViewBag.TalksAttendees = TalksAttendees;
+
+
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
             ViewBag.UserId = userId;
@@ -111,7 +124,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,DateTime,EndDate,VenueId,FranchiseId")] Conference conference)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,DateTime,EndDate,Capacity,VenueId,FranchiseId")] Conference conference)
         {
             ApplicationUser currentUser = await GetCurrentUserAsync();
             conference.Organizer = currentUser;
@@ -261,7 +274,6 @@ namespace proyecto_iic2113.Controllers
 
             var conference = await _context.Conferences.FindAsync(id);
             var currentUser = await GetCurrentUserAsync();
-
             var existingConferenceUserAttendee = await _context.ConferenceUserAttendees.SingleOrDefaultAsync(m => m.ConferenceId == conference.Id && m.ApplicationUserId == currentUser.Id);
 
             // Check if user is already attending this conference
