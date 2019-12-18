@@ -64,9 +64,10 @@ namespace proyecto_iic2113.Controllers
         }
 
         // GET: Room/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
             ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Name");
+            ViewBag.VenueId = id;
             return View();
         }
 
