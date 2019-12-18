@@ -18,15 +18,11 @@
                 <input asp-for="FoodName" class="form-control" />
                 <span asp-validation-for="FoodName" class="text-danger"></span>
             </div>
+            <input type="hidden" asp-for="LaunchId" />
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsVegan" /> @Html.DisplayNameFor(model => model.IsVegan)
                 </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="LaunchId" class="control-label"></label>
-                <select asp-for="LaunchId" class="form-control" asp-items="ViewBag.LaunchId"></select>
-                <span asp-validation-for="LaunchId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

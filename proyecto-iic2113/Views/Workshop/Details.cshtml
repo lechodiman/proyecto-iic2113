@@ -81,7 +81,7 @@
 
     @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
     {
-        <a asp-controller="WorkshopExhibitor" asp-action="Create" asp-route-id="@Model.Id"> add exhibitor</a>
+        <a asp-controller="WorkshopExhibitor" asp-action="Create" asp-route-id="@Model.Id"><i class="fa fa-plus" aria-hidden="true"></i></a>
     }
 
     <h3>

@@ -27,7 +27,7 @@
             }
             @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
             {
-                <a class="btn btn-outline-primar mt-2" asp-controller="Event" asp-action="CreateNotification" asp-route-id="@Model.Id"><i class="fas fa-paper-plane"></i></a>
+                <a class="btn btn-outline-primary mt-2" asp-controller="Event" asp-action="CreateNotification" asp-route-id="@Model.Id"><i class="fas fa-paper-plane"></i></a>
                 <a asp-action="Dashboard" asp-controller="Event" asp-route-id="@Model.Id" class="btn btn-outline-secondary mt-2">
                     <i class="fas fa-chart-line"></i>
                     Dashboard
@@ -78,14 +78,26 @@
         </dd>
     </dl>
 
-    <b>Menus:</b>
+    <h3>Menus:</h3>
     @foreach (var menu in Model.Menus) {
         <ul class="list-group">
             <li class="list-group-item">
+                @if (menu.IsVegan)
+                {
+                    <strong>🥗</strong>
+                }
                 <a asp-action="Details" asp-controller="Menu" asp-route-id= "@menu.Id">@menu.FoodName</a>
+                @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
+                {
+                    <div>
+                        <a asp-controller="Menu" asp-action="Edit" asp-route-id="@menu.Id"><i class="fa fa-pencil" aria-hidden="true"></i></a> |
+                        <a asp-controller="Menu" asp-action="Delete" asp-route-id="@menu.Id"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    </div>
+                }
             </li>
         </ul>
     }
+    <a asp-controller="Menu" asp-action="Create" asp-route-id="@Model.Id"><i class="fa fa-plus" aria-hidden="true"></i></a>
 
     <h3>
         <a asp-action="Index" asp-controller="Review" asp-route-id="@Model.Id">

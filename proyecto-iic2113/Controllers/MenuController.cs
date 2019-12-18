@@ -50,9 +50,10 @@ namespace proyecto_iic2113.Controllers
         }
 
         // GET: Menu/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
             ViewData["LaunchId"] = new SelectList(_context.Launches, "Id", "Name");
+            ViewBag.LaunchId = id;
             return View();
         }
 
@@ -61,15 +62,15 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FoodName,IsVegan,LaunchId")] Menu menu)
+        public async Task<IActionResult> Create([Bind("FoodName,IsVegan,LaunchId")] Menu menu)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(menu);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Launch", new { id = menu.LaunchId });
             }
-            ViewData["LaunchId"] = new SelectList(_context.Launches, "Id", "Discriminator", menu.LaunchId);
+            ViewData["LaunchId"] = new SelectList(_context.Launches, "Id", "Name", menu.LaunchId);
             return View(menu);
         }
 
@@ -86,7 +87,7 @@ namespace proyecto_iic2113.Controllers
             {
                 return NotFound();
             }
-            ViewData["LaunchId"] = new SelectList(_context.Launches, "Id", "Discriminator", menu.LaunchId);
+            ViewData["LaunchId"] = new SelectList(_context.Launches, "Id", "Name", menu.LaunchId);
             return View(menu);
         }
 
@@ -120,9 +121,9 @@ namespace proyecto_iic2113.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Launch", new { id = menu.LaunchId });
             }
-            ViewData["LaunchId"] = new SelectList(_context.Launches, "Id", "Discriminator", menu.LaunchId);
+            ViewData["LaunchId"] = new SelectList(_context.Launches, "Id", "Name", menu.LaunchId);
             return View(menu);
         }
 
@@ -153,7 +154,7 @@ namespace proyecto_iic2113.Controllers
             var menu = await _context.Menus.FindAsync(id);
             _context.Menus.Remove(menu);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Launch", new { id = menu.LaunchId });
         }
 
         private bool MenuExists(int id)
