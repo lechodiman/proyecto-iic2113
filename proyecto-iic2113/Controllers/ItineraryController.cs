@@ -31,7 +31,7 @@ namespace proyecto_iic2113.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            ApplicationUser currentUser = await GetCurrentUserAsync();
+            var currentUser = await GetCurrentUserAsync();
         
             var baseConferenceQuery = await _context.ConferenceUserAttendees
                 .Join(
