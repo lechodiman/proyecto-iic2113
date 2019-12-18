@@ -173,7 +173,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,DateTime,VenueId,FranchiseId")] Conference conference)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,DateTime,EndDate,Capacity,VenueId,FranchiseId")] Conference conference)
         {
             if (id != conference.Id)
             {
