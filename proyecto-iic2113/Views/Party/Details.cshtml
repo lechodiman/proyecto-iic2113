@@ -72,7 +72,6 @@
             @Html.DisplayFor(model => model.Conference.Name)
             </a>
         </dd>
-<<<<<<< HEAD
 
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Room)
@@ -84,20 +83,6 @@
     </dl
 </div>
 
-<div>
-    @if (User.Identity.IsAuthenticated && ViewBag.UserId == Model.Conference.Organizer.Id)
-    {
-        <div>
-            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-            <a asp-action="Index">Back to List</a>
-        </div>
-    }
-    else
-    {
-        <div><a asp-action="Index">Back to List</a></div>
-    }
-</div>
-=======
     </dl>
     <h3>
         <a asp-action="Index" asp-controller="Review" asp-route-id="@Model.Id">
@@ -125,4 +110,4 @@
 </div>
 
 
->>>>>>> dev
+
