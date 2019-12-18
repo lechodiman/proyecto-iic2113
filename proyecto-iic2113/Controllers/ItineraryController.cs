@@ -15,8 +15,10 @@ namespace proyecto_iic2113.Controllers
     public class ItineraryController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+       
         private readonly UserManager<ApplicationUser> _userManager;
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         public ItineraryController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
