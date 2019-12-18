@@ -31,7 +31,7 @@ namespace proyecto_iic2113.Controllers
         {
             ApplicationUser currentUser = await GetCurrentUserAsync();
         
-            var query = await _context.ConferenceUserAttendees
+            var baseConferenceQuery = await _context.ConferenceUserAttendees
                 .Join(
                     _context.Conferences,
                     attendance => attendance.ConferenceId,
@@ -48,31 +48,78 @@ namespace proyecto_iic2113.Controllers
                     }
                 ).Where(a => a.ApplicationUserId == currentUser.Id).ToListAsync();
 
-            ViewBag.Conferences = query;
+            ViewBag.Conferences = baseConferenceQuery;
 
 
-
-            var query2 = await _context.EventUserAttendees
+            ViewBag.Parties = await _context.EventUserAttendees
                 .Join(
-                    _context.Events,
+                    _context.Parties,
                     attendance => attendance.EventId,
                     event_i => event_i.Id,
                     (attendance, event_i) => new AttendanceViewEvent
                     {
-                        ConferenceId = event_i.Id,
+                        EventId = event_i.Id,
                         Name = event_i.Name,
                         EndDate = event_i.EndDate,
                         StartDate = event_i.StartDate,
                         ApplicationUserId = attendance.ApplicationUserId
 
+
                     }
                 ).Where(e => e.ApplicationUserId == currentUser.Id).ToListAsync();
 
 
-            //var events = await _context.EventUserAttendees.Where(a => a.ApplicationUserId == currentUser.Id).ToListAsync();
-            ViewBag.Events = query2;
+            ViewBag.Lunches = await _context.EventUserAttendees
+                .Join(
+                    _context.Launches,
+                    attendance => attendance.EventId,
+                    event_i => event_i.Id,
+                    (attendance, event_i) => new AttendanceViewEvent
+                    {
+                        EventId = event_i.Id,
+                        Name = event_i.Name,
+                        EndDate = event_i.EndDate,
+                        StartDate = event_i.StartDate,
+                        ApplicationUserId = attendance.ApplicationUserId
 
 
+                    }
+                ).Where(e => e.ApplicationUserId == currentUser.Id).ToListAsync();
+
+
+            ViewBag.Chats = await _context.EventUserAttendees
+                .Join(
+                    _context.Chat,
+                    attendance => attendance.EventId,
+                    event_i => event_i.Id,
+                    (attendance, event_i) => new AttendanceViewEvent
+                    {
+                        EventId = event_i.Id,
+                        Name = event_i.Name,
+                        EndDate = event_i.EndDate,
+                        StartDate = event_i.StartDate,
+                        ApplicationUserId = attendance.ApplicationUserId
+
+
+                    }
+                ).Where(e => e.ApplicationUserId == currentUser.Id).ToListAsync();
+
+            ViewBag.Talks = await _context.EventUserAttendees
+                .Join(
+                    _context.Talks,
+                    attendance => attendance.EventId,
+                    event_i => event_i.Id,
+                    (attendance, event_i) => new AttendanceViewEvent
+                    {
+                        EventId = event_i.Id,
+                        Name = event_i.Name,
+                        EndDate = event_i.EndDate,
+                        StartDate = event_i.StartDate,
+                        ApplicationUserId = attendance.ApplicationUserId
+
+
+                    }
+                ).Where(e => e.ApplicationUserId == currentUser.Id).ToListAsync();
 
             return View();
         }
