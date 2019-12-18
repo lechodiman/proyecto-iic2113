@@ -46,6 +46,7 @@ namespace proyecto_iic2113.Controllers
             }
 
             var party = await _context.Parties
+                .Include(p => p.Room)
                 .Include(p => p.Conference)
                 .ThenInclude(conference => conference.Organizer)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -66,7 +67,6 @@ namespace proyecto_iic2113.Controllers
             {
                 return NotFound();
             }
-
             return View(party);
         }
 
@@ -74,6 +74,7 @@ namespace proyecto_iic2113.Controllers
         public IActionResult Create(int id)
         {
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name");
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name");
             ViewBag.ConferenceId = id;
             return View();
         }
@@ -83,7 +84,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("HasOpenBar,Name,StartDate,EndDate,Description,ConferenceId,Capacity")] Party party)
+        public async Task<IActionResult> Create([Bind("HasOpenBar,Name,StartDate,EndDate,Description,ConferenceId,Capacity,RoomId")] Party party)
         {
             if (ModelState.IsValid)
             {

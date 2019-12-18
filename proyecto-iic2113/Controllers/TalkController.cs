@@ -46,6 +46,7 @@ namespace proyecto_iic2113.Controllers
             }
 
             var talk = await _context.Talks
+                .Include(t => t.Room)
                 .Include(t => t.TalkLecturers)
                 .ThenInclude(tl => tl.Lecturer)
                 .Include(t => t.Conference)
@@ -78,6 +79,7 @@ namespace proyecto_iic2113.Controllers
         public IActionResult Create(int id)
         {
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name");
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name");
             ViewBag.ConferenceId = id;
             return View();
         }
@@ -87,7 +89,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Subject,Name,StartDate,EndDate,Description,ConferenceId,Capacity")] Talk talk)
+        public async Task<IActionResult> Create([Bind("Subject,Name,StartDate,EndDate,Description,ConferenceId,Capacity, RoomId")] Talk talk)
         {
             if (ModelState.IsValid)
             {
@@ -96,6 +98,7 @@ namespace proyecto_iic2113.Controllers
                 return RedirectToAction("Details", "Conference", new { id = talk.ConferenceId });
             }
             ViewData["ConferenceId"] = new SelectList(_context.Conferences, "Id", "Name", talk.ConferenceId);
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name");
             return View(talk);
         }
 
@@ -129,7 +132,7 @@ namespace proyecto_iic2113.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Subject,Id,Name,StartDate,EndDate,Description,ConferenceId,Capacity")] Talk talk)
+        public async Task<IActionResult> Edit(int id, [Bind("Subject,Id,Name,StartDate,EndDate,Description,ConferenceId,Capacity,RoomId")] Talk talk)
         {
             if (id != talk.Id)
             {
