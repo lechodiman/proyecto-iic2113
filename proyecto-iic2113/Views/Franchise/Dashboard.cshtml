@@ -38,7 +38,11 @@
                 @for (var i=0; i<ViewBag.conferences.Count; i++) {
                     
                     <tr>
-                        <td scope="row">@ViewBag.conferences[i].Name</td>
+                        <td scope="row">
+                            <a asp-controller="Conference" asp-action="Dashboard" asp-route-id="@ViewBag.conferences[i].Id">
+                                    @ViewBag.conferences[i].Name
+                            </a>
+                        </td>
                         <td>@ViewBag.conferencesAverageReviews[i]</td>
                     </tr>
                 
